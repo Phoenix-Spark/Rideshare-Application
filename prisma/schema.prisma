@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String       @id @default(uuid())
+  firstName         String
+  lastName          String
+  phoneNumber       String
+  authCode          String?
+  squadrons         Squadron[]
+  vehicles          Vehicle[]
+  passengers        Passenger[]
+  requests          Request[]
+  licenses          License[]     @relation("UserLicenses")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Passenger {
+  id                String    @id @default(uuid())
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Driver {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  licenses          License[] @relation("DriverLicenses")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Vehicle {
+  id                String    @id @default(uuid())
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id])
+  year              String
+  make              String
+  model             String
+  color             String
+  plate             String    @unique
+  licenses          License[] @relation("VehicleLicenses")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model License {
+  id                String    @id @default(uuid())
+  licenseNumber     String    @unique
+  licenseState      String
+  licenseExpireDate DateTime
+  userId            String?
+  user              User?     @relation("UserLicenses", fields: [userId], references: [id])
+  driverId          String?
+  driver            Driver?   @relation("DriverLicenses", fields: [driverId], references: [id])
+  vehicleId         String?
+  vehicle           Vehicle?  @relation("VehicleLicenses", fields: [vehicleId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Dropoff {
+  id                String    @id @default(uuid())
+  dropoffLocation   String
+  requests          Request[] @relation("DropoffRequests")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+} 
+
+model Pickup {  
+  id                String    @id @default(uuid())
+  pickupLocation    String
+  requests          Request[] @relation("PickupRequests")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Request {
+  id                String    @id @default(uuid())
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id])
+  pickupId          String?
+  pickup            Pickup?   @relation("PickupRequests", fields: [pickupId], references: [id])
+  dropoffId         String?
+  dropoff           Dropoff?  @relation("DropoffRequests", fields: [dropoffId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Squadron {
+  id                String    @id @default(uuid())
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id])
+  squadronName      String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}

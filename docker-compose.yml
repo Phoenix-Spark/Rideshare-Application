@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8888:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
+  keycloak_data:

@@ -4,14 +4,16 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "react-router dev",
+    "dev": "react-router dev --port 3000",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@prisma/client": "^6.18.0",
     "@react-router/node": "^7.9.2",
     "@react-router/serve": "^7.9.2",
     "isbot": "^5.1.31",
+    "prisma": "^6.18.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.2"
