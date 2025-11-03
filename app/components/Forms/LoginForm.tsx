@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
-import { useIsMobile } from "~/hooks/MobileDevice";
+import { useDevice } from "~/hooks/DeviceProvider";
 
 export default function Login({ error }: { error?: string }) {
   const [showPassword, setShowPassword] = useState(false);
-  const isMobile = useIsMobile();
+  const { isMobile } = useDevice();
+  console.log(isMobile)
 
   function LoginModal() {
     return (
