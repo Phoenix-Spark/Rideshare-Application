@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { BaseBoundIcon } from "../Icons/BaseBoundIcon";
 
 export default function LeftSideRidePanel() {
@@ -21,20 +20,7 @@ export default function LeftSideRidePanel() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
-      </div>
-
-      <div className="p-6 border-t border-gray-200 space-y-3">
-        <form method="post" action="/settings">
-          <button type="submit" className="block w-full py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 rounded-xl font-semibold text-white text-center transition-all shadow-lg shadow-gray-400/30">
-            User Settings
-          </button>
-        </form>
-
-        <form method="post" action="/logout">
-          <button type="submit" className="block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 rounded-xl font-semibold text-white text-center transition-all shadow-lg shadow-blue-400/30">
-            Logout
-          </button>
-        </form>
+        {/**Pickup location goes here! */}
       </div>
     </div>
   );

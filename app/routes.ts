@@ -6,7 +6,10 @@ export default [
     route("/logout", "./routes/auth/logout.tsx"),
     route("/register", "./routes/auth/register.tsx"),
     route("/verify", "./routes/auth/twofactor.tsx"),
-    route("/dashboard", "./routes/dashboard/dashboard.tsx"),
+    route("/dashboard", "./routes/dashboard/dashboard.tsx", [
+        route("settings", "./routes/settings/usersettings.tsx"),
+        route("admin", "./routes/settings/adminsettings.tsx"),
+    ]),
     route("*", './routes/notfound.tsx')
 
 ] satisfies RouteConfig;
