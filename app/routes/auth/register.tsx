@@ -30,5 +30,5 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 export default function Register() {
-  return <RegisterForm />
+  return <RegisterForm />;
 }

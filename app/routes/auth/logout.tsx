@@ -13,5 +13,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Logout() {
-    return <LogoutForm />
+    return <LogoutForm />;
 }

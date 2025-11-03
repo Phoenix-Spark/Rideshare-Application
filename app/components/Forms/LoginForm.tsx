@@ -2,20 +2,23 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
-import { useDevice } from "~/hooks/DeviceProvider";
 
 export default function Login({ error }: { error?: string }) {
   const [showPassword, setShowPassword] = useState(false);
-  const { isMobile } = useDevice();
-  console.log(isMobile)
 
-  function LoginModal() {
-    return (
-      <>
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-blue-500 via-indigo-500 to-blue-500 " />
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 relative overflow-hidden">
+
+      <div className="absolute inset-0 overflow-hidden opacity-40">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative bg-white rounded-3xl shadow-xl border border-gray-100 p-10 w-full max-w-[550px]">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 rounded-t-3xl" />
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-3 bg-linear-to-br from-blue-500 to-indigo-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30">
+          <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -141,7 +144,7 @@ export default function Login({ error }: { error?: string }) {
 
             <button
               type="submit"
-              className="w-full py-4 mt-6 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+              className="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
             >
               Sign In
             </button>
@@ -157,28 +160,8 @@ export default function Login({ error }: { error?: string }) {
             Create account
           </Link>
         </p>
-      </>
-    );
-  }
+      </div>
 
-  return (
-    <div
-      className={`min-h-screen flex ${isMobile ? "flex-col" : ""} items-center justify-center bg-linear-to-br from-blue-50 via-white to-indigo-50 p-6 relative overflow-hidden`}
-    >
-      {!isMobile && (
-        <div className="absolute inset-0 overflow-hidden opacity-40">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl" />
-        </div>
-      )}
-
-      {!isMobile ? (
-        <div className="relative overflow-clip bg-white rounded-b-3xl shadow-xl border border-gray-100 p-10 w-full max-w-[550px]">
-          <LoginModal />
-        </div>
-      ) : (
-        <LoginModal />
-      )}
       <div className="absolute bottom-6 text-center text-sm text-gray-500">
         <p>Secured Shared Rides</p>
       </div>
