@@ -5,12 +5,12 @@ import DashboardForm from "~/components/Forms/DashboardForm";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
-  const userName = await getUserInfo('dashboard', userId);
+  const user = await getUserInfo('dashboard', userId);
   
-  return{userName};
+  return{user};
 }
 
 export default function Dashboard() {
-  const { userName } = useLoaderData<typeof loader>();
-  return <DashboardForm userName={userName}/>;
+  const { user } = useLoaderData<typeof loader>();
+  return <DashboardForm user={user}/>;
 }

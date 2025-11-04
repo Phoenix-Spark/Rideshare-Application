@@ -4,7 +4,7 @@ import RightSideUserPanelForm from "./RightSideUserPanelForm";
 import LeftSideRidePanelForm from "./LeftSideRidePanelForm";
 import { Outlet } from "react-router";
 
-export default function Dashboard({userName}: any) {
+export default function Dashboard({user}: any) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
 
@@ -61,7 +61,7 @@ export default function Dashboard({userName}: any) {
     <div className="relative w-full h-screen">
       <div ref={mapRef} className="absolute inset-0 z-0 w-full h-full"></div>
       <LeftSideRidePanelForm />
-      <RightSideUserPanelForm userName={userName}/>
+      <RightSideUserPanelForm user={user}/>
       <Outlet/>
     </div>
   );

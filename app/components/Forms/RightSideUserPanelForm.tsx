@@ -4,7 +4,7 @@ import { AdminIcon } from "../Icons/AdminIcon";
 import { LogoutIcon } from "../Icons/LogoutIcon";
 import { Link } from "react-router";
 
-export default function RightSideUserPanelForm({userName}: any) {
+export default function RightSideUserPanelForm({user}: any) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
@@ -19,26 +19,28 @@ export default function RightSideUserPanelForm({userName}: any) {
       >
         <div className="flex flex-col text-left max-w-[70%]">
           <p className="text-gray-900 font-semibold text-lg truncate">
-            {userName.firstName} {userName.lastName}
+            {user?.firstName} {user?.lastName}
           </p>
-          <p className="text-gray-500 text-sm truncate">{userName.email}</p>
+          <p className="text-gray-500 text-sm truncate">{user?.email}</p>
         </div>
 
         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg">
-          {userName.firstName[0]}
-          {userName.lastName[0]}
+          {user?.firstName[0]}
+          {user?.lastName[0]}
         </div>
       </button>
 
       {isDropdownOpen && (
         <div className="w-full p-3 space-y-2 bg-white border-t border-gray-100">
-            <Link
+            {user.isAdmin ? (
+              <Link
               to="/dashboard/admin"
               className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors font-medium text-gray-800"
             >
               <AdminIcon className="size-6" />
               Admin
             </Link>
+            ): ''}
 
             <Link
               to="/dashboard/settings"

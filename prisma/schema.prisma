@@ -68,7 +68,7 @@ model Pickup {
   requests       Request[] @relation("PickupRequests")
 }
 
-model Locations {
+model Location {
   id             String    @id @default(uuid())
   name           String
   Longitude      String

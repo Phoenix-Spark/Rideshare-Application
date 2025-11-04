@@ -2,31 +2,46 @@ import { prisma } from "../db.server";
 import bcrypt from "bcryptjs";
 
 export async function getUserInfo(intent: string, userId: string) {
-  const dashboard = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      firstName: true,
-      lastName: true,
-      email: true,
-    },
-  });
-
-  const settings = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       firstName: true,
       lastName: true,
       email: true,
       phoneNumber: true,
+      isAdmin: true,
     },
   });
 
-  if (intent === "dashboard") {
-    return dashboard;
-  } else if (intent === "settings") {
-    return settings;
+  if (!user) return null;
+
+  switch (intent) {
+    case "dashboard":
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      };
+    case "settings":
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+      };
+    case "admin":
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      };
+    default:
+      return null;
   }
 }
+
 
 export async function updateUserInfo(
   userId: string,
