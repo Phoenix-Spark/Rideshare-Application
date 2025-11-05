@@ -10,65 +10,91 @@ export default function CreateBaseForm() {
         </p>
       </div>
 
-      <form className="space-y-5">
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Base Name
-          </label>
-          <input
-            type="text"
-            name="baseName"
-            placeholder="e.g., Langley Air Force Base"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-          />
-        </div>
+      <form method="post" action="/dashboard/admin">
+        <input type="hidden" name="intent" value="createBase" />
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Abbreviation
-          </label>
-          <input
-            type="text"
-            name="abbreviation"
-            placeholder="e.g., LAFB"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-5">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Longitude
+              Base Name
             </label>
             <input
-              type="number"
-              name="longitude"
-              step="any"
-              placeholder="e.g., -76.3604"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              type="text"
+              name="name"
+              required
+              placeholder="e.g., Langley Air Force Base"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 
+                         focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Latitude
-            </label>
-            <input
-              type="number"
-              name="latitude"
-              step="any"
-              placeholder="e.g., 37.0824"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-            />
-          </div>
-        </div>
 
-        <div className="flex justify-end pt-2">
-          <button
-            type="submit"
-            className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"
-          >
-            Add Base
-          </button>
+          <div className="mb-4">
+            <label
+              htmlFor="state"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              State
+            </label>
+            <select
+              id="state"
+              name="state"
+              required
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
+               focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+            >
+              <option value="">Select a state</option>
+              {[
+                "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+                "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+                "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan",
+                "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma",
+                "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
+                "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+              ].map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Longitude
+              </label>
+              <input
+                name="longitude"
+                placeholder="e.g., -76.3604"
+                required
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 
+                           focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Latitude
+              </label>
+              <input
+                name="latitude"
+                placeholder="e.g., 37.0824"
+                required
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 
+                           focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold 
+                         shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"
+            >
+              Add Base
+            </button>
+          </div>
         </div>
       </form>
     </section>

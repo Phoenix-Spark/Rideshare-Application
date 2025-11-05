@@ -62,16 +62,16 @@ export async function requireUserId(request: Request, redirectTo = "/login") {
   return userId;
 }
 
-// Require 2fa code column to be null
-export async function requireTwoFactorCode(userId: string) {
+// Require admin userId for protected routes
+export async function requireAdminId(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { code: true },
+    select: { isAdmin: true },
   });
 
-  if (!user) {
-    return("User not found");
+  if (!user || !user.isAdmin) {
+    return ("Unauthorized user");
   }
 
-  return user.code;
+  return user;
 }

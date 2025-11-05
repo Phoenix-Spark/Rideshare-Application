@@ -35,6 +35,7 @@ export async function getUserInfo(intent: string, userId: string) {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
         isAdmin: user.isAdmin,
       };
     default:

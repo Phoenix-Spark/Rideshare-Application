@@ -10,7 +10,7 @@ import { AdminIcon } from "../Icons/AdminIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
 
-export default function AdminSettingsModal({ user }: any) {
+export default function AdminSettingsModal({ user, base }: any) {
   const [activeTab, setActiveTab] = useState("bases");
 
   const renderContent = () => {
@@ -19,7 +19,7 @@ export default function AdminSettingsModal({ user }: any) {
         return (
           <div className="space-y-8">
             <CreateBaseForm />
-            <ManageBaseForm />
+            <ManageBaseForm base={base} />
           </div>
         );
 
@@ -108,12 +108,12 @@ export default function AdminSettingsModal({ user }: any) {
           <div className="border-t border-gray-200 p-4 bg-gray-50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                {user.firstName[0]}
-                {user.lastName[0]}
+                {user?.firstName[0]}
+                {user?.lastName[0]}
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">Administrator</p>
-                <p className="text-xs text-gray-500">{user.isAdmin && user.email}</p>
+                <p className="text-xs text-gray-500">{user?.isAdmin && user?.email}</p>
               </div>
             </div>
           </div>

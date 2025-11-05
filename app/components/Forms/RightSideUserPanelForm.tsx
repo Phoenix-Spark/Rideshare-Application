@@ -32,7 +32,7 @@ export default function RightSideUserPanelForm({user}: any) {
 
       {isDropdownOpen && (
         <div className="w-full p-3 space-y-2 bg-white border-t border-gray-100">
-            {user.isAdmin ? (
+            {user?.isAdmin ? (
               <Link
               to="/dashboard/admin"
               className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors font-medium text-gray-800"

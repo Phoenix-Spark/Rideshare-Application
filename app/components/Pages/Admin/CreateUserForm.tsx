@@ -10,8 +10,10 @@ export default function CreateUserForm() {
         </p>
       </div>
 
-      <form className="space-y-5">
-        <div className="grid grid-cols-2 gap-4">
+      <form method="post" action="/admin">
+        <input type="hidden" name="intent" value="user" />
+        <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               First Name
@@ -55,6 +57,7 @@ export default function CreateUserForm() {
           >
             Create User
           </button>
+        </div>
         </div>
       </form>
     </section>

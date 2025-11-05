@@ -9,6 +9,7 @@ datasource db {
 
 model User {
   id             String      @id @default(uuid())
+  baseId         String?      
   firstName      String
   lastName       String
   phoneNumber    String      @unique
@@ -20,7 +21,6 @@ model User {
   updatedAt      DateTime    @updatedAt
   passengers     Passenger[]
   requests       Request[]
-  squadrons      Squadron[]
   vehicles       Vehicle[]
 }
 
@@ -71,6 +71,7 @@ model Pickup {
 model Location {
   id             String    @id @default(uuid())
   name           String
+  base           String
   Longitude      String
   Latitude       String
   description    String?
@@ -90,22 +91,12 @@ model Request {
   user      User?    @relation(fields: [userId], references: [id])
 }
 
-model Squadron {
-  id           String   @id @default(uuid())
-  userId       String?
-  squadronName String
-  baseId       String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  base         Base?    @relation(fields: [baseId], references: [id])
-  user         User?    @relation(fields: [userId], references: [id])
-}
-
 model Base {
   id        String     @id @default(uuid())
-  baseName  String
-  baseState String
+  name      String
+  state     String
+  long      String
+  lat       String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  squadrons Squadron[]
 }
