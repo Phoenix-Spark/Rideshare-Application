@@ -1,100 +1,90 @@
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router";
+import { UserIcon } from "../Icons/UserIcon";
+import { LockIcon } from "../Icons/LockIcon";
+import { VehicleIcon } from "../Icons/VehicleIcon";
+import { ShieldIcon } from "../Icons/ShieldIcon";
+import { WarningIcon } from "../Icons/WarningIcon";
+import { BaseIcon } from "../Icons/BaseIcon";
+import { XMarkIcon } from "../Icons/XMarkIcon";
+import UserDeleteForm from "../Pages/User/UserDeleteForm";
+import UserSecurityForm from "../Pages/User/UserSecurityForm";
+import UserVehicleForm from "../Pages/User/UserVehicleForm";
+import UserBaseForm from "../Pages/User/UserBaseForm";
+import UserPermissionForm from "../Pages/User/UserPermissionForm";
+import UserProfileForm from "../Pages/User/UserProfileForm";
 
-export default function UserSettingsModal({ user }: any) {
+export default function UserSettingsModal({ user, base, vehicles }: any) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [selectedTab, setSelectedTab] = useState(tabParam || "Profile");
+
+  const tabs = [
+    { name: "Profile", icon: <UserIcon className="size-6" /> },
+    { name: "Permissions", icon: <LockIcon className="size-6" /> },
+    { name: "Base", icon: <BaseIcon className="size-6" /> },
+    { name: "Vehicles", icon: <VehicleIcon className="size-6" /> },
+    { name: "Security", icon: <ShieldIcon className="size-6" /> },
+    { name: "Deactivation", icon: <WarningIcon className="size-6" /> },
+  ];
+
+  useEffect(() => {
+    setSearchParams({ tab: selectedTab }, { replace: true });
+  }, [selectedTab, setSearchParams]);
+
+  useEffect(() => {
+    if (tabParam && tabParam !== selectedTab) {
+      setSelectedTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tabName: string) => {
+    setSelectedTab(tabName);
+  };
+
   return (
-    <div className="fixed inset-0 z-80 flex items-center justify-center bg-black/40 backdrop-blur-md">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative transform transition-transform duration-300 scale-100">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">User Settings</h2>
-
-        <Link
-          to="/dashboard"
-          className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 transition"
-          aria-label="Close settings modal"
-        >
-          <p className="text-2xl">✕</p>
-        </Link>
-
-        <form method="post" action="/dashboard/settings">
-          <div className="flex flex-col gap-5">
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder={user.firstName}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                />
-              </div>
-
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder={user.lastName}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                placeholder={user.email}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phoneNumber"
-                placeholder={user.phoneNumber}
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                className="w-full rounded-xl border border-gray-200 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-              />
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6">
-              <Link
-                to="/dashboard"
-                type="button"
-                className="px-5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition"
-              >
-                Cancel
-              </Link>
-              <button
-                type="submit"
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition"
-              >
-                Save Changes
-              </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 to-black/50 backdrop-blur-lg p-4">
+      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl w-[1000px] h-[700px] flex overflow-hidden relative border border-gray-200/50">
+        <aside className="w-80 bg-gradient-to-b from-indigo-50 via-white to-indigo-50/50 p-8 flex flex-col gap-2 border-r border-indigo-100/50 relative overflow-hidden">
+          <div className="relative z-10">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
+              Settings
+            </h2>
+            <div className="space-y-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.name}
+                  type="button"
+                  onClick={() => handleTabChange(tab.name)}
+                  className={`w-full text-left px-5 py-3.5 rounded-2xl font-medium transition-all duration-300 flex items-center gap-3 group ${
+                    selectedTab === tab.name
+                      ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/30 scale-105"
+                      : "text-gray-700 hover:bg-white/70 hover:shadow-md hover:scale-102"
+                  }`}
+                >
+                  <span className="text-xl">{tab.icon}</span>
+                  <span>{tab.name}</span>
+                </button>
+              ))}
             </div>
           </div>
-        </form>
+        </aside>
+
+        <div className="flex-1 p-10 overflow-y-auto max-h-[85vh] relative bg-gradient-to-br from-white via-indigo-50/10 to-white">
+          <Link
+            to="/dashboard"
+            className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 hover:bg-red-500 transition-all duration-300 hover:rotate-90"
+          >
+            <XMarkIcon className="size-6" />
+          </Link>
+
+          {selectedTab === "Profile" && <UserProfileForm user={user} />}
+          {selectedTab === "Permissions" && <UserPermissionForm user={user} />}
+          {selectedTab === "Base" && <UserBaseForm user={user} base={base} />}
+          {selectedTab === "Vehicles" && <UserVehicleForm user={user} vehicles={vehicles} />}
+          {selectedTab === "Security" && <UserSecurityForm user={user} />}
+          {selectedTab === "Deactivation" && <UserDeleteForm user={user} />}
+        </div>
       </div>
     </div>
   );

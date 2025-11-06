@@ -13,51 +13,67 @@ export default function CreateUserForm() {
       <form method="post" action="/admin">
         <input type="hidden" name="intent" value="user" />
         <div className="space-y-5">
+          {/* Name Fields */}
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                First Name
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="Jane"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Smith"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              First Name
+              Email
             </label>
             <input
-              type="text"
-              name="firstName"
-              placeholder="Jane"
+              type="email"
+              name="email"
+              placeholder="jane.smith@domain.com"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
             />
           </div>
+
+          {/* Phone Number */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Last Name
+              Phone Number
             </label>
             <input
-              type="text"
-              name="lastName"
-              placeholder="Smith"
+              type="tel"
+              name="phoneNumber"
+              placeholder="e.g., (555) 123-4567"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
             />
           </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            placeholder="jane.smith@domain.com"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-          />
-        </div>
-
-        <div className="flex justify-end pt-2">
-          <button
-            type="submit"
-            className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"
-          >
-            Create User
-          </button>
-        </div>
+          {/* Submit */}
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"
+            >
+              Create User
+            </button>
+          </div>
         </div>
       </form>
     </section>

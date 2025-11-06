@@ -43,8 +43,8 @@ export default function AdminSettingsModal({ user, base }: any) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl shadow-2xl w-full max-w-7xl h-[55vh] flex overflow-hidden">
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col shadow-lg">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl shadow-2xl w-full max-w-7xl h-[60vh] flex overflow-hidden">
+        <div className="w-90 bg-white border-r border-gray-200 flex flex-col shadow-lg">
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-2xl font-bold text-gray-900">Admin Settings</h2>

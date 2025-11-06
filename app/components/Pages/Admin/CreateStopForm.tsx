@@ -13,6 +13,23 @@ export default function CreateStopForm() {
       <form method="post" action="/admin">
         <input type="hidden" name="intent" value="stop" />
         <div className="space-y-5">
+          {/* Base Dropdown */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Select Base
+            </label>
+            <select
+              name="baseId"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                -- Choose a base --
+              </option>
+            </select>
+          </div>
+
+          {/* Stop Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Stop Name
@@ -25,15 +42,14 @@ export default function CreateStopForm() {
             />
           </div>
 
+          {/* Coordinates */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Longitude
               </label>
               <input
-                type="number"
                 name="longitude"
-                step="any"
                 placeholder="e.g., -76.3802"
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
               />
@@ -43,15 +59,14 @@ export default function CreateStopForm() {
                 Latitude
               </label>
               <input
-                type="number"
                 name="latitude"
-                step="any"
                 placeholder="e.g., 37.0701"
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
               />
             </div>
           </div>
 
+          {/* Submit */}
           <div className="flex justify-end pt-2">
             <button
               type="submit"
