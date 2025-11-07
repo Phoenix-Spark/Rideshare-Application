@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router";
 import CreateBaseForm from "../Pages/Admin/CreateBaseForm";
 import ManageBaseForm from "../Pages/Admin/ManageBaseForm";
 import CreateStopForm from "../Pages/Admin/CreateStopForm";
@@ -11,7 +11,23 @@ import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
 
 export default function AdminSettingsModal({ user, base, station }: any) {
-  const [activeTab, setActiveTab] = useState("bases");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = searchParams.get("page");
+  const [activeTab, setActiveTab] = useState(pageParam || "bases");
+
+  useEffect(() => {
+    setSearchParams({ page: activeTab }, { replace: true });
+  }, [activeTab, setSearchParams]);
+
+  useEffect(() => {
+    if (pageParam && pageParam !== activeTab) {
+      setActiveTab(pageParam);
+    }
+  }, [pageParam]);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -36,6 +52,14 @@ export default function AdminSettingsModal({ user, base, station }: any) {
           <div className="space-y-8">
             <CreateUserForm />
             <ManageUserForm />
+          </div>
+        );
+
+      default:
+        return (
+          <div className="space-y-8">
+            <CreateBaseForm />
+            <ManageBaseForm base={base} />
           </div>
         );
     }
@@ -63,7 +87,7 @@ export default function AdminSettingsModal({ user, base, station }: any) {
 
           <nav className="flex-1 flex flex-col p-4 gap-2">
             <button
-              onClick={() => setActiveTab("bases")}
+              onClick={() => handleTabChange("bases")}
               className={`flex items-center gap-3 text-left px-4 py-3.5 rounded-xl font-semibold transition-all ${
                 activeTab === "bases"
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
@@ -77,7 +101,7 @@ export default function AdminSettingsModal({ user, base, station }: any) {
             </button>
 
             <button
-              onClick={() => setActiveTab("stops")}
+              onClick={() => handleTabChange("stops")}
               className={`flex items-center gap-3 text-left px-4 py-3.5 rounded-xl font-semibold transition-all ${
                 activeTab === "stops"
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
@@ -91,7 +115,7 @@ export default function AdminSettingsModal({ user, base, station }: any) {
             </button>
 
             <button
-              onClick={() => setActiveTab("users")}
+              onClick={() => handleTabChange("users")}
               className={`flex items-center gap-3 text-left px-4 py-3.5 rounded-xl font-semibold transition-all ${
                 activeTab === "users"
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
@@ -108,8 +132,8 @@ export default function AdminSettingsModal({ user, base, station }: any) {
           <div className="border-t border-gray-200 p-4 bg-gray-50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                {user?.firstName[0]}
-                {user?.lastName[0]}
+                {user?.firstName?.[0]}
+                {user?.lastName?.[0]}
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">Administrator</p>

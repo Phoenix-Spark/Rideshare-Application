@@ -57,7 +57,7 @@ export default function ManageStopForm({ station, base }: any) {
             >
               {editingId === s.id ? (
                 <div className="p-5">
-                  <form method="post" action="/dashboard/admin" className="space-y-4">
+                  <form method="post" action="/dashboard/admin?page=stops" className="space-y-4">
                     <input type="hidden" name="id" value={s.id} />
                     <input type="hidden" name="intent" value="updateStop" />
 
@@ -314,7 +314,7 @@ export default function ManageStopForm({ station, base }: any) {
                 Cancel
               </button>
 
-              <form method="post" action="/dashboard/admin" className="inline">
+              <form method="post" action="/dashboard/admin?page=stops" className="inline">
                 <input type="hidden" name="intent" value="deleteStop" />
                 <input type="hidden" name="id" value={deletingStop.id} />
                 <button

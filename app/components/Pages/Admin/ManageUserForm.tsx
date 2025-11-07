@@ -18,7 +18,7 @@ export default function ManageUserForm() {
           </p>
         </div>
 
-        <form method="post" action="/admin">
+        <form method="post" action="/dashboard/admin?page=users">
           <input type="hidden" name="intent" value="edit" />
           <div className="space-y-5">
             <div>

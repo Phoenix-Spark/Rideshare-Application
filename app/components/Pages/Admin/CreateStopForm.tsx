@@ -10,7 +10,7 @@ export default function CreateStopForm({ base }: any ) {
         </p>
       </div>
 
-      <form method="post" action="/dashboard/admin">
+      <form method="post" action="/dashboard/admin?page=stops">
         <input type="hidden" name="intent" value="createStop" />
         <div className="space-y-5">
           <div>

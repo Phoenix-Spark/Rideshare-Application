@@ -10,10 +10,9 @@ export default function CreateUserForm() {
         </p>
       </div>
 
-      <form method="post" action="/admin">
+      <form method="post" action="/dashboard/admin?page=users">
         <input type="hidden" name="intent" value="user" />
         <div className="space-y-5">
-          {/* Name Fields */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -39,7 +38,6 @@ export default function CreateUserForm() {
             </div>
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Email
@@ -52,7 +50,6 @@ export default function CreateUserForm() {
             />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Phone Number
@@ -65,7 +62,6 @@ export default function CreateUserForm() {
             />
           </div>
 
-          {/* Submit */}
           <div className="flex justify-end pt-2">
             <button
               type="submit"

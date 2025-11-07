@@ -108,10 +108,7 @@ export default function ManageBaseForm({ base }: any) {
             >
               {editingId === b.id ? (
                 <div className="p-5">
-                  <form
-                    method="post"
-                    action="/dashboard/admin"
-                    className="space-y-4"
+                  <form method="post" action="/dashboard/admin?page=bases" className="space-y-4"
                   >
                     <input type="hidden" name="id" value={b.id} />
                     <input type="hidden" name="intent" value="updateBase" />
@@ -381,7 +378,7 @@ export default function ManageBaseForm({ base }: any) {
           Cancel
         </button>
 
-        <form method="post" action="/dashboard/admin" className="inline">
+        <form method="post" action="/dashboard/admin?page=bases" className="inline">
           <input type="hidden" name="intent" value="deleteBase" />
           <input type="hidden" name="id" value={deletingBase.id} />
           <button
