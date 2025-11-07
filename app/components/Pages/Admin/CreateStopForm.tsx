@@ -1,4 +1,4 @@
-export default function CreateStopForm() {
+export default function CreateStopForm({ base }: any ) {
   return (
     <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
       <div className="mb-6">
@@ -10,10 +10,9 @@ export default function CreateStopForm() {
         </p>
       </div>
 
-      <form method="post" action="/admin">
-        <input type="hidden" name="intent" value="stop" />
+      <form method="post" action="/dashboard/admin">
+        <input type="hidden" name="intent" value="createStop" />
         <div className="space-y-5">
-          {/* Base Dropdown */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Select Base
@@ -21,28 +20,39 @@ export default function CreateStopForm() {
             <select
               name="baseId"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                -- Choose a base --
-              </option>
+              defaultValue="">
+              {base.map((item: any) =>
+                <option key={item.id} value={item.id}>
+                    {item.name}
+                </option>
+              )}
             </select>
           </div>
 
-          {/* Stop Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Stop Name
             </label>
             <input
               type="text"
-              name="stopName"
+              name="name"
               placeholder="e.g., Gate 2 Pickup Zone"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
             />
           </div>
 
-          {/* Coordinates */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Stop Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              placeholder="e.g., Front gate entrance"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -66,7 +76,6 @@ export default function CreateStopForm() {
             </div>
           </div>
 
-          {/* Submit */}
           <div className="flex justify-end pt-2">
             <button
               type="submit"

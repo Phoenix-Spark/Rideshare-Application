@@ -43,9 +43,11 @@ model Vehicle {
 
 model Station {
   id          String     @id @default(uuid())
+  baseId      String
+  base        Base       @relation(fields: [baseId], references: [id])
   name        String
-  long        String
-  lat         String
+  longitude   String
+  latitude    String
   description String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -68,14 +70,15 @@ model Request {
 }
 
 model Base {
-  id        String   @id @default(uuid())
-  name      String
-  abbreviation String?
-  state     String
-  long      String
-  lat       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(uuid())
+  name          String
+  abbreviation  String?
+  state         String
+  long          String
+  lat           String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  users     User[]
+  users         User[]
+  stations      Station[]
 }

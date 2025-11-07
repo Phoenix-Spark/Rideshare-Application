@@ -72,7 +72,6 @@ export async function getBaseInfo() {
   return{ base };
 }
 
-
 export async function updateUserInfo(
   userId: string,
   firstName?: string,

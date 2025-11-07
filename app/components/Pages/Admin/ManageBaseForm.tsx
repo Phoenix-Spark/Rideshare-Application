@@ -335,7 +335,6 @@ export default function ManageBaseForm({ base }: any) {
         </p>
       </div>
 
-      {/* Body */}
       <div className="px-6 pb-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -351,7 +350,6 @@ export default function ManageBaseForm({ base }: any) {
           />
         </div>
 
-        {/* Toggle confirmation switch */}
         <div className="flex items-center gap-3 mt-2">
           <button
             type="button"
@@ -374,7 +372,6 @@ export default function ManageBaseForm({ base }: any) {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
         <button
           type="button"

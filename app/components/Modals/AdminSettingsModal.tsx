@@ -10,7 +10,7 @@ import { AdminIcon } from "../Icons/AdminIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
 
-export default function AdminSettingsModal({ user, base }: any) {
+export default function AdminSettingsModal({ user, base, station }: any) {
   const [activeTab, setActiveTab] = useState("bases");
 
   const renderContent = () => {
@@ -26,8 +26,8 @@ export default function AdminSettingsModal({ user, base }: any) {
       case "stops":
         return (
           <div className="space-y-8">
-            <CreateStopForm />
-            <ManageStopForm />
+            <CreateStopForm base={base} />
+            <ManageStopForm station={station} base={base} />
           </div>
         );
 
