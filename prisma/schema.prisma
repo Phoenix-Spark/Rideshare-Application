@@ -58,21 +58,21 @@ model Station {
 }
 
 model Request {
-  id         String   @id @default(uuid())
-  userId     String?
-  status     String?  
-  pickupId   String?
-  pickedupAt DateTime?
-  dropoffId  String?
-  droppedOffAt String?
-  driverId   String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  
+  id           String         @id @default(uuid())
+  userId       String?
+  driverId     String?
+  pickupId     String?
+  dropoffId    String?
+  status       String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  pickedUpAt   DateTime?
+  droppedOffAt DateTime?
 
-  user       User?    @relation(fields: [userId], references: [id])
-  pickup     Station? @relation("PickupStation", fields: [pickupId], references: [id])
-  dropoff    Station? @relation("DropoffStation", fields: [dropoffId], references: [id])
+  user     User?    @relation(fields: [userId], references: [id])
+  driver   User?    @relation("DriverRequests", fields: [driverId], references: [id])
+  pickup   Station? @relation("PickupStation", fields: [pickupId], references: [id])
+  dropoff  Station? @relation("DropoffStation", fields: [dropoffId], references: [id])
 }
 
 model Base {
