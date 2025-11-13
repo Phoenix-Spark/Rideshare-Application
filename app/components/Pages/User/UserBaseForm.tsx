@@ -31,14 +31,17 @@ export default function UserBaseForm({ user, base }: any) {
           </select>
         </div>
 
-        {user?.baseId && user?.baseName && user?.baseState && (
-          <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
-            <span className="block text-sm text-gray-500 font-semibold mb-1">Current Assigned Base</span>
-            <span className="block text-gray-800 font-medium text-lg">
-              {user.baseName} ({user.baseState})
-            </span>
-          </div>
-        )}
+        {user?.base?.id && (
+  <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+    <span className="block text-sm text-gray-500 font-semibold mb-1">
+      Current Assigned Base
+    </span>
+    <span className="block text-gray-800 font-medium text-lg">
+      {user.base.name} ({user.base.state})
+    </span>
+  </div>
+)}
+
 
         <div className="absolute bottom-10 right-10">
           <ButtonControls />

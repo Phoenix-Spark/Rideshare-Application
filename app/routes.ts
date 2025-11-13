@@ -10,6 +10,6 @@ export default [
         route("settings", "./routes/settings/usersettings.tsx"),
         route("admin", "./routes/settings/adminsettings.tsx"),
     ]),
-    route("*", './routes/notfound.tsx')
+    route("*", './routes/notfound.tsx'),
 
 ] satisfies RouteConfig;

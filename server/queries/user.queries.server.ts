@@ -11,64 +11,64 @@ function generateRandomCode(length = 10) {
 }
 
 export async function getUserInfo(intent: string, userId: string) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phoneNumber: true,
-      isAdmin: true,
-      isDriver: true,
-      isPassenger: true,
-      isReset: true,
-      baseId: true,
-      base: {
-        select: {
-          id: true,
-          name: true,
-          state: true,
-        }
-      }
-    },
-  });
-
-  if (!user) return null;
-
   switch (intent) {
     case "dashboard":
-      return {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        isReset: user.isReset,
-        baseId: user.baseId,
-      };
+      return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          isAdmin: true,
+          isReset: true,
+          baseId: true,
+        },
+      });
+
     case "settings":
-      return {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        baseId: user?.base?.id,
-        baseName: user?.base?.name,
-        baseState: user?.base?.state,
-        isAdmin: user.isAdmin,
-        isDriver: user.isDriver,
-        isPassenger: user.isPassenger,
-      };
+      return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          phoneNumber: true,
+          isAdmin: true,
+          isDriver: true,
+          isPassenger: true,
+          base: {
+            select: {
+              id: true,
+              name: true,
+              state: true,
+            },
+          },
+        },
+      });
+
     case "admin":
-      return {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        isAdmin: user.isAdmin,
-      };
+      return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phoneNumber: true,
+          isAdmin: true,
+        },
+      });
+
+    case "requests":
+      return await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          baseId: true,
+        },
+      });
+
     default:
       return null;
   }

@@ -10,6 +10,7 @@ export async function createRequest(
       userId,
       pickupId,
       dropoffId,
+      status: "Pending",
     },
   });
   return request;
@@ -23,6 +24,10 @@ export async function getUserRequest(userId: string) {
     select: {
       id: true,
       createdAt: true,
+      status: true,
+      driverId: true,
+      pickedUpAt: true,
+      dropoffId: true,
       user: {
         select: {
           firstName: true,
@@ -52,10 +57,21 @@ export async function getUserRequest(userId: string) {
   return request;
 }
 
-export async function deleteRequest(id: string) {
-    const request = await prisma.request.delete({
-        where: { id },
-    });
+export async function updateRequest(id: string) {
+  const request = await prisma.request.updateMany({
+    where: { id },
+    data: {},
+  });
+  return request;
+}
 
-    return request;
+export async function cancelRequest(id: string) {
+  const request = await prisma.request.updateMany({
+    where: { id },
+    data: {
+      status: "Cancelled",
+    },
+  });
+
+  return request;
 }
