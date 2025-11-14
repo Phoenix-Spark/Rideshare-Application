@@ -3,6 +3,7 @@ import { BaseBoundIcon } from "../Icons/BaseBoundIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { NavigationIcon } from "../Icons/NavigationIcon";
 import LeftPanelRequestsForm from "./LeftPanelRequestsForm";
+import { MagnifyIcon } from "../Icons/MagnifyIcon";
 
 export default function LeftSideRidePanelForm({ user, station, requestInfo }: any) {
   const [fromLocation, setFromLocation] = useState("");
@@ -41,6 +42,9 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
           <Icon className="w-5 h-5" />
         </div>
+        <div className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" onClick={() => setShowMain(false)}>
+          <MagnifyIcon className="w-5 h-5" />
+        </div>
         <select
           name={name}
           value={value}
@@ -59,10 +63,20 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
       </div>
     </div>
   );
+  const [showMain, setShowMain] = useState(true)
 
   return (
     <>
-      <div className="absolute top-8 left-8 z-50 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+    {!showMain && 
+      <div className="absolute top-7 left-6 rounded-xl">
+        <div className="bg-linear-to-br from-blue-600 to-indigo-700 text-white flex rounded-xl items-center gap-3">
+          <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl" onClick={() => setShowMain(true)}>
+            <BaseBoundIcon className="w-6 h-6"/>
+          </div>
+        </div>
+      </div>
+    }
+      {showMain && <><div className="absolute top-0 left-0 md:top-8 md:left-8 z-50 w-screen md:w-96 h-screen md:h-fit bg-white md:rounded-2xl shadow-2xl md:border border-gray-100 overflow-hidden">
         <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white flex items-center gap-3">
           <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
             <BaseBoundIcon className="w-6 h-6" />
@@ -119,7 +133,7 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
         </div>
       </div>
 
-      <LeftPanelRequestsForm requestInfo={requestInfo}/>
+      <LeftPanelRequestsForm requestInfo={requestInfo}/></>}
     </>
   );
 }

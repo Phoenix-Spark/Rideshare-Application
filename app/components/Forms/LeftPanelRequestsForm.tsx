@@ -99,7 +99,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
       <div className="transition-all">
         {isCollapsed ? (
           <div
-            className="p-3 bg-gray-50 flex justify-between items-center cursor-pointer rounded-xl hover:shadow"
+            className=" p-3 bg-gray-50 flex justify-between items-center cursor-pointer rounded-xl hover:shadow"
             onClick={() => setExpanded(true)}
           >
             <p className="text-sm font-medium text-gray-900 truncate">
@@ -219,10 +219,10 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
       </div>
     );
   };
-
+  const [showRequests, setShowRequests] = useState(false);
   return (
-    <div className="absolute bottom-10 left-8 z-40 h-80 w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+    <div className={`absolute transition-all bottom-0 left-0 md:bottom-10 md:left-8 z-51 md:z-40 ${showRequests ? 'max-h-80' : ''} w-96 bg-white md:rounded-2xl shadow-xl border border-gray-100 overflow-hidden`} >
+      <div className="p-4 border-2 border-y-gray-200 md:border-b md:border-gray-100 flex items-center justify-between bg-gray-100" onClick={() => setShowRequests(!showRequests)}>
         <h3 className="text-sm font-semibold text-gray-700">Requests</h3>
         {requestInfo.length > 0 && (
           <>
@@ -240,8 +240,8 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
           </>
         )}
       </div>
-
-      <div className="max-h-64 overflow-y-auto p-4 space-y-3">
+      {showRequests &&
+      <div className="max-h-64 overflow-y-auto p-4 space-y-3 w-full">
         {sortedRequests.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-gray-400">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
@@ -254,7 +254,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <RequestItem key={request.id} request={request} />
           ))
         )}
-      </div>
+      </div>}
     </div>
   );
 }

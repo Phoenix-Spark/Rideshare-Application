@@ -61,15 +61,15 @@ export default function Dashboard({ user, station, requestInfo }: any) {
   return (
     <div className="relative w-full h-screen">
       <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 w-[90%] max-w-4xl">
+      {/* <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 w-[90%] max-w-4xl">
         <MiddlePanelForm user={user}/>
-      </div>
+      </div> */}
 
       <div className="absolute top-0 left-0 h-full z-10">
         <LeftSideRidePanelForm user={user} station={station} requestInfo={requestInfo}/>
       </div>
 
-      <div className="absolute top-0 right-0 h-full z-10">
+      <div className="hidden md:block absolute top-0 right-0 h-full z-10">
         <RightSideUserPanelForm user={user} />
       </div>
       <Outlet />
