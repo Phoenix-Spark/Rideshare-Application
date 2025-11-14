@@ -3,7 +3,7 @@ import LocationSelect from "../Input/LocationSelect";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { NavigationIcon } from "../Icons/NavigationIcon";
 
-export default function LeftSidePassengerForm({ user, station }: any) {
+export default function LeftSidePassengerForm({ user, station, setShowMain }: any) {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
 
@@ -40,6 +40,7 @@ export default function LeftSidePassengerForm({ user, station }: any) {
             excludeId=""
             icon={MapPinIcon}
             name="pickupId"
+            setShowMain={setShowMain}
           />
 
           <LocationSelect
@@ -50,6 +51,7 @@ export default function LeftSidePassengerForm({ user, station }: any) {
             excludeId={fromLocation}
             icon={NavigationIcon}
             name="dropoffId"
+            setShowMain={setShowMain}
           />
         </div>
 

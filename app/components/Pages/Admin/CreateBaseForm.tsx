@@ -62,11 +62,11 @@ export default function CreateBaseForm() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Longitude
+                Latitude
               </label>
               <input
-                name="longitude"
-                placeholder="e.g., -76.3604"
+                name="latitude"
+                placeholder="e.g., 37.0824"
                 required
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 
                            focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
@@ -74,11 +74,11 @@ export default function CreateBaseForm() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Latitude
+                Longitude
               </label>
               <input
-                name="latitude"
-                placeholder="e.g., 37.0824"
+                name="longitude"
+                placeholder="e.g., -76.3604"
                 required
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 
                            focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"

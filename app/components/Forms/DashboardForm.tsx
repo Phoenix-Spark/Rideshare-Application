@@ -9,6 +9,8 @@ export default function Dashboard({ user, station, accepted, activeRequests, req
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
 
+  console.log(station)
+
   useEffect(() => {
     if (mapInstanceRef.current) return;
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { BaseBoundIcon } from "../Icons/BaseBoundIcon";
 import LeftPanelPassengerRequestsForm from "./LeftPanelPassengerRequestsForm";
@@ -16,6 +16,7 @@ export default function LeftSideRidePanelForm({
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get("mode") || "passenger";
   const isDriverMode = mode === "driver";
+  const [showMain, setShowMain] = useState(true);
   const toggleMode = () => {
     setSearchParams({ mode: isDriverMode ? "passenger" : "driver" });
   };
@@ -25,9 +26,20 @@ export default function LeftSideRidePanelForm({
     }
   }, [searchParams, setSearchParams]);
 
+  console.log(isDriverMode)
+
   return (
     <>
-      <div className="absolute top-8 left-8 z-50 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+    {!showMain && 
+      <div className="absolute top-7 left-6 rounded-xl">
+        <div className="bg-linear-to-br from-blue-600 to-indigo-700 text-white flex rounded-xl items-center gap-3">
+          <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl" onClick={() => setShowMain(true)}>
+            <BaseBoundIcon className="w-6 h-6"/>
+          </div>
+        </div>
+      </div>
+    }
+    {showMain && <div className="absolute top-0 left-0 md:top-8 md:left-8 z-50 w-screen md:w-96 h-screen md:h-fit bg-white md:rounded-2xl shadow-2xl md:border border-gray-100 overflow-hidden">
         <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -63,7 +75,7 @@ export default function LeftSideRidePanelForm({
 
         <div className="p-6 bg-white">
           {!isDriverMode ? (
-            <LeftPanelPassengerForm user={user} station={station} />
+            <LeftPanelPassengerForm user={user} station={station} setShowMain={setShowMain}/>
           ) : (
             user?.isDriver && (
               <LeftPanelDriverForm
@@ -74,6 +86,7 @@ export default function LeftSideRidePanelForm({
           )}
         </div>
       </div>
+    }
 
       {!isDriverMode ? (
         <div className="absolute bottom-0">
@@ -81,7 +94,7 @@ export default function LeftSideRidePanelForm({
         </div>
       ) : (
         user?.isDriver && (
-          <div className="absolute bottom-0">
+          <div className="absolute bottom-0 w-screen">
             <LeftPanelDriverRequestForm accepted={accepted} />
           </div>
         )

@@ -106,19 +106,6 @@ export default function CreateStopForm({ base }: any) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Longitude
-              </label>
-              <input
-                name="longitude"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
-                required
-                placeholder="e.g., -76.3802"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Latitude
               </label>
               <input
@@ -127,6 +114,19 @@ export default function CreateStopForm({ base }: any) {
                 onChange={(e) => setLatitude(e.target.value)}
                 required
                 placeholder="e.g., 37.0701"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Longitude
+              </label>
+              <input
+                name="longitude"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                required
+                placeholder="e.g., -76.3802"
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
               />
             </div>

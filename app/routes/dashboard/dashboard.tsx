@@ -21,6 +21,7 @@ import DashboardForm from "~/components/Forms/DashboardForm";
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
   const user = await getUserInfo("dashboard", userId);
+  console.log(user)
   const station = await getStop(user?.baseId || "");
   const passenger = await getPassengerRequest(userId);
   const accepted = await getDriverRequest(userId);

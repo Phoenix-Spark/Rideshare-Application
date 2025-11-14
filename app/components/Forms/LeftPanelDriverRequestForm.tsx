@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 export default function LeftPanelDriverRequestForm({ accepted }: any) {
+  const [showRequests, setShowRequests] = useState(false);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -16,13 +19,13 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
   };
 
   return (
-    <div className="absolute bottom-8 left-8 z-40 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white">
+    <div className={`fixed md:absolute bottom-0 left-0 w-full transition-all md:bottom-10 md:left-8 z-51 md:z-40 md:w-96 bg-white md:rounded-2xl shadow-xl md:border border-gray-100 overflow-hidden`}>
+      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white" onClick={() => setShowRequests(!showRequests)}>
         <h3 className="text-lg font-bold">Active Rides</h3>
         <p className="text-indigo-100 text-sm">{accepted.length} ride{accepted.length !== 1 ? 's' : ''} in progress</p>
       </div>
 
-      <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
+      {showRequests && <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
         {accepted.length === 0 ? (
           <div className="text-center py-8">
             <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
@@ -120,7 +123,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
             </div>
           ))
         )}
-      </div>
+      </div>}
     </div>
   );
 }

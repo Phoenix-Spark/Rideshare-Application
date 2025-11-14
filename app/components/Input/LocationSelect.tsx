@@ -1,4 +1,5 @@
-import React from "react";
+import React, { type SetStateAction } from "react";
+import { MagnifyIcon } from "../Icons/MagnifyIcon";
 
 interface Option {
   id: string;
@@ -14,6 +15,7 @@ interface LocationSelectProps {
   excludeId?: string;
   icon?: React.ElementType;
   name: string;
+  setShowMain: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const LocationSelect: React.FC<LocationSelectProps> = ({
@@ -24,6 +26,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   excludeId,
   icon: Icon,
   name,
+  setShowMain,
 }) => {
   return (
     <div className="relative">
@@ -32,9 +35,14 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
       </label>
       <div className="relative">
         {Icon && (
+          <>
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
             <Icon className="w-5 h-5" />
           </div>
+          <div className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" onClick={() => setShowMain(false)}>
+            <MagnifyIcon className="w-5 h-5" />
+          </div>
+        </>
         )}
         <select
           name={name}
