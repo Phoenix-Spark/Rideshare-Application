@@ -83,12 +83,24 @@ useEffect(() => {
         popupDiv.style.padding = "8px";
         popupDiv.style.minWidth = "100px";
         popupDiv.style.textAlign = "center";
-        popupDiv.innerHTML = `<b>${location.name}</b><br/><small>${location.description}</small>`;
+        popupDiv.innerHTML = `
+            <b>${location.name}</b><br/>
+            <small>${location.description}</small><br/>
+            <button class="bg-blue-500 rounded-lg p-2 hover:bg-blue-400 text-white mt-2">Test</button>
+            `;
+        const button = popupDiv.querySelector("button");
+        if (button) {
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Button clicked!");
+          });
+        }
         
         // Add click handler directly to the div
         popupDiv.addEventListener("click", (e) => {
           e.stopPropagation(); // Prevent event bubbling
-          
+
           setSearchParams((prev) => {
             const params = new URLSearchParams(prev);
             const dest = params.get("showmap")
@@ -100,6 +112,16 @@ useEffect(() => {
     
         // Bind the popup with the DOM element
         marker.bindPopup(popupDiv);
+
+        marker.on('click', function() {
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.flyTo(
+                [location.latitude, location.longitude], 
+                19,
+                { duration: 2 }
+              );
+            }
+          });
 
         markersRef.current.push(marker);
       });
