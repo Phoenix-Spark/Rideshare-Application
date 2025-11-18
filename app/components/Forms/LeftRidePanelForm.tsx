@@ -118,13 +118,13 @@ export default function LeftSideRidePanelForm({
               
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">Base Bound</h1>
-                <p className="text-blue-100 text-sm">{!isDriverMode ? 'Request Your Ride': 'Your Driving'}</p>
+                <p className="text-blue-100 text-sm">Request Your Ride</p>
               </div>
             </div>
 
             {user?.isDriver && (
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-white hidden sm:inline">
+                <span className="text-sm font-medium text-white  sm:inline">
                   {isDriverMode ? "Driver" : "Passenger"}
                 </span>
                 <button
