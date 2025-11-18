@@ -36,40 +36,41 @@ export default function MapDisplay({ user, station }: any) {
 
     mapInstanceRef.current = map;
 
+    map.on("click", (e) => {
+      markersRef.current.forEach((marker) => {
+        const popup = marker.getPopup();
+        if (popup && popup.isOpen()) {
+          popup.remove();
+        }
+      });
+    });
+
     return () => {
       map.remove();
       mapInstanceRef.current = null;
     };
   }, [user.base.long, user.base.lat]);
 
-  // Add markers for stations
   useEffect(() => {
     if (!mapInstanceRef.current || !station) return;
 
-    // Clear existing markers
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
-    // Add new markers
     station.forEach((loc: any) => {
       const popup = new maplibregl.Popup({ offset: 25 }).setHTML(
-        `<div class="p-2">
-          <h3 class="font-bold">${loc.name}</h3>
-          <p class="text-sm">${loc.description || ""}</p>
-        </div>`
+        `
+        <div class="text-center p-2 text-black">
+          <h3 class="text-lg font-bold">${loc.name}</h3>
+          <p class="max-w-40 text-md">${loc.description || ""}</p>
+        </div>
+        `
       );
 
       const marker = new maplibregl.Marker({ color: "#ef4444" })
         .setLngLat([parseFloat(loc.longitude), parseFloat(loc.latitude)])
         .setPopup(popup)
         .addTo(mapInstanceRef.current!);
-
-      // Add click handler for selection
-      marker.getElement().addEventListener("click", () => {
-        console.log("Selected station:", loc);
-        // You can add your selection logic here
-        // For example, call a callback function or update state
-      });
 
       markersRef.current.push(marker);
     });
