@@ -86,29 +86,29 @@ useEffect(() => {
         popupDiv.innerHTML = `
             <b>${location.name}</b><br/>
             <small>${location.description}</small><br/>
-            <button class="bg-blue-500 rounded-lg p-2 hover:bg-blue-400 text-white mt-2">Test</button>
+            <button class="bg-blue-500 rounded-lg p-2 text-white mt-2">Select this location</button>
             `;
         const button = popupDiv.querySelector("button");
         if (button) {
           button.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Button clicked!");
+            setSearchParams((prev) => {
+                  const params = new URLSearchParams(prev);
+                  const dest = params.get("showmap")
+                  params.set(dest === "pickup" ? "pickupId" : "dropoffId", location.id);
+                  params.delete("showmap")
+                  return params;
+                });
           });
         }
         
         // Add click handler directly to the div
-        popupDiv.addEventListener("click", (e) => {
-          e.stopPropagation(); // Prevent event bubbling
+      //   popupDiv.addEventListener("click", (e) => {
+      //     e.stopPropagation(); // Prevent event bubbling
 
-          setSearchParams((prev) => {
-            const params = new URLSearchParams(prev);
-            const dest = params.get("showmap")
-            params.set(dest === "pickup" ? "pickupId" : "dropoffId", location.id);
-            params.delete("showmap")
-            return params;
-          });
-        });
+          
+      //   });
     
         // Bind the popup with the DOM element
         marker.bindPopup(popupDiv);
