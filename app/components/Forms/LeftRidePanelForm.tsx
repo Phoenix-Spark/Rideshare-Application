@@ -132,12 +132,12 @@ export default function LeftSideRidePanelForm({
       )}
       
       {!isDriverMode ? (
-        <div className="absolute bottom-0">
+        <div className="absolute bottom-5">
           <LeftPanelPassengerRequestsForm requestInfo={requestInfo} />
         </div>
       ) : (
         user?.isDriver && (
-          <div className="absolute bottom-0 w-screen">
+          <div className="absolute bottom-5 w-screen">
             <LeftPanelDriverRequestForm accepted={accepted} />
           </div>
         )

@@ -116,8 +116,12 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <div className="flex items-center gap-2">{getStatusBadge()}</div>
           </div>
         ) : (
-          <Form method="post" action="/dashboard?mode=passenger" key={request.id}
-            className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
+          <Form
+            method="post"
+            action="/dashboard?mode=passenger"
+            key={request.id}
+            className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow"
+          >
             <input type="hidden" name="intent" value="cancelRequest" />
             <input type="hidden" name="requestId" value={request.id} />
 
@@ -235,12 +239,18 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
   };
 
   return (
-    <div className={`fixed md:absolute transition-all bottom-0 left-0 md:bottom-10 md:left-8 z-51 md:z-40 ${showRequests ? 'max-h-80' : ' '} w-full md:w-96 bg-white md:rounded-2xl shadow-xl md:border border-gray-100 overflow-hidden`}>
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white" onClick={() => setShowRequests(!showRequests)}>
-        <h3 className="text-lg font-semibold ">Requests</h3>
-        {requestInfo.length > 0 && (
-          <>
-            {requestInfo.some(
+    <div
+      className={`fixed md:absolute transition-all bottom-0 left-0 md:bottom-10 md:left-8 z-51 md:z-40 ${showRequests ? "max-h-80" : " "} w-full md:w-96 bg-white md:rounded-2xl shadow-xl md:border border-gray-100 overflow-hidden`}
+    >
+      <div
+        className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white flex"
+        onClick={() => setShowRequests(!showRequests)}
+      >
+        <div className="flex justify-between items-center gap-x-63">
+          <h3 className="text-lg font-semibold">Requests</h3>
+
+          {requestInfo.length > 0 &&
+            requestInfo.some(
               (r: any) => r.status === "Accepted" || r.status === "Pending"
             ) && (
               <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
@@ -252,24 +262,25 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                 }
               </span>
             )}
-          </>
-        )}
+        </div>
       </div>
 
-      {showRequests && <div className="max-h-64 overflow-y-auto p-4 space-y-3">
-        {sortedRequests.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <ClockIcon className="w-6 h-6" />
+      {showRequests && (
+        <div className="max-h-64 overflow-y-auto p-4 space-y-3">
+          {sortedRequests.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                <ClockIcon className="w-6 h-6" />
+              </div>
+              <p className="text-sm">No requests</p>
             </div>
-            <p className="text-sm">No requests</p>
-          </div>
-        ) : (
-          sortedRequests.map((request) => (
-            <RequestItem key={request.id} request={request} />
-          ))
-        )}
-      </div>}
+          ) : (
+            sortedRequests.map((request) => (
+              <RequestItem key={request.id} request={request} />
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

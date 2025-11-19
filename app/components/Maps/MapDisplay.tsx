@@ -9,7 +9,16 @@ export default function MapDisplay({ user, station }: any) {
 
   const longitude = user?.base?.long ? parseFloat(user.base.long) : 0;
   const latitude = user?.base?.lat ? parseFloat(user.base.lat) : 0;
-  const zoom = longitude === 0 && latitude === 0 ? 1 : 12;
+
+  const baseZoom = longitude === 0 && latitude === 0 ? 1 : 12;
+  const minZoom = 8;
+  const maxZoom = 24;
+
+  const delta = 0.07;
+  const bounds: [[number, number], [number, number]] = [
+    [longitude - delta, latitude - delta],
+    [longitude + delta, latitude + delta],
+  ];
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -35,7 +44,10 @@ export default function MapDisplay({ user, station }: any) {
         ],
       },
       center: [longitude, latitude],
-      zoom: zoom,
+      zoom: baseZoom,
+      minZoom,
+      maxZoom,
+      maxBounds: bounds,
     });
 
     mapInstanceRef.current = map;
@@ -43,9 +55,7 @@ export default function MapDisplay({ user, station }: any) {
     map.on("click", () => {
       markersRef.current.forEach((marker) => {
         const popup = marker.getPopup();
-        if (popup && popup.isOpen()) {
-          popup.remove();
-        }
+        if (popup && popup.isOpen()) popup.remove();
       });
     });
 
@@ -62,11 +72,11 @@ export default function MapDisplay({ user, station }: any) {
     markersRef.current = [];
 
     station.forEach((loc: any) => {
-      const popup = new maplibregl.Popup({ 
+      const popup = new maplibregl.Popup({
         offset: 25,
         closeButton: false,
         closeOnClick: false,
-       }).setHTML(
+      }).setHTML(
         `
         <div class="text-center p-2 text-black">
           <h3 class="text-lg font-bold">${loc?.name || ""}</h3>
@@ -90,5 +100,4 @@ export default function MapDisplay({ user, station }: any) {
   }, [station]);
 
   return <div ref={mapRef} className="w-screen h-screen overflow-hidden" />;
-
 }

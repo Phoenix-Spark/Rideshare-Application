@@ -13,7 +13,7 @@ export default function Dashboard({ user, station, accepted, activeRequests, req
         <MiddlePanelForm user={user}/>
       </div>
 
-      <div className="absolute top-0 left-0 h-full z-10">
+      <div className="absolute top-8 left-0 h-full z-10">
         <LeftSideRidePanelForm 
           user={user} 
           station={station}
@@ -24,7 +24,7 @@ export default function Dashboard({ user, station, accepted, activeRequests, req
         />
       </div>
 
-      <div className="hidden md:block absolute top-8 right-8 h-full md:z-10">
+      <div className="hidden md:block absolute top-16 right-8 h-full md:z-10">
         <RightSideUserPanelForm user={user} />
       </div>
       <Outlet />

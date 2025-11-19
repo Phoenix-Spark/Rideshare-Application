@@ -66,9 +66,9 @@ export async function getDriverRequest(userId: string) {
       },
       createdAt: true,
       status: true,
-      
       pickedUpAt: true,
       dropoffId: true,
+      acceptedAt: true,
       pickup: {
         select: {
           name: true,
