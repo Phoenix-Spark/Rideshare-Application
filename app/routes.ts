@@ -11,5 +11,6 @@ export default [
         route("admin", "./routes/settings/adminsettings.tsx"),
     ]),
     route("*", './routes/notfound.tsx'),
+    route("available", "../api/rides/available.ts")
 
 ] satisfies RouteConfig;

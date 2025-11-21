@@ -1,3 +1,5 @@
+
+import { notifyDriversOfNewRide } from "server/websocket.server";
 import { prisma } from "../db.server";
 
 export async function createRequest(
@@ -15,6 +17,8 @@ export async function createRequest(
       status: "Pending",
     },
   });
+
+  notifyDriversOfNewRide(request.id, pickupId)
   return request;
 }
 
@@ -193,6 +197,7 @@ export async function pickupRequest(requestId: string) {
       pickedUpAt: new Date(Date.now()),
     },
   });
+  // notifyDriversOfNewRide(requestId, requestId)
   return request;
 }
 
