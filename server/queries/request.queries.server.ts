@@ -1,5 +1,5 @@
 
-import { notifyDriversOfNewRide } from "server/websocket.server";
+import { notifyDriverOfCancelation, notifyDriversOfNewRide, notifyPassengerOfDropoff, notifyPassengerOfPickup, notifyRiderOfConfirmation } from "server/websocket.server";
 import { prisma } from "../db.server";
 
 export async function createRequest(
@@ -36,6 +36,7 @@ export async function getActiveRequest(baseId: string) {
           firstName: true,
           lastName: true,
           phoneNumber: true,
+          id: true,
         },
       },
       pickup: {
@@ -66,6 +67,7 @@ export async function getDriverRequest(userId: string) {
           firstName: true,
           lastName: true,
           phoneNumber: true,
+          id: true,
         },
       },
       createdAt: true,
@@ -164,31 +166,37 @@ export async function updateRequest(id: string) {
   return request;
 }
 
-export async function cancelRequest(id: string) {
+export async function cancelRequest(id: string, driverId: string) {
   const request = await prisma.request.updateMany({
     where: { id },
     data: {
       status: "Cancelled",
     },
   });
-
+  console.log('id: ', id, ' driverId; ', driverId)
+  notifyDriverOfCancelation(id, driverId);
   return request;
 }
 
-export async function acceptRequest(requestId: string, userId: string) {
+export async function acceptRequest(requestId: string, driverId: string, userId: string) {
   const request = await prisma.request.updateMany({
     where: { id: requestId },
     data: {
-      driverId: userId,
+      driverId: driverId,
       status: 'Accepted',
       updatedAt: new Date(Date.now()),
       acceptedAt: new Date(Date.now()),
     },
   });
+
+  console.log('paged: ', userId)
+
+  notifyRiderOfConfirmation(requestId, userId)
   return request;
 }
 
-export async function pickupRequest(requestId: string) {
+export async function pickupRequest(requestId: string, userId: string) {
+  console.log(requestId, userId)
   const request = await prisma.request.updateMany({
     where: { id: requestId },
     data: {
@@ -197,11 +205,12 @@ export async function pickupRequest(requestId: string) {
       pickedUpAt: new Date(Date.now()),
     },
   });
+  notifyPassengerOfPickup(requestId, userId)
   // notifyDriversOfNewRide(requestId, requestId)
   return request;
 }
 
-export async function dropOffRequest(requestId: string) {
+export async function dropOffRequest(requestId: string, userId: string) {
   const request = await prisma.request.updateMany({
     where: { id: requestId },
     data: {
@@ -210,5 +219,6 @@ export async function dropOffRequest(requestId: string) {
       droppedOffAt: new Date(Date.now()),
     },
   });
+  notifyPassengerOfDropoff(requestId, userId)
   return request;
 }

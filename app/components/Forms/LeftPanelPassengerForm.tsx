@@ -16,7 +16,7 @@ export default function LeftSidePassengerForm({ user, station, params }: any) {
 
   return (
     <Form method="post" >
-      <input type="hidden" name="intent" value="requestPickup" />
+      <input type="hidden" name="intent" value="createRequest" />
       <input type="hidden" name="userId" value={user?.id} />
       <input type="hidden" name="baseId" value={user?.base?.id} />
 

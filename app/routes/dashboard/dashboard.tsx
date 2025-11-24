@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   useLoaderData,
   type LoaderFunctionArgs,
@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const passenger = await getPassengerRequest(userId);
   const accepted = await getDriverRequest(userId);
   const activeRequests = await getActiveRequest(user?.base?.id);
-
+  console.log('id from loader: ', user?.id)
   return { user, station, accepted, activeRequests, requestInfo: passenger };
 }
 
@@ -44,50 +44,95 @@ export async function action({ request }: ActionFunctionArgs) {
   const baseId = (formData.get("baseId") as string) || undefined;
   const pickupId = (formData.get("pickupId") as string) || undefined;
   const dropoffId = (formData.get("dropoffId") as string) || undefined;
-
-  if (intent === "requestPickup") {
+  console.log('form_data: ',formData)
+  if (intent === "createRequest") {
     createRequest(userId!, baseId!, pickupId!, dropoffId!);
   }
   if (intent === "cancelRequest") {
-    cancelRequest(requestId!);
+    cancelRequest(requestId!, driverId!);
   }
   if (intent === "acceptRequest") {
-    acceptRequest(requestId!, driverId!);
+    acceptRequest(requestId!, driverId! , userId!);
   }
   if (intent === "pickupRequest") {
-    pickupRequest(requestId!);
-    // notifyDriversOfNewRide(requestId!, pickupId!)
+    pickupRequest(requestId!, userId!);
   }
   if (intent === "dropOffRequest") {
-    dropOffRequest(requestId!);
+    dropOffRequest(requestId!, userId!);
   }
 }
 
 export default function Dashboard() {
   const { user, station, accepted, activeRequests, requestInfo } =
-    useLoaderData<typeof loader>();
+  useLoaderData<typeof loader>();
+const revalidate = useRevalidator();
+const { isConnected, messages, sendMessage } = useWebSocket(user?.id);
+const { rideData } = useRideNotifications(user?.id);
+const processedRideIds = useRef(new Set<string>());
+const processedAcceptedRides = useRef(new Set<string>());
+const processedCancelledRides = useRef(new Set<string>());
+const processedPickedUpRides = useRef(new Set<string>());
+const processedDroppedOffRides = useRef(new Set<string>());
+
+useEffect(() => {
+  const newRideMessages = messages.filter(
+    m => m.type === "new_ride_request" && !processedRideIds.current.has(m.rideId)
+  );
   
-  const revalidate = useRevalidator();
+  const acceptMessages = messages.filter(
+    m => m.type === "accept_ride_request" && !processedAcceptedRides.current.has(m.rideId)
+  );
+  
+  const cancelledMessages = messages.filter(
+    m => m.type === "user_cancelled_request" && !processedCancelledRides.current.has(m.rideId)
+  );
 
-  const {isConnected, messages, sendMessage} = useWebSocket(user?.id)
-  const { rideData } = useRideNotifications(user?.id);
+  const pickedUpMessages = messages.filter(
+    m => m.type === "user_picked_up" && !processedPickedUpRides.current.has(m.rideId)
+  );
 
+  const droppedOffMessages = messages.filter(
+    m => m.type === "user_dropped_off" && !processedDroppedOffRides.current.has(m.rideId)
+  );
 
-  useEffect(() => {
-      if(rideData){
-        revalidate.revalidate()
-      }
-  }, [rideData])
+  console.log('after filter - new:', newRideMessages.length, 'accepted:', acceptMessages.length);
+  console.log('all messages ', messages)
+  
+  if (newRideMessages.length > 0 && rideData) {
+    console.log('New rides detected:', newRideMessages.length);
+    newRideMessages.forEach(m => processedRideIds.current.add(m.rideId));
+    revalidate.revalidate();
+  }
+  
+  if (acceptMessages.length > 0) {
+    console.log('Accepted rides:', acceptMessages.length);
+    acceptMessages.forEach(m => processedAcceptedRides.current.add(m.rideId));
+    revalidate.revalidate();
+  }
+
+  if( cancelledMessages.length > 0){
+    cancelledMessages.forEach(m => processedCancelledRides.current.add(m.rideId));
+    revalidate.revalidate();
+  }
+  if( pickedUpMessages.length > 0){
+    pickedUpMessages.forEach(m => processedPickedUpRides.current.add(m.rideId));
+    revalidate.revalidate();
+  }
+  if( droppedOffMessages.length > 0){
+    droppedOffMessages.forEach(m => processedDroppedOffRides.current.add(m.rideId));
+    revalidate.revalidate();
+  }
+}, [messages, rideData, revalidate]);
 
   return (
     <div>
-      <div className="absolute bg-red-500 z-60">
+      {/* <div className="absolute bg-red-500 z-60">
         <div>Status: {isConnected ? 'Connected': 'Disconnected'}</div>
         <button className="hover:bg-red-300" onClick={() => {console.log('sent'); sendMessage({ type: 'ping'})}} >Send Message</button>
         <div>Messages:
           {messages && messages.length > 0 && <>{messages.map(message =><p>{message.type}: {message.timestamp}</p>)}</>}
         </div>
-      </div>
+      </div> */}
       <MapDisplay
         user={user} 
         station={station} 

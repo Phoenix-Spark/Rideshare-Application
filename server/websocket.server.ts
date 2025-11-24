@@ -84,6 +84,7 @@ export function broadcastToUser(userId: string, data: any) {
   const userClients = clients.get(userId);
   if (userClients) {
     const message = JSON.stringify(data);
+    console.log('message: ', message)
     userClients.forEach((client) => {
       if (client.readyState === 1) {
         try {
@@ -99,10 +100,10 @@ export function broadcastToUser(userId: string, data: any) {
 export function broadcastToAll(data: any) {
   const wss = getWss();
   
-  console.log("data: ", data);
-  console.log("wss: ", wss);
-  console.log("🔴 broadcastToAll called, wss is:", wss ? "SET" : "NULL");
-  console.log("🔴 wss.clients count:", wss?.clients?.size || 0);
+  // console.log("data: ", data);
+  // console.log("wss: ", wss);
+  // console.log("🔴 broadcastToAll called, wss is:", wss ? "SET" : "NULL");
+  // console.log("🔴 wss.clients count:", wss?.clients?.size || 0);
   
   if (!wss) {
     console.warn("⚠️ WebSocket server not available, skipping broadcast");
@@ -129,4 +130,25 @@ export function notifyDriversOfNewRide(rideId: string, pickupLocation: string) {
     rideId: rideId,
     pickupLocation: pickupLocation
   });
+}
+
+export function notifyRiderOfConfirmation(rideId: string, userId: string){
+  broadcastToUser(userId, {rideId: rideId, confirm: true, type: "accept_ride_request"})
+}
+
+export function notifyDriverOfCancelation(rideId: string, userId: string){
+  console.log('driverId: ', userId)
+  broadcastToUser(userId, {
+    type: "user_cancelled_request",
+    rideId: rideId,
+  })
+}
+
+export function notifyPassengerOfPickup(requestId: string, userId: string){
+  console.log('request: ', requestId, ' userId: ', userId);
+  broadcastToUser(userId, {type: "user_picked_up", rideId: requestId})
+}
+
+export function notifyPassengerOfDropoff(requestId: string, userId: string){
+  broadcastToUser(userId, {type: "user_dropped_off", rideId: requestId})
 }

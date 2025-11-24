@@ -120,6 +120,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
                         value="pickupRequest"
                       />
                       <input type="hidden" name="requestId" value={ride.id} />
+                      <input type="hidden" name="userId" value={ride.user.id}/>
                       <button
                         type="submit"
                         disabled={isPickupSubmitting}
@@ -145,6 +146,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
                         value="dropOffRequest"
                       />
                       <input type="hidden" name="requestId" value={ride.id} />
+                      <input type="hidden" name="userId" value={ride.user.id}/>
                       <button
                         type="submit"
                         disabled={isDropoffSubmitting}

@@ -4,6 +4,7 @@ import { MapPinIcon } from "../Icons/MapPinIcon";
 import { NavigationIcon } from "../Icons/NavigationIcon";
 import LeftPanelRequestsForm from "./LeftPanelRequestsForm";
 import { MagnifyIcon } from "../Icons/MagnifyIcon";
+import { Form } from "react-router";
 
 export default function LeftSideRidePanelForm({ user, station, requestInfo }: any) {
   const [fromLocation, setFromLocation] = useState("");
@@ -88,8 +89,8 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
         </div>
 
         <div className="p-6">
-          <form method="post" action="/dashboard">
-            <input type="hidden" name="intent" value="requestPickup" />
+          <Form method="post" action="/dashboard">
+            <input type="hidden" name="intent" value="createRequest" />
             <input type="hidden" name="userId" value={user?.id} />
 
             <div className="space-y-4 mb-6 text-gray-700">
@@ -129,7 +130,7 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
                 {getDisabledReason()}
               </p>
             )}
-          </form>
+          </Form>
         </div>
       </div>
 

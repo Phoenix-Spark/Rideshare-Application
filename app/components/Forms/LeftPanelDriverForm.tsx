@@ -6,6 +6,8 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
   const isSubmitting = navigation.state === "submitting";
   const submittingRequestId = navigation.formData?.get("requestId");
 
+  console.log(activeRequests)
+
   return (
     <div className="max-h-[500px] overflow-y-auto">
       {activeRequests.length === 0 ? (
@@ -62,6 +64,7 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
               <input type="hidden" name="intent" value="acceptRequest" />
               <input type="hidden" name="requestId" value={request.id} />
               <input type="hidden" name="driverId" value={user.id} />
+              <input type="hidden" name="userId" value={request.user.id}/>
               <div className="bg-gray-50 rounded-xl p-4 mb-4 shadow-md hover:shadow-md transition">
                 <div className="grid grid-cols-2 gap-4 items-start">
                   <div>

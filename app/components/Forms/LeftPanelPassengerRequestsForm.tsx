@@ -124,6 +124,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
           >
             <input type="hidden" name="intent" value="cancelRequest" />
             <input type="hidden" name="requestId" value={request.id} />
+            <input type="hidden" name="driverId" value={request.driverId} />
 
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
