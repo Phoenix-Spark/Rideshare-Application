@@ -2,6 +2,7 @@ import { prisma } from "../db.server";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(
+  inviteCode: string | null,
   firstName: string,
   lastName: string,
   email: string,
@@ -9,11 +10,48 @@ export async function registerUser(
   password: string,
 ) {
   const hashedPassword = await bcrypt.hash(password, 10);
+
   const existingAdmin = await prisma.user.findFirst({
     where: { isAdmin: true },
   });
-
   const isAdmin = existingAdmin ? false : true;
+
+  let inviteId: string | null = null;
+
+  if (inviteCode) {
+    const invite = await prisma.invite.findFirst({
+      where: {
+        code: inviteCode,
+        email,
+        isActive: true,
+      },
+      select: { id: true },
+    });
+
+    if (!invite) {
+      return { error: "Invalid invite code" };
+    }
+
+    inviteId = invite.id;
+  } else {
+    const allowedDomains = [
+      "@us.af.mil",
+      "@army.mil",
+      "@mail.mil",
+      "@us.navy.mil",
+      "@uscg.mil",
+      "@usmc.mil",
+      "@spaceforce.mil",
+    ];
+
+    const emailLower = email.toLowerCase();
+    const isMilitaryEmail = allowedDomains.some(domain => emailLower.endsWith(domain));
+
+    if (!isMilitaryEmail) {
+      return { error: "Only U.S. military email addresses are allowed without a valid invite code" };
+      
+    }
+  }
 
   try {
     const user = await prisma.user.create({
@@ -24,14 +62,18 @@ export async function registerUser(
         phoneNumber,
         password: hashedPassword,
         isAdmin,
+        isInvite: !!inviteId,
+        inviteId: inviteId,
+        inviteCode: inviteId ? inviteCode : null,
       },
     });
+
     return user;
   } catch (error: any) {
     if (error.code === "P2002") {
-      throw new Error("Email is already in use");
+      return { error: "Email is already in use" };
     }
-    throw error;
+    return {error: "Something went wrong" };
   }
 }
 

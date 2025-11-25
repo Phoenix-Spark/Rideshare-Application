@@ -1,64 +1,34 @@
 import { useState } from "react";
-import { Link } from "react-router"; // use react-router-dom
+import { Form, useActionData } from "react-router";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  carrier: string;
-  password: string;
-}
-
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    carrier: "",
-    password: "",
-  });
+  const [useInvite, setUseInvite] = useState(false);
+  const actionData = useActionData<{ error?: string }>();
 
-  const formatPhoneNumber = (value: string) => {
-    const digits = value.replace(/\D/g, "");
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "phoneNumber" ? formatPhoneNumber(value) : value,
-    }));
-  };
+  const fields = [
+    { label: "First Name", name: "firstName", type: "text", placeholder: "John" },
+    { label: "Last Name", name: "lastName", type: "text", placeholder: "Doe" },
+    { label: "Email Address", name: "email", type: "email", placeholder: "you@example.com" },
+    { label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "(123) 456-7890", maxLength: 14 },
+  ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-40 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl " />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30 overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative bg-white rounded-b-3xl h-screen md:h-fit shadow-xl md:border-l md:border-b md:border-r border-gray-100 p-10 w-full max-w-[550px]">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 " />
+      <div className="relative bg-white rounded-3xl shadow-xl border border-gray-100 w-full max-w-[550px] p-10 flex flex-col items-center">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 rounded-t-full" />
 
-        <div className="mb-8 md:text-center">
-          <div className="flex items-start md:items-center md:justify-center gap-4 md:gap-0 md:flex-col">
-            <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl md:mb-4 shadow-lg shadow-blue-500/30 flex-shrink-0">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+        <div className="mb-8 text-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/30">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -67,120 +37,110 @@ export default function Register() {
                 />
               </svg>
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-xl md:text-3xl font-bold text-gray-900 md:mb-2">
-                Create Account
-              </h1>
-              <p className="text-gray-500 text-sm">
-                Join Base Bound to start your secure rides
-              </p>
+            <div className="flex flex-col text-gray-700 text-sm gap-1">
+              <span className="text-3xl font-bold text-gray-900">Create Account</span>
+              <span className="text-gray-500">Join Base Bound to start your secure rides.</span>
+              <span className="text-gray-500">Enter your email and invite code to join.</span>
             </div>
           </div>
         </div>
-        {/* Form */}
-        <form method="POST" action="/register" className="space-y-5">
-          {[
-            {
-              label: "First Name",
-              name: "firstName",
-              type: "text",
-              placeholder: "John",
-            },
-            {
-              label: "Last Name",
-              name: "lastName",
-              type: "text",
-              placeholder: "Doe",
-            },
-            {
-              label: "Email Address",
-              name: "email",
-              type: "email",
-              placeholder: "you@example.com",
-            },
-            {
-              label: "Phone Number",
-              name: "phoneNumber",
-              type: "tel",
-              placeholder: "(123) 456-7890",
-              maxLength: 14,
-            },
-          ].map((field) => (
-            <div key={field.name}>
-              <label
-                className="block text-sm font-semibold text-gray-700 mb-2"
-                htmlFor={field.name}
-              >
-                {field.label}
-              </label>
-              <input
-                type={field.type}
-                id={field.name}
-                name={field.name}
-                value={formData[field.name as keyof FormData]}
-                onChange={handleChange}
-                placeholder={field.placeholder}
-                maxLength={field.maxLength}
-                required
-                className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
-              />
-            </div>
-          ))}
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••••••••••"
-                required
-                className="w-full px-4 pr-12 py-3.5 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
-              />
+        <div className="w-full flex justify-center">
+          <Form method="POST" action="/register" className="w-full max-w-md space-y-5">
+
+            {actionData?.error && (
+              <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md text-red-700">
+                {actionData.error}
+              </div>
+            )}
+
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">Sign up with Invite Code</span>
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setUseInvite(!useInvite)}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 focus:outline-none ${
+                  useInvite ? "bg-blue-600" : "bg-gray-300"
+                }`}
               >
-                {showPassword ? (
-                  <EyeClosedIcon className="size-5" />
-                ) : (
-                  <EyeOpenIcon className="size-5" />
-                )}
+                <span
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    useInvite ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
               </button>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
-          >
-            Create Account
-          </button>
-        </form>
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                useInvite ? "max-h-40 opacity-100 mt-0" : "max-h-0 opacity-0 mt-0"
+              }`}
+            >
+              {useInvite && (
+                <div className="mt-3">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="inviteCode">
+                    Invite Code
+                  </label>
+                  <input
+                    type="text"
+                    id="inviteCode"
+                    name="inviteCode"
+                    placeholder="Enter invite code"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
+                  />
+                </div>
+              )}
+            </div>
 
-        <p className="text-sm text-center text-gray-600 mt-4 md:mt-8">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-          >
-            Sign In
-          </Link>
-        </p>
-      </div>
+            {fields.map((field) => (
+              <div key={field.name}>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor={field.name}>
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  id={field.name}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  maxLength={field.maxLength}
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
+                />
+              </div>
+            ))}
 
-      <div className="absolute bottom-6 text-center text-sm text-gray-500">
-        <p>Secured Shared Rides</p>
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  placeholder="••••••••••••••••"
+                  required
+                  className="w-full px-4 pr-12 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeClosedIcon className="size-5" /> : <EyeOpenIcon className="size-5" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+            >
+              Create Account
+            </button>
+          </Form>
+        </div>
       </div>
     </div>
   );

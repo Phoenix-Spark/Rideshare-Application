@@ -33,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const passenger = await getPassengerRequest(userId);
   const accepted = await getDriverRequest(userId);
   const activeRequests = await getActiveRequest(user?.base?.id);
-  console.log('id from loader: ', user?.id)
+
   return { user, station, accepted, activeRequests, requestInfo: passenger };
 }
 

@@ -32,6 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const description   = formData.get("description") as string || undefined;
 
   const userId        = formData.get("userId") as string;
+  const inviteCode    = formData.get("inviteCode") as string || undefined;
   const firstName     = formData.get("firstName") as string || undefined;
   const lastName      = formData.get("lastName") as string || undefined;
   const email         = formData.get("email") as string || undefined;
@@ -61,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return deleteStop(id!)
   }
   if (intent === "createUser") {
-    return registerUser(firstName!, lastName!, email!, phoneNumber!, password!)
+    return registerUser(inviteCode!, firstName!, lastName!, email!, phoneNumber!, password!)
   }
   if (intent === "updateUser") {
     return updateUserInfoAdmin({ userId, firstName, lastName, email, phoneNumber, isAdmin, isDriver, isPassenger, isReset })

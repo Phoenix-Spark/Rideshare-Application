@@ -16,20 +16,56 @@ import UserProfileForm from "../Pages/User/UserProfileForm";
 import UserInviteForm from "../Pages/User/UserInviteForm";
 import { KeyIcon } from "../Icons/KeyIcon";
 
-export default function UserSettingsModal({ user, base, vehicles, invite }: any) {
+export default function UserSettingsModal({
+  user,
+  base,
+  vehicles,
+  invite,
+}: any) {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
   const [selectedTab, setSelectedTab] = useState(tabParam || "profile");
 
   const tabs = [
-    { label: "Profile",      name: "profile",      icon: <UserIcon className="size-6" /> },
-    { label: "Permissions",  name: "permissions",  icon: <LockIcon className="size-6" /> },
-    { label: "Base",         name: "base",         icon: <BaseIcon className="size-6" /> },
-    { label: "Vehicles",     name: "vehicles",     icon: <VehicleIcon className="size-6" /> },
-    { label: "Security",     name: "security",     icon: <ShieldIcon className="size-6" /> },
-    { label: "Invites",      name: "invites",      icon: <KeyIcon className="size-6" /> },
-    { label: "Deactivation", name: "deactivation", icon: <WarningIcon className="size-6" /> },
-  ];
+    {
+      label: "Profile",
+      name: "profile",
+      icon: <UserIcon className="size-6" />,
+    },
+    {
+      label: "Permissions",
+      name: "permissions",
+      icon: <LockIcon className="size-6" />,
+    },
+    { label: "Base", name: "base", icon: <BaseIcon className="size-6" /> },
+    {
+      label: "Vehicles",
+      name: "vehicles",
+      icon: <VehicleIcon className="size-6" />,
+    },
+    {
+      label: "Security",
+      name: "security",
+      icon: <ShieldIcon className="size-6" />,
+    },
+    {
+      label: "Invites",
+      name: "invites",
+      icon: <KeyIcon className="size-6" />,
+      hide: user.isInvite,
+    },
+    {
+      label: "Deactivation",
+      name: "deactivation",
+      icon: <WarningIcon className="size-6" />,
+    },
+  ].filter((tab) => !tab.hide);
+
+  useEffect(() => {
+    if (user.isInvite && selectedTab === "invites") {
+      setSelectedTab("profile");
+    }
+  }, [user.isInvite, selectedTab]);
 
   useEffect(() => {
     setSearchParams({ tab: selectedTab }, { replace: true });
@@ -81,12 +117,16 @@ export default function UserSettingsModal({ user, base, vehicles, invite }: any)
             <XMarkIcon className="size-6" />
           </Link>
 
-          {selectedTab === "profile"      && <UserProfileForm user={user} />}
-          {selectedTab === "permissions"  && <UserPermissionForm user={user} />}
-          {selectedTab === "base"         && <UserBaseForm user={user} base={base} />}
-          {selectedTab === "vehicles"     && <UserVehicleForm user={user} vehicles={vehicles} />}
-          {selectedTab === "security"     && <UserSecurityForm user={user} />}
-          {selectedTab === "invites"      && <UserInviteForm user={user} invite={invite} />}
+          {selectedTab === "profile" && <UserProfileForm user={user} />}
+          {selectedTab === "permissions" && <UserPermissionForm user={user} />}
+          {selectedTab === "base" && <UserBaseForm user={user} base={base} />}
+          {selectedTab === "vehicles" && (
+            <UserVehicleForm user={user} vehicles={vehicles} />
+          )}
+          {selectedTab === "security" && <UserSecurityForm user={user} />}
+          {!user.isInvite && selectedTab === "invites" && (
+            <UserInviteForm user={user} invite={invite} />
+          )}
           {selectedTab === "deactivation" && <UserDeleteForm user={user} />}
         </div>
       </div>

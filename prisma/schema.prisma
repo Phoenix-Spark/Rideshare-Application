@@ -23,10 +23,13 @@ model User {
   resetCode   String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  inviteId    String?
+  isInvite    Boolean    @default(false)
+  inviteId    String?    @unique
+  invite      Invite?    @relation("UserInviteRelation", fields: [inviteId], references: [id])
+  inviteCode  String?
   requests    Request[]  @relation("PassengerRelation")
   driver      Request[]  @relation("DriverRelation")
-  invite      Invite[]   @relation("InviteRelation")
+  invites     Invite[]   @relation("InviteRelation")
   vehicles    Vehicle[]  
 }
 
@@ -37,9 +40,9 @@ model Invite {
   code        String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  isActive      Boolean    @default(true)
-
-  user     User?    @relation("InviteRelation", fields: [userId], references: [id])
+  isActive    Boolean    @default(true)
+  user        User?    @relation("InviteRelation", fields: [userId], references: [id])
+  usedBy      User?    @relation("UserInviteRelation")
 }
 
 model Vehicle {

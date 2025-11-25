@@ -148,6 +148,7 @@ export default function Login({ error }: { error?: string }) {
             >
               Sign In
             </button>
+            
           </div>
         </form>
 
@@ -160,10 +161,6 @@ export default function Login({ error }: { error?: string }) {
             Create account
           </Link>
         </p>
-      </div>
-
-      <div className="absolute bottom-6 text-center text-sm text-gray-500">
-        <p>Secured Shared Rides</p>
       </div>
     </div>
   );

@@ -159,12 +159,23 @@ export default function ManageUserForm({ accounts }: any) {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 mt-2">
-              <ToggleSwitch
-                label="Administrator"
-                name="isAdmin"
-                checked={isAdmin}
-                onChange={setIsAdmin}
-              />
+              {selectedUserId &&
+                (() => {
+                  const selectedUser = accounts.find(
+                    (u: any) => u.id === selectedUserId
+                  );
+                  if (selectedUser && !selectedUser.isInvite) {
+                    return (
+                      <ToggleSwitch
+                        label="Administrator"
+                        name="isAdmin"
+                        checked={isAdmin}
+                        onChange={setIsAdmin}
+                      />
+                    );
+                  }
+                  return null;
+                })()}
               <ToggleSwitch
                 label="Driver"
                 name="isDriver"

@@ -46,6 +46,8 @@ export async function getUserInfo(intent: string, userId: string) {
           isAdmin: true,
           isDriver: true,
           isPassenger: true,
+          isInvite: true,
+          inviteCode: true,
           base: {
             select: {
               id: true,
@@ -205,6 +207,7 @@ export async function getAccounts() {
       isPassenger: true,
       isReset: true,
       resetCode: true,
+      isInvite: true,
     },
   });
 

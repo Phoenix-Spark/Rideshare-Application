@@ -7,7 +7,7 @@ import { EyeOpenIcon } from "~/components/Icons/EyeOpenIcon";
 import { RefreshIcon } from "~/components/Icons/RefreshIcon";
 import { CheckMarkIcon } from "~/components/Icons/CheckMarkIcon";
 
-export default function UserInviteForm({ user, invite }: any) {
+export default function UserInviteForm({ invite }: any) {
   const actionData = useActionData();
   const [visible, setVisible] = useState<{ [key: string]: boolean }>({});
 
@@ -72,12 +72,31 @@ export default function UserInviteForm({ user, invite }: any) {
 
       <div className="bg-gray-50 space-y-4 rounded-xl">
         {actionData?.error && (
-          <div className="p-3 ml-29 text-center rounded-lg bg-red-100 w-90 border border-red-300 text-red-700">
+          <div className="p-3 ml-29 text-center rounded-lg bg-red-100 w-100 border border-red-300 text-red-700">
             {actionData.error}
           </div>
         )}
 
-        <h4 className="text-lg font-semibold text-gray-900">Your Invites</h4>
+        <div className="flex justify-between items-center">
+          <h4 className="text-lg font-semibold text-gray-900">Your Invites</h4>
+
+          {(() => {
+            const maxInvites = 5;
+            const remaining = maxInvites - invite.length;
+
+            let bgColor = "bg-green-500";
+            if (remaining <= 2 && remaining > 0) bgColor = "bg-yellow-400";
+            if (remaining === 0) bgColor = "bg-red-500";
+
+            return (
+              <p
+                className={`text-white text-sm py-1 px-3 rounded-full font-semibold ${bgColor}`}
+              >
+                {remaining} / {maxInvites} left
+              </p>
+            );
+          })()}
+        </div>
 
         <div className="space-y-4">
           {invite?.length === 0 && (
@@ -90,14 +109,14 @@ export default function UserInviteForm({ user, invite }: any) {
             return (
               <div
                 key={inv.id}
-                className="p-4 bg-white rounded-xl border border-gray-200 shadow-sm"
+                className="p-2 bg-white rounded-xl border border-gray-200 shadow-sm"
               >
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <div>
-                    <p className="text-sm text-gray-900 font-semibold">
+                <div className="grid grid-cols-6 items-center">
+                  <div className="truncate col-span-2 w-full">
+                    <p className="text-sm text-gray-900 font-semibold truncate">
                       {inv.email}
                     </p>
-                    <div className="text-xs text-gray-500 w-[300px] flex flex-col">
+                    <div className="text-xs text-gray-500 flex flex-col">
                       <span>
                         Created: {new Date(inv.createdAt).toLocaleString()}
                       </span>
@@ -107,32 +126,65 @@ export default function UserInviteForm({ user, invite }: any) {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-center">
-                    <div className="w-[500px]">
-                      <p className="font-mono rounded-full bg-gray-400 text-sm text-black px-2 py-1 ml-10">
-                        {show ? (
-                          <p className="text-center">{inv.code}</p>
-                        ) : (
-                          <p className="text-center">**********</p>
-                        )}
+                  <div className="flex w-full ml-6 justify-center col-span-2">
+                    {inv.isActive ? (
+                      <p className="font-mono text-sm px-3 py-1 text-black rounded-full border border-green-500 bg-green-200 text-center truncate w-40">
+                        {show ? inv.code : "**********"}
                       </p>
-                    </div>
+                    ) : (
+                      <p className="font-mono max-w-40 text-sm px-3 py-1 text-black rounded-full border border-red-500 bg-red-200 text-center">
+                        key disabled
+                      </p>
+                    )}
                   </div>
 
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => toggleVisibility(inv.id)}
-                      className="rounded-lg hover:bg-gray-100 transition"
-                      title={show ? "Hide code" : "Show code"}
-                      aria-label={show ? "Hide code" : "Show code"}
-                    >
-                      {show ? (
-                        <EyeClosedIcon className="text-gray-700 size-6" />
-                      ) : (
-                        <EyeOpenIcon className="text-gray-700 size-6" />
-                      )}
-                    </button>
+                  <div className="flex justify-end w-46 gap-2">
+                    {inv.isActive && (
+                      <button
+                        type="button"
+                        onClick={() => toggleVisibility(inv.id)}
+                        className="rounded-lg hover:bg-gray-100 transition"
+                        title={show ? "Hide code" : "Show code"}
+                      >
+                        {show ? (
+                          <EyeClosedIcon className="text-gray-700 size-7" />
+                        ) : (
+                          <EyeOpenIcon className="text-gray-700 size-7" />
+                        )}
+                      </button>
+                    )}
+
+                    {inv.isActive && (
+                      <Form
+                        method="post"
+                        action="/dashboard/settings?tab=invites"
+                      >
+                        <input
+                          type="hidden"
+                          name="intent"
+                          value="regenerate-invite"
+                        />
+                        <input type="hidden" name="id" value={inv.id} />
+                        {new Date().getTime() -
+                          new Date(inv.updatedAt).getTime() >
+                        60_000 ? (
+                          <button
+                            type="submit"
+                            className="rounded-lg hover:bg-blue-100 transition"
+                          >
+                            <RefreshIcon className="text-blue-600 size-7" />
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="rounded-lg transition"
+                            title="Please wait 1 minute to regenerate this key"
+                          >
+                            <RefreshIcon className="cursor-not-allowed text-gray-300 size-7" />
+                          </button>
+                        )}
+                      </Form>
+                    )}
 
                     <Form
                       method="post"
@@ -141,54 +193,27 @@ export default function UserInviteForm({ user, invite }: any) {
                       <input
                         type="hidden"
                         name="intent"
-                        value="regenerate-invite"
+                        value={
+                          inv.isActive ? "disable-invite" : "enable-invite"
+                        }
                       />
                       <input type="hidden" name="id" value={inv.id} />
                       <button
                         type="submit"
-                        className="rounded-lg hover:bg-blue-100 transition"
+                        className={`rounded-lg transition ${
+                          inv.isActive
+                            ? "hover:bg-yellow-100"
+                            : "hover:bg-green-100"
+                        }`}
+                        title={inv.isActive ? "Disable Key" : "Enable Key"}
                       >
-                        <RefreshIcon className="text-blue-600 size-6" />
+                        {inv.isActive ? (
+                          <BanIcon className="text-yellow-600 size-7" />
+                        ) : (
+                          <CheckMarkIcon className="text-green-600 size-7" />
+                        )}
                       </button>
                     </Form>
-
-                    {inv.isActive ? (
-                      <Form
-                        method="post"
-                        action="/dashboard/settings?tab=invites"
-                      >
-                        <input
-                          type="hidden"
-                          name="intent"
-                          value="disable-invite"
-                        />
-                        <input type="hidden" name="id" value={inv.id} />
-                        <button
-                          type="submit"
-                          className="rounded-lg hover:bg-yellow-100 transition"
-                        >
-                          <BanIcon className="text-yellow-600 size-6" />
-                        </button>
-                      </Form>
-                    ) : (
-                      <Form
-                        method="post"
-                        action="/dashboard/settings?tab=invites"
-                      >
-                        <input
-                          type="hidden"
-                          name="intent"
-                          value="enable-invite"
-                        />
-                        <input type="hidden" name="id" value={inv.id} />
-                        <button
-                          type="submit"
-                          className="rounded-lg hover:bg-green-100 transition"
-                        >
-                          <CheckMarkIcon className="text-green-600 size-7" />
-                        </button>
-                      </Form>
-                    )}
 
                     <Form
                       method="post"
@@ -203,8 +228,9 @@ export default function UserInviteForm({ user, invite }: any) {
                       <button
                         type="submit"
                         className="rounded-lg hover:bg-red-100 transition"
+                        title="Delete Key"
                       >
-                        <XMarkIcon className="text-red-600 size-6" />
+                        <XMarkIcon className="text-red-600 size-7" />
                       </button>
                     </Form>
                   </div>
