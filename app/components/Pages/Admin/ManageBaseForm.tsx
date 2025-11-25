@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Form } from "react-router";
 import { AdminIcon } from "~/components/Icons/AdminIcon";
 import { EllipsisIcon } from "~/components/Icons/EllipsisIcon";
 
@@ -108,7 +109,7 @@ export default function ManageBaseForm({ base }: any) {
             >
               {editingId === b.id ? (
                 <div className="p-5">
-                  <form method="post" action="/dashboard/admin?page=bases" className="space-y-4"
+                  <Form method="post" action="/dashboard/admin?page=bases" className="space-y-4"
                   >
                     <input type="hidden" name="id" value={b.id} />
                     <input type="hidden" name="intent" value="updateBase" />
@@ -188,7 +189,7 @@ export default function ManageBaseForm({ base }: any) {
                         Save Changes
                       </button>
                     </div>
-                  </form>
+                  </Form>
                 </div>
               ) : (
                 <div className="relative">
@@ -308,7 +309,6 @@ export default function ManageBaseForm({ base }: any) {
   <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
 
-      {/* Header */}
       <div className="px-6 pt-8 pb-6 text-center">
         <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
           <svg
@@ -378,7 +378,7 @@ export default function ManageBaseForm({ base }: any) {
           Cancel
         </button>
 
-        <form method="post" action="/dashboard/admin?page=bases" className="inline">
+        <Form method="post" action="/dashboard/admin?page=bases" className="inline">
           <input type="hidden" name="intent" value="deleteBase" />
           <input type="hidden" name="id" value={deletingBase.id} />
           <button
@@ -392,7 +392,7 @@ export default function ManageBaseForm({ base }: any) {
           >
             Delete Permanently
           </button>
-        </form>
+        </Form>
       </div>
     </div>
   </div>

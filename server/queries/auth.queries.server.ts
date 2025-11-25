@@ -9,15 +9,25 @@ export async function registerUser(
   phoneNumber: string,
   password: string,
 ) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const existingAdmin = await prisma.user.findFirst({
-    where: { isAdmin: true },
+  const existingEmail = await prisma.user.findFirst({
+    where: {
+      email: email.toLowerCase(),
+    },
   });
-  const isAdmin = existingAdmin ? false : true;
+  if (existingEmail) {
+    return { error: "This email address is already registered" };
+  }
+
+  const existingPhone = await prisma.user.findFirst({
+    where: {
+      phoneNumber,
+    },
+  });
+  if (existingPhone) {
+    return { error: "This phone number is already in use by another account" };
+  }
 
   let inviteId: string | null = null;
-
   if (inviteCode) {
     const invite = await prisma.invite.findFirst({
       where: {
@@ -27,11 +37,9 @@ export async function registerUser(
       },
       select: { id: true },
     });
-
     if (!invite) {
       return { error: "Invalid invite code" };
     }
-
     inviteId = invite.id;
   } else {
     const allowedDomains = [
@@ -43,38 +51,33 @@ export async function registerUser(
       "@usmc.mil",
       "@spaceforce.mil",
     ];
-
     const emailLower = email.toLowerCase();
     const isMilitaryEmail = allowedDomains.some(domain => emailLower.endsWith(domain));
-
     if (!isMilitaryEmail) {
       return { error: "Only U.S. military email addresses are allowed without a valid invite code" };
-      
     }
   }
 
-  try {
-    const user = await prisma.user.create({
-      data: {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        password: hashedPassword,
-        isAdmin,
-        isInvite: !!inviteId,
-        inviteId: inviteId,
-        inviteCode: inviteId ? inviteCode : null,
-      },
-    });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  
+  const existingAdmin = await prisma.user.findFirst({
+    where: { isAdmin: true },
+  });
+  const isAdmin = existingAdmin ? false : true;
 
-    return user;
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      return { error: "Email is already in use" };
-    }
-    return {error: "Something went wrong" };
-  }
+  const user = await prisma.user.create({
+    data: {
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      phoneNumber,
+      password: hashedPassword,
+      isAdmin,
+      inviteId,
+    },
+  });
+
+  return { success: true, user };
 }
 
 export async function authenticateUser( email: string, password: string ) {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Form } from "react-router";
 
 export default function CreateStopForm({ base }: any) {
   const [baseId, setBaseId] = useState("");
@@ -28,7 +29,7 @@ export default function CreateStopForm({ base }: any) {
         </p>
       </div>
 
-      <form method="post" action="/dashboard/admin?page=stops">
+      <Form method="post" action="/dashboard/admin?page=stops">
         <input type="hidden" name="intent" value="createStop" />
         <div className="space-y-5">
           <div>
@@ -146,7 +147,7 @@ export default function CreateStopForm({ base }: any) {
             </button>
           </div>
         </div>
-      </form>
+      </Form>
     </section>
   );
 }

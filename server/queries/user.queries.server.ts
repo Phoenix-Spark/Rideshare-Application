@@ -106,13 +106,52 @@ export async function updateUserInfo(
   password?: string,
   baseId?: string,
 ) {
+  if (email) {
+    const allowedDomains = [
+      "@us.af.mil",
+      "@army.mil",
+      "@mail.mil",
+      "@us.navy.mil",
+      "@uscg.mil",
+      "@usmc.mil",
+      "@spaceforce.mil",
+    ];
+    const emailLower = email.toLowerCase();
+    const isMilitaryEmail = allowedDomains.some(domain => emailLower.endsWith(domain));
+    if (!isMilitaryEmail) {
+      return { error: "Only U.S. military email addresses are allowed" };
+    }
+
+    const existingEmail = await prisma.user.findFirst({
+      where: {
+        email: emailLower,
+        id: { not: userId },
+      },
+    });
+    if (existingEmail) {
+      return { error: "This email address is already in use by another account" };
+    }
+  }
+
+  if (phoneNumber) {
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        phoneNumber,
+        id: { not: userId },
+      },
+    });
+    if (existingUser) {
+      return { error: "This phone number is already in use by another account" };
+    }
+  }
+
   const data: any = { 
     firstName, 
     lastName, 
-    email, 
+    email: email?.toLowerCase(), 
     phoneNumber, 
     baseId,
-   };
+  };
 
   if (password) {
     data.password = await bcrypt.hash(password, 10);
@@ -120,10 +159,12 @@ export async function updateUserInfo(
     data.resetCode = null;
   }
 
-  return prisma.user.update({
+  const user = await prisma.user.update({
     where: { id: userId },
     data,
   });
+
+  return { success: true, user };
 }
 
 export async function updateUserInfoAdmin({

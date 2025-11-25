@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Form } from "react-router";
 import ToggleSwitch from "~/components/Buttons/ToggleSwitch";
 import { WarningIcon } from "~/components/Icons/WarningIcon";
 
@@ -76,7 +77,7 @@ export default function ManageUserForm({ accounts }: any) {
           })()}
 
         <div className="mt-5">
-          <form
+          <Form
             method="post"
             action="/dashboard/admin?page=users"
             className="space-y-5"
@@ -226,7 +227,7 @@ export default function ManageUserForm({ accounts }: any) {
                 Save Changes
               </button>
             </div>
-          </form>
+          </Form>
         </div>
       </section>
 
@@ -257,7 +258,7 @@ export default function ManageUserForm({ accounts }: any) {
               >
                 Cancel
               </button>
-              <form method="post" action="/dashboard/admin?page=users">
+              <Form method="post" action="/dashboard/admin?page=users">
                 <input type="hidden" name="intent" value="deleteUser" />
                 <input type="hidden" name="userId" value={deletingUser.id} />
                 <button
@@ -266,7 +267,7 @@ export default function ManageUserForm({ accounts }: any) {
                 >
                   Delete Permanently
                 </button>
-              </form>
+              </Form>
             </div>
           </div>
         </div>

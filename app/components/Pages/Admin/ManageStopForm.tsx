@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MapPinIcon } from "~/components/Icons/MapPinIcon";
 import { EllipsisIcon } from "~/components/Icons/EllipsisIcon";
+import { Form } from "react-router";
 
 export default function ManageStopForm({ station, base }: any) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -55,7 +56,7 @@ export default function ManageStopForm({ station, base }: any) {
             >
               {editingId === s.id ? (
                 <div className="p-5">
-                  <form method="post" action="/dashboard/admin?page=stops" className="space-y-4">
+                  <Form method="post" action="/dashboard/admin?page=stops" className="space-y-4">
                     <input type="hidden" name="id" value={s.id} />
                     <input type="hidden" name="intent" value="updateStop" />
 
@@ -144,7 +145,7 @@ export default function ManageStopForm({ station, base }: any) {
                         Save Changes
                       </button>
                     </div>
-                  </form>
+                  </Form>
                 </div>
               ) : (
                 <div className="relative">
@@ -312,7 +313,7 @@ export default function ManageStopForm({ station, base }: any) {
                 Cancel
               </button>
 
-              <form method="post" action="/dashboard/admin?page=stops" className="inline">
+              <Form method="post" action="/dashboard/admin?page=stops" className="inline">
                 <input type="hidden" name="intent" value="deleteStop" />
                 <input type="hidden" name="id" value={deletingStop.id} />
                 <button
@@ -326,7 +327,7 @@ export default function ManageStopForm({ station, base }: any) {
                 >
                   Delete Permanently
                 </button>
-              </form>
+              </Form>
             </div>
           </div>
         </div>

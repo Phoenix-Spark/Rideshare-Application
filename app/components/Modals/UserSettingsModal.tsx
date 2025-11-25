@@ -52,7 +52,7 @@ export default function UserSettingsModal({
       label: "Invites",
       name: "invites",
       icon: <KeyIcon className="size-6" />,
-      hide: user.isInvite,
+      hide: user?.isInvite,
     },
     {
       label: "Deactivation",
@@ -62,10 +62,10 @@ export default function UserSettingsModal({
   ].filter((tab) => !tab.hide);
 
   useEffect(() => {
-    if (user.isInvite && selectedTab === "invites") {
+    if (user?.isInvite && selectedTab === "invites") {
       setSelectedTab("profile");
     }
-  }, [user.isInvite, selectedTab]);
+  }, [user?.isInvite, selectedTab]);
 
   useEffect(() => {
     setSearchParams({ tab: selectedTab }, { replace: true });
@@ -124,7 +124,7 @@ export default function UserSettingsModal({
             <UserVehicleForm user={user} vehicles={vehicles} />
           )}
           {selectedTab === "security" && <UserSecurityForm user={user} />}
-          {!user.isInvite && selectedTab === "invites" && (
+          {!user?.isInvite && selectedTab === "invites" && (
             <UserInviteForm user={user} invite={invite} />
           )}
           {selectedTab === "deactivation" && <UserDeleteForm user={user} />}

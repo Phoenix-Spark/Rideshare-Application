@@ -1,3 +1,5 @@
+import { Form } from "react-router";
+
 export default function CreateBaseForm() {
   return (
     <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
@@ -10,7 +12,7 @@ export default function CreateBaseForm() {
         </p>
       </div>
 
-      <form method="post" action="/dashboard/admin?page=bases">
+      <Form method="post" action="/dashboard/admin?page=bases">
         <input type="hidden" name="intent" value="createBase" />
 
         <div className="space-y-5">
@@ -96,7 +98,7 @@ export default function CreateBaseForm() {
             </button>
           </div>
         </div>
-      </form>
+      </Form>
     </section>
   );
 }
