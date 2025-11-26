@@ -133,7 +133,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                 </p>
               </div>
 
-              {request.status === "Active" && (
+              {/* {request.status === "Active" && (
                 <div className="flex items-center gap-1 text-xs">
                   <ClockIcon
                     className={`w-5 h-5 ${
@@ -156,7 +156,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                     {isExpired ? "Expired" : formatCountdown(timeLeft)}
                   </span>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="space-y-2">

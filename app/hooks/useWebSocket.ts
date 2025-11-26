@@ -10,26 +10,29 @@ export function useWebSocket(userId: string | null) {
     if (!userId) return;
 
     const connect = () => {
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//${window.location.host}`;
+      // Connect to external WebSocket server
+      const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:3001";
       
+      console.log(`Connecting to WebSocket server at ${wsUrl}`);
       ws.current = new WebSocket(wsUrl);
 
       ws.current.onopen = () => {
+        console.log("Connected to WebSocket server");
         setIsConnected(true);
-        
         ws.current?.send(JSON.stringify({ type: "auth", userId }));
       };
 
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("WebSocket message received:", data);
         setMessages((prev) => [...prev, data]);
       };
 
       ws.current.onclose = () => {
+        console.log("Disconnected from WebSocket server");
         setIsConnected(false);
-        
         reconnectTimeout.current = setTimeout(() => {
+          console.log("Attempting to reconnect...");
           connect();
         }, 3000);
       };
@@ -56,7 +59,6 @@ export function useWebSocket(userId: string | null) {
       console.warn("WebSocket is not connected");
     }
   };
-
 
   return { isConnected, messages, sendMessage };
 }

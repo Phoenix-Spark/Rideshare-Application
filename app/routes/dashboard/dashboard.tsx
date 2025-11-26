@@ -80,6 +80,7 @@ const processedDroppedOffRides = useRef(new Set<string>());
 const processedRideAcceptedRides = useRef(new Set<string>());
 
 useEffect(() => {
+  console.log('messages: ', messages)
   const newRideMessages = messages.filter(
     m => m.type === "new_ride_request" && !processedRideIds.current.has(m.rideId)
   );

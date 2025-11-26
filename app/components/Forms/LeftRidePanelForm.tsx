@@ -17,10 +17,11 @@ export default function LeftSideRidePanelForm({
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const mode = searchParams.get("mode") || "passenger";
-  const isDriverMode = mode === "driver";
+  const [isDriverMode, setIsDriverMode] = useState(mode === 'driver' ? true: false)
   const showMain = 
   !searchParams.get("showmap")
   const toggleMode = () => {
+    setIsDriverMode(!isDriverMode)
     setSearchParams({ mode: isDriverMode ? "passenger" : "driver" });
   };
 
