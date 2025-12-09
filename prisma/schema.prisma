@@ -8,41 +8,41 @@ datasource db {
 }
 
 model User {
-  id          String     @id @default(uuid())
-  baseId      String?    
-  base        Base?      @relation(fields: [baseId], references: [id])
+  id          String    @id @default(uuid())
+  baseId      String?
   firstName   String
   lastName    String
-  phoneNumber String     
-  email       String     @unique
+  phoneNumber String
+  email       String    @unique
   password    String
-  isAdmin     Boolean    @default(false)
-  isDriver    Boolean    @default(false)
-  isPassenger Boolean    @default(true)
-  isReset     Boolean    @default(false)
+  isAdmin     Boolean   @default(false)
+  isDriver    Boolean   @default(false)
+  isPassenger Boolean   @default(true)
+  isReset     Boolean   @default(false)
   resetCode   String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  isInvite    Boolean    @default(false)
-  inviteId    String?    @unique
-  invite      Invite?    @relation("UserInviteRelation", fields: [inviteId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  isInvite    Boolean   @default(false)
+  inviteId    String?   @unique
   inviteCode  String?
-  requests    Request[]  @relation("PassengerRelation")
-  driver      Request[]  @relation("DriverRelation")
-  invites     Invite[]   @relation("InviteRelation")
-  vehicles    Vehicle[]  
+  invites     Invite[]  @relation("InviteRelation")
+  driver      Request[] @relation("DriverRelation")
+  requests    Request[] @relation("PassengerRelation")
+  base        Base?     @relation(fields: [baseId], references: [id])
+  invite      Invite?   @relation("UserInviteRelation", fields: [inviteId], references: [id])
+  vehicles    Vehicle?
 }
 
 model Invite {
-  id          String      @id @default(uuid())
-  email       String      @unique
-  userId      String
-  code        String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  isActive    Boolean    @default(true)
-  user        User?    @relation("InviteRelation", fields: [userId], references: [id])
-  usedBy      User?    @relation("UserInviteRelation")
+  id        String   @id @default(uuid())
+  email     String   @unique
+  userId    String
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+  user      User     @relation("InviteRelation", fields: [userId], references: [id])
+  usedBy    User?    @relation("UserInviteRelation")
 }
 
 model Vehicle {
@@ -55,58 +55,53 @@ model Vehicle {
   plate     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   user      User?    @relation(fields: [userId], references: [id])
 }
 
 model Station {
-  id          String     @id @default(uuid())
-  baseId      String
-  base        Base       @relation(fields: [baseId], references: [id])
-  name        String
-  longitude   String
-  latitude    String
-  description String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  pickupRequests  Request[] @relation("PickupStation")
+  id              String    @id @default(uuid())
+  baseId          String
+  name            String    @unique
+  longitude       String    @unique
+  latitude        String    @unique
+  description     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   dropoffRequests Request[] @relation("DropoffStation")
+  pickupRequests  Request[] @relation("PickupStation")
+  base            Base      @relation(fields: [baseId], references: [id])
 }
 
 model Request {
-  id           String       @id @default(uuid())
+  id           String    @id @default(uuid())
   baseId       String?
   userId       String?
   driverId     String?
   pickupId     String?
   dropoffId    String?
   status       String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   acceptedAt   DateTime?
   pickedUpAt   DateTime?
   droppedOffAt DateTime?
-
-  base     Base?    @relation("BaseRelation", fields: [baseId], references: [id])
-  user     User?    @relation("PassengerRelation", fields: [userId], references: [id])
-  driver   User?    @relation("DriverRelation", fields: [driverId], references: [id])
-  pickup   Station? @relation("PickupStation", fields: [pickupId], references: [id])
-  dropoff  Station? @relation("DropoffStation", fields: [dropoffId], references: [id])
+  base         Base?     @relation("BaseRelation", fields: [baseId], references: [id])
+  driver       User?     @relation("DriverRelation", fields: [driverId], references: [id])
+  dropoff      Station?  @relation("DropoffStation", fields: [dropoffId], references: [id])
+  pickup       Station?  @relation("PickupStation", fields: [pickupId], references: [id])
+  user         User?     @relation("PassengerRelation", fields: [userId], references: [id])
 }
 
-
 model Base {
-  id            String    @id @default(uuid())
-  name          String
-  abbreviation  String?
-  state         String
-  long          String
-  lat           String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  requests      Request[] @relation("BaseRelation")
-  users         User[]
-  stations      Station[]
+  id           String    @id @default(uuid())
+  name         String
+  abbreviation String?
+  state        String
+  long         String
+  lat          String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  requests     Request[] @relation("BaseRelation")
+  stations     Station[]
+  users        User[]
 }

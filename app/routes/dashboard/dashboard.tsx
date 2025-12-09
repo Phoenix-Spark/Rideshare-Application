@@ -52,14 +52,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (intent === "createRequest") {
     createRequest(userId!, baseId!, pickupId!, dropoffId!);
-    return { success: true, message: "Ride Requested!"}
+    // return { success: true, message: "Ride Requested!"}
   }
   if (intent === "cancelRequest") {
     cancelRequest(requestId!, driverId!);
-    return { success: false, message: "Ride Cancelled!"}
+    // return { success: false, message: "Ride Cancelled!"}
   }
   if (intent === "acceptRequest") {
     acceptRequest(requestId!, driverId! , userId!);
+    // return { success: true, message: "Ride Accepted!!"}
   }
   if (intent === "pickupRequest") {
     if(rideConfirmOrCancel === "confirm")   
@@ -84,22 +85,22 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
   // const processedAcceptedRides = useRef(new Set<string>());
   const previousMessagesRef = useRef<RideMessage[]>([]);
 
-  useEffect(() => {
-    if (!messages || messages.length === 0) return;
+  // useEffect(() => {
+  //   if (!messages || messages.length === 0) return;
 
-    // Check if messages changed
-    const hasChanged = JSON.stringify(messages) !== JSON.stringify(previousMessagesRef.current);
+  //   // Check if messages changed
+  //   const hasChanged = JSON.stringify(messages) !== JSON.stringify(previousMessagesRef.current);
     
-    if (hasChanged) {
-      console.log("📊 Active rides:", messages.length);
-      messages.forEach(msg => {
-        console.log(`  - Ride ${msg.rideId}: ${msg.status}`);
-      });
+  //   if (hasChanged) {
+  //     console.log("📊 Active rides:", messages.length);
+  //     messages.forEach(msg => {
+  //       console.log(`  - Ride ${msg.rideId}: ${msg.status}`);
+  //     });
 
-      previousMessagesRef.current = messages;
-      revalidate.revalidate();
-    }
-  }, [messages, revalidate]);
+  //     previousMessagesRef.current = messages;
+  //     revalidate.revalidate();
+  //   }
+  // }, [messages, revalidate]);
 
   useEffect(() => {
     if (actionData?.success) {
@@ -113,7 +114,7 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
   useEffect(() => {
     messages.forEach(message => {
       const previous = previousMessagesRef.current.find(m => m.rideId === message.rideId);
-      
+      console.log('previous', previous)
       if (!previous) {
         // New ride appeared
         if (message.status === "requested") {
@@ -130,12 +131,14 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
         if (message.status === "completed") {
           toast.success("Ride completed!");
         }
+      } else {
+        toast.info("no change")
       }
     });
     
     previousMessagesRef.current = messages;
   }, [messages]);
-
+  console.log(messages)
   // You can now easily access ride status
   const myActiveRide = messages.find(m => m.userId === user?.id);
   const myAcceptedRide = messages.find(m => m.driverId === user?.id && m.status === "accepted");

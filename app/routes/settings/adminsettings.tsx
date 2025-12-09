@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { type LoaderFunctionArgs, type ActionFunctionArgs, useLoaderData } from "react-router";
+import { toast } from "react-toastify";
 import { registerUser } from "server/queries/auth.queries.server";
 import { createBase, deleteBase, getBase, updateBase } from "server/queries/base.queries.server";
 import { createStop, deleteStop, getStop, updateStop } from "server/queries/station.queries.server";
@@ -6,6 +8,7 @@ import { deleteUserAccount, getAccounts, getUserInfo, updateUserInfoAdmin } from
 import { requireAdminId, requireUserId } from "server/session.server";
 import AdminSettingsModal from "~/components/Modals/AdminSettingsModal";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
+import type { Route } from "./+types/adminsettings";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId   = await requireUserId(request);
@@ -45,37 +48,52 @@ export async function action({ request }: ActionFunctionArgs) {
   const isReset       = formData.get("isReset") === "true";
   
   if (intent === "createBase") {
-    return createBase(name!, state!, longitude!, latitude!);
+    createBase(name!, state!, longitude!, latitude!);
+    return { success: true, message: "Base created!", intent}
   } 
   if (intent === "updateBase") {
-    return updateBase(id!, name!, state!, longitude!, latitude!);
+    updateBase(id!, name!, state!, longitude!, latitude!);
+    return { success: true, message: "Base updated!", intent} 
   } 
   if (intent === "deleteBase") {
-    return deleteBase(id!)
+    deleteBase(id!)
+    return { success: true, message: "Base deleted!", intent} 
   }
   if (intent === "createStop") {
-    return createStop(baseId!, name!, longitude!, latitude!, description!)
+    createStop(baseId!, name!, longitude!, latitude!, description!)
+    return { success: true, message: "New stop added!", intent} 
   }
   if (intent === "updateStop") {
-    return updateStop(id!, baseId!, name!, longitude!, latitude!, description!)
+    updateStop(id!, baseId!, name!, longitude!, latitude!, description!)
+    return { success: true, message: "Stop updated!", intent} 
   }
   if (intent === "deleteStop") {
-    return deleteStop(id!)
+    deleteStop(id!)
+    return { success: true, message: "Stop deleted!", intent} 
   }
   if (intent === "createUser") {
-    return registerUser(inviteCode!, firstName!, lastName!, email!, phoneNumber!, password!)
+    registerUser(inviteCode!, firstName!, lastName!, email!, phoneNumber!, password!)
+    return { success: true, message: "User created!", intent}
   }
   if (intent === "updateUser") {
-    return updateUserInfoAdmin({ userId, firstName, lastName, email, phoneNumber, isAdmin, isDriver, isPassenger, isReset })
+    updateUserInfoAdmin({ userId, firstName, lastName, email, phoneNumber, isAdmin, isDriver, isPassenger, isReset })
+    return { success: true, message: "User updated", intent}
   }
   if (intent === "deleteUser") {
-    return deleteUserAccount(userId)
+    deleteUserAccount(userId)
+    return { success: true, message: "User deleted!", intent}
   }
 }
 
-export default function AdminSettings() {
+export default function AdminSettings({ loaderData, actionData}: Route.ComponentProps) {
     
-    const { user, base, station, accounts } = useLoaderData<typeof loader>();
+    const { user, base, station, accounts } = loaderData;
+    useEffect(() => {
+      if(actionData?.success && actionData?.message){
+        toast.success(actionData.message);
+      }
+    },[actionData]);
+
     return <AdminSettingsModal user={user} base={base} station={station} accounts={accounts} />
 }
 

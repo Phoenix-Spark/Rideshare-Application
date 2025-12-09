@@ -13,3 +13,9 @@ body {
     color-scheme: dark;
   }
 }
+
+.Toastify__toast {
+  align-items: center;
+  font-weight: 200;
+  font-size: large;
+}

@@ -18,6 +18,7 @@ export default function CreateStopForm({ base }: any) {
     longitude.trim() !== "" &&
     latitude.trim() !== "";
 
+
   return (
     <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
       <div className="mb-6">
