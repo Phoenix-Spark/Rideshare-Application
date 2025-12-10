@@ -1,12 +1,9 @@
 import { useEffect, useRef } from "react";
 import {
-  useLoaderData,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  useRevalidator,
 } from "react-router";
 import { toast } from "react-toastify";
-// import { notifyDriversOfNewRide } from "server";
 import {
   cancelRequest,
   createRequest,
@@ -23,7 +20,6 @@ import { getUserInfo } from "server/queries/user.queries.server";
 import { requireUserId } from "server/session.server";
 import DashboardForm from "~/components/Forms/DashboardForm";
 import MapDisplay from "~/components/Maps/MapDisplay";
-import { useRideNotifications } from "~/hooks/useRideNotifications";
 import { useWebSocket, type RideMessage } from "~/hooks/useWebSocket";
 import type { Route } from "../../+types/root";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
@@ -52,15 +48,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (intent === "createRequest") {
     createRequest(userId!, baseId!, pickupId!, dropoffId!);
-    // return { success: true, message: "Ride Requested!"}
   }
   if (intent === "cancelRequest") {
     cancelRequest(requestId!, driverId!);
-    // return { success: false, message: "Ride Cancelled!"}
   }
   if (intent === "acceptRequest") {
     acceptRequest(requestId!, driverId! , userId!);
-    // return { success: true, message: "Ride Accepted!!"}
   }
   if (intent === "pickupRequest") {
     if(rideConfirmOrCancel === "confirm")   
@@ -76,32 +69,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
   const { user, station, accepted, activeRequests, requestInfo } = loaderData;
 
-  const revalidate = useRevalidator();
-  const { isConnected, messages, sendMessage } = useWebSocket(user?.id);
-  const { rideData } = useRideNotifications(user?.id);
-  
-  // Track which messages we've already processed
-  // const lastProcessedIndex = useRef(0);
-  // const processedAcceptedRides = useRef(new Set<string>());
+  const { messages } = useWebSocket(user?.id);
   const previousMessagesRef = useRef<RideMessage[]>([]);
-
-  // useEffect(() => {
-  //   if (!messages || messages.length === 0) return;
-
-  //   // Check if messages changed
-  //   const hasChanged = JSON.stringify(messages) !== JSON.stringify(previousMessagesRef.current);
-    
-  //   if (hasChanged) {
-  //     console.log("📊 Active rides:", messages.length);
-  //     messages.forEach(msg => {
-  //       console.log(`  - Ride ${msg.rideId}: ${msg.status}`);
-  //     });
-
-  //     previousMessagesRef.current = messages;
-  //     revalidate.revalidate();
-  //   }
-  // }, [messages, revalidate]);
-
   useEffect(() => {
     if (actionData?.success) {
       toast.success(actionData.message);
@@ -116,12 +85,10 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
       const previous = previousMessagesRef.current.find(m => m.rideId === message.rideId);
       console.log('previous', previous)
       if (!previous) {
-        // New ride appeared
         if (message.status === "requested") {
           toast.info("New ride request!");
         }
       } else if (previous.status !== message.status) {
-        // Status changed
         if (message.status === "accepted") {
           toast.success("Ride accepted!");
         }
@@ -138,11 +105,6 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
     
     previousMessagesRef.current = messages;
   }, [messages]);
-  console.log(messages)
-  // You can now easily access ride status
-  const myActiveRide = messages.find(m => m.userId === user?.id);
-  const myAcceptedRide = messages.find(m => m.driverId === user?.id && m.status === "accepted");
-
 
   return (
     <div>
