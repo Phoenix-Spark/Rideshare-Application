@@ -189,7 +189,7 @@ export async function acceptRequest(requestId: string, driverId: string, userId:
     },
   });
 
-  notifyRiderOfConfirmation(requestId, userId)
+  notifyRiderOfConfirmation(requestId, userId, driverId)
   return request;
 }
 

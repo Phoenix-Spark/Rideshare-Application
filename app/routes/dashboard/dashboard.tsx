@@ -87,12 +87,7 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
     console.log(messages)
     messages.forEach(message => {
       const previous = previousMessagesRef.current.find(m => m.rideId === message.rideId);
-      console.log('previous', previous)
-      if (!previous) {
-        if (message.status === "requested") {
-          toast.info("New ride request!");
-        }
-      } else if (previous.status !== message.status) {
+      if (previous?.status !== message.status) {
         if (message.status === "accepted") {
           toast.success("Ride accepted!");
         }
@@ -102,11 +97,9 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
         if (message.status === "completed") {
           toast.success("Ride completed!");
         }
-        if (message.status === "user_cancelled_request") {
-          toast.success("Ride request cancelled!")
+        if (message.status === "cancelled") {
+          toast.info("Ride request cancelled!")
         }
-      } else {
-        toast.info("no change")
       }
     });
     revalidate.revalidate();
