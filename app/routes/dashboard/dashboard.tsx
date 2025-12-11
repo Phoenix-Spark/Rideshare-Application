@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  useRevalidator,
 } from "react-router";
 import { toast } from "react-toastify";
 import {
@@ -69,6 +70,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
   const { user, station, accepted, activeRequests, requestInfo } = loaderData;
 
+  const revalidate = useRevalidator();
+
   const { messages } = useWebSocket(user?.id);
   const previousMessagesRef = useRef<RideMessage[]>([]);
   useEffect(() => {
@@ -81,6 +84,7 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
   }, [actionData]);
 
   useEffect(() => {
+    console.log(messages)
     messages.forEach(message => {
       const previous = previousMessagesRef.current.find(m => m.rideId === message.rideId);
       console.log('previous', previous)
@@ -98,11 +102,14 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
         if (message.status === "completed") {
           toast.success("Ride completed!");
         }
+        if (message.status === "user_cancelled_request") {
+          toast.success("Ride request cancelled!")
+        }
       } else {
         toast.info("no change")
       }
     });
-    
+    revalidate.revalidate();
     previousMessagesRef.current = messages;
   }, [messages]);
 

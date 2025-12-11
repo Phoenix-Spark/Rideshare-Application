@@ -74,7 +74,7 @@ export async function registerUser(
       password: hashedPassword,
       isAdmin,
       inviteId,
-      name: `${firstName} ${lastName}`,
+      // name: `${firstName} ${lastName}`,
     },
   });
 

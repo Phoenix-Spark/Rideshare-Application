@@ -166,7 +166,7 @@ export async function updateRequest(id: string) {
   return request;
 }
 
-export async function cancelRequest(id: string, driverId: string) {
+export async function cancelRequest(id: string, driverId: string | null) {
   const request = await prisma.request.updateMany({
     where: { id },
     data: {
