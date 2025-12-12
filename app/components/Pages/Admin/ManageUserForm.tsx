@@ -3,7 +3,7 @@ import { Form } from "react-router";
 import ToggleSwitch from "~/components/Buttons/ToggleSwitch";
 import { WarningIcon } from "~/components/Icons/WarningIcon";
 
-export default function ManageUserForm({ accounts }: any) {
+export default function ManageUserForm({ accounts , base}: any) {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -13,6 +13,7 @@ export default function ManageUserForm({ accounts }: any) {
   const [isDriver, setIsDriver] = useState(false);
   const [isPassenger, setIsPassenger] = useState(false);
   const [isReset, setIsReset] = useState(false);
+  const [selectedBase, setSelectedBase] = useState("");
   const [deletingUser, setDeletingUser] = useState<{
     id: string;
     name: string;
@@ -49,9 +50,14 @@ export default function ManageUserForm({ accounts }: any) {
     <>
       <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
         <div className="mb-6">
+        <div className="inline-flex w-full items-center justify-between">
           <h3 className="text-2xl font-bold text-gray-900 mb-2">
             Manage Users
           </h3>
+          <select className="rounded-lg p-2 -mt-3 mr-2 border border-gray-200 text-black w-[300px]" onChange={(e) => setSelectedBase(e.currentTarget.value)}>
+           {base.map(b => <option value={b.id}>{b.name}</option>)}
+          </select>
+        </div>
           <p className="text-gray-600">
             Select an existing user to view or modify their details.
           </p>
@@ -94,7 +100,7 @@ export default function ManageUserForm({ accounts }: any) {
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
               >
                 <option value="">-- Choose a user --</option>
-                {accounts.map((user: any) => (
+                {accounts.filter(a => a.baseId === selectedBase).map((user: any) => (
                   <option key={user.id} value={user.id}>
                     {user.firstName} {user.lastName}
                   </option>

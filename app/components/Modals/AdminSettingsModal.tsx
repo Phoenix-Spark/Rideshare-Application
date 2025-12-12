@@ -51,7 +51,7 @@ export default function AdminSettingsModal({ user, base, station, accounts }: an
         return (
           <div className="space-y-8">
             <CreateUserForm />
-            <ManageUserForm accounts={accounts} />
+            <ManageUserForm accounts={accounts} base={base}/>
           </div>
         );
 
