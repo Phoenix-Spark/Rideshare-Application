@@ -6,8 +6,9 @@ import LeftPanelPassengerForm from "./LeftPanelPassengerForm";
 import LeftPanelDriverForm from "./LeftPanelDriverForm";
 import LeftPanelDriverRequestForm from "./LeftPanelDriverRequestForm";
 import { LogoutIcon } from "../Icons/LogoutIcon";
-import { tabs } from "~/lib/constants";
+// import { tabs } from "~/lib/constants";
 import LeftPanelScheduleForm from "./LeftPanelScheduleForm";
+import UserSettingsModal, { createTabs } from "../Modals/UserSettingsModal";
 
 export default function LeftSideRidePanelForm({
   user,
@@ -28,7 +29,7 @@ export default function LeftSideRidePanelForm({
     setIsDriverMode(!isDriverMode);
     setSearchParams({ mode: isDriverMode ? "passenger" : "driver" });
   };
-
+  const tabs = createTabs(user, true)
   useEffect(() => {
     if (!searchParams.get("mode")) {
       setSearchParams({ mode: "passenger" });
@@ -92,7 +93,16 @@ export default function LeftSideRidePanelForm({
                             to={t.to as string}
                             className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium text-gray-600 border-b border-gray-200"
                           >
-                            {t.label}
+                            
+                            <span className="text-xl">{t.icon}</span>
+                            <span>{t.label}</span>
+
+                            {t.badge && (
+                              <>
+                                <span className="absolute right-3 top-1/2 w-2.5 h-2.5 bg-red-500 rounded-full -translate-y-1/2" />
+                                <span className="absolute right-3 top-1/2 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping -translate-y-1/2" />
+                              </>
+                            )}
                           </Link>
                         ))}
                         <button
