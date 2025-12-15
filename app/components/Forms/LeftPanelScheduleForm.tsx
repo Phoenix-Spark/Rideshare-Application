@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-export default function LeftPanelScheduleForm({}: any) {
+export default function LeftPanelScheduleForm() {
   return (
     <div className="mt-2 flex">
       <Link

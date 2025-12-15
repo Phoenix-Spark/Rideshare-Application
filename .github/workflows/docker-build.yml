@@ -11,16 +11,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@0e9a4c61f4f7d7e04f8e0b2a1d17bb5d58c3c9f5
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@4f58ea792a40f6c7a6bbf31b4c3c6c8b2c4f7c4d
         with:
           context: .
           push: true

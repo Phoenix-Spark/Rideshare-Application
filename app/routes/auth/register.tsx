@@ -5,7 +5,7 @@ import RegisterForm from "~/components/Forms/RegisterForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import type { Route } from "./+types/register";
 
-export const loader = async ({}) => {
+export const loader = async () => {
   const bases = await prisma.base.findMany()
   return {bases}
 }
