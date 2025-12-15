@@ -1,3 +1,4 @@
+import { truncate } from "fs";
 import { prisma } from "../db.server";
 import bcrypt from "bcryptjs";
 
@@ -46,6 +47,7 @@ export async function getUserInfo(intent: string, userId: string) {
           isAdmin: true,
           isDriver: true,
           isPassenger: true,
+          isReset: true,
           isInvite: true,
           inviteCode: true,
           base: {
@@ -263,4 +265,20 @@ export async function getAccounts() {
   });
 
   return account
+}
+
+export async function getUserBase(userId: string) {
+  const base = await prisma.user.findFirst({
+    where: { id: userId },
+    select: {
+      base: {
+        select: {
+          id: true,
+          name: true,
+        }
+      }
+    },
+  });
+
+  return base;
 }

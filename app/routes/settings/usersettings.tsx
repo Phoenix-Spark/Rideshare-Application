@@ -1,6 +1,6 @@
 import { useLoaderData, type LoaderFunctionArgs, type ActionFunctionArgs } from "react-router";
 import { createInvite, deleteInvite, disableInvite, enableInvite, getInvites, updateInvite } from "server/queries/invite.queries.server";
-import { deleteUserAccount, getBaseInfo, getUserInfo, updateUserInfo } from "server/queries/user.queries.server";
+import { deleteUserAccount, getBaseInfo, getUserBase, getUserInfo, updateUserInfo } from "server/queries/user.queries.server";
 import { createVehicle, deleteVehicle, enableVehicle, getVehicles } from "server/queries/vehicle.queries.server";
 import { checkEmailVerification, requireUserId } from "server/session.server";
 import UserSettingsModal from "~/components/Modals/UserSettingsModal";
@@ -12,9 +12,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUserInfo('settings', userId);
   const vehicles = await getVehicles(userId);
   const base = await getBaseInfo();
+  const userBase = await getUserBase(userId);
   const invite = await getInvites(userId);
   
-  return{ user, base, vehicles, invite };
+  return{ user, base, userBase, vehicles, invite };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -61,8 +62,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function UserSettings() {
-    const { user, base, vehicles, invite } = useLoaderData<typeof loader>();
-    return <UserSettingsModal user={user} base={base} vehicles={vehicles} invite={invite} />
+    const { user, base, userBase, vehicles, invite } = useLoaderData<typeof loader>();
+    return <UserSettingsModal user={user} base={base} vehicles={vehicles} invite={invite} userBase={userBase}/>
 }
 
 export { ErrorBoundary };

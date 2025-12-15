@@ -74,6 +74,7 @@ export default function Login({ error }: { error?: string }) {
                   name="email"
                   placeholder="you@example.com"
                   required
+                  
                   className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 />
               </div>

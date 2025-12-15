@@ -2,13 +2,13 @@ import RightSideUserPanelForm from "./RightSideUserPanelForm";
 import LeftSideRidePanelForm from "./LeftRidePanelForm";
 import { Outlet, useNavigate } from "react-router";
 import MiddlePanelForm from "./MiddlePanelForm";
-import { InfoCircleIcon } from "../Icons/InfoCircleIcon";
 
 export default function Dashboard({
   user,
   station,
   accepted,
   activeRequests,
+  vehicles,
   requestInfo,
 }: any) {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function Dashboard({
   return (
     <div className="w-full h-screen">
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 w-[90%] max-w-4xl">
-        <MiddlePanelForm user={user} />
+        <MiddlePanelForm user={user} vehicles={vehicles} />
       </div>
 
       <div className="absolute top-0 left-0 h-full z-10">

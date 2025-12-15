@@ -22,8 +22,9 @@ import { checkEmailVerification, requireUserId } from "server/session.server";
 import DashboardForm from "~/components/Forms/DashboardForm";
 import MapDisplay from "~/components/Maps/MapDisplay";
 import { useWebSocket, type RideMessage } from "~/hooks/useWebSocket";
-import type { Route } from "../../+types/root";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
+import type { Route } from "./+types/dashboard";
+import { getVehicles } from "server/queries/vehicle.queries.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -32,9 +33,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const station = await getStop(user?.base?.id);
   const passenger = await getPassengerRequest(userId);
   const accepted = await getDriverRequest(userId);
+  const vehicles = await getVehicles(userId);
   const activeRequests = await getActiveRequest(user?.base?.id);
 
-  return { user, verified, station, accepted, activeRequests, requestInfo: passenger };
+  return { user, verified, station, accepted, activeRequests, vehicles, requestInfo: passenger };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -76,7 +78,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
-  const { user, station, accepted, activeRequests, requestInfo } = loaderData;
+  const { user, station, accepted, activeRequests, vehicles, requestInfo } = loaderData;
 
   const revalidate = useRevalidator();
 
@@ -92,7 +94,6 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
   }, [actionData]);
 
   useEffect(() => {
-    console.log(messages)
     messages.forEach(message => {
       const previous = previousMessagesRef.current.find(m => m.rideId === message.rideId);
       if (previous?.status !== message.status) {
@@ -121,6 +122,7 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
         user={user}
         station={station}
         accepted={accepted}
+        vehicles={vehicles}
         activeRequests={activeRequests}
         requestInfo={requestInfo}
       />

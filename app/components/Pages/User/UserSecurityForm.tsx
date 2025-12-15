@@ -22,6 +22,12 @@ export default function UserSecurityForm({ user }: any) {
           </p>
         </div>
 
+        {user?.isReset && (
+          <div className="bg-red-100 p-2 rounded-lg border border-1 border-red-400">
+          <p className="text-black">Your password has been reset please create a new one.</p>
+        </div>
+        )}
+
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">

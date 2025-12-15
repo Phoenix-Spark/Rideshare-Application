@@ -31,8 +31,8 @@ export async function createVehicle(
 }
 
 export async function getVehicles(userId: string) {
-  const vehicle = await prisma.vehicle.findMany({
-    where: { userId: userId },
+  return prisma.vehicle.findMany({
+    where: { userId },
     select: {
       id: true,
       year: true,
@@ -43,8 +43,6 @@ export async function getVehicles(userId: string) {
       createdAt: true,
     },
   });
-
-  return vehicle;
 }
 
 export async function deleteVehicle(id: string) {

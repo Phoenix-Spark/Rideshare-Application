@@ -1,7 +1,7 @@
 import { Form } from "react-router";
 import ButtonControls from "~/components/Buttons/ButtonControls";
 
-export default function UserBaseForm({ user, base }: any) {
+export default function UserBaseForm({ user, base, userBase }: any) {
   const bases = base.base;
 
   return (
@@ -12,6 +12,12 @@ export default function UserBaseForm({ user, base }: any) {
           Select your primary operating base location
         </p>
       </div>
+
+      {!userBase.base && (
+          <div className="bg-red-100 p-2 rounded-lg border border-1 border-red-400">
+          <p className="text-black">Please select a duty location to start requesting rides from your base.</p>
+        </div>
+        )}
 
       <Form
         method="post"

@@ -20,11 +20,14 @@ import { tabs } from "~/lib/constants";
 export default function UserSettingsModal({
   user,
   base,
+  userBase,
   vehicles,
   invite,
 }: any) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState(searchParams.get("tab") ?? "profile");
+
+  console.log('======',userBase.base)
 
   const tabs = [
     {
@@ -37,16 +40,23 @@ export default function UserSettingsModal({
       name: "permissions",
       icon: <LockIcon className="size-6" />,
     },
-    { label: "Base", name: "base", icon: <BaseIcon className="size-6" /> },
+    { 
+      label: "Base", 
+      name: "base", 
+      icon: <BaseIcon className="size-6" />,
+      badge: !userBase.base,
+    },
     {
       label: "Vehicles",
       name: "vehicles",
       icon: <VehicleIcon className="size-6" />,
+      badge: user?.isDriver,
     },
     {
       label: "Security",
       name: "security",
       icon: <ShieldIcon className="size-6" />,
+      badge: user?.isReset,
     },
     {
       label: "Invites",
@@ -75,7 +85,7 @@ export default function UserSettingsModal({
                   key={tab.name}
                   type="button"
                   onClick={() => setSelectedTab(tab.name)}
-                  className={`w-full text-left px-5 py-3.5 rounded-2xl font-medium transition-all duration-300 flex items-center gap-3 group ${
+                  className={`relative w-full text-left px-5 py-3.5 rounded-2xl font-medium transition-all duration-300 flex items-center gap-3 group ${
                     selectedTab === tab.name
                       ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/30 scale-105"
                       : "text-gray-700 hover:bg-white/70 hover:shadow-md hover:scale-102"
@@ -83,6 +93,13 @@ export default function UserSettingsModal({
                 >
                   <span className="text-xl">{tab.icon}</span>
                   <span>{tab.label}</span>
+
+                  {tab.badge && (
+                    <>
+                      <span className="absolute right-3 top-1/2 w-2.5 h-2.5 bg-red-500 rounded-full -translate-y-1/2" />
+                      <span className="absolute right-3 top-1/2 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping -translate-y-1/2" />
+                    </>
+                  )}
                 </button>
               ))}
             </div>
@@ -99,7 +116,7 @@ export default function UserSettingsModal({
 
           {selectedTab === "profile" && <UserProfileForm user={user} />}
           {selectedTab === "permissions" && <UserPermissionForm user={user} />}
-          {selectedTab === "base" && <UserBaseForm user={user} base={base} />}
+          {selectedTab === "base" && <UserBaseForm user={user} base={base} userBase={userBase}/>}
           {selectedTab === "vehicles" && ( <UserVehicleForm user={user} vehicles={vehicles} /> )}
           {selectedTab === "security" && <UserSecurityForm user={user} />}
           {!user?.isInvite && selectedTab === "invites" && ( <UserInviteForm user={user} invite={invite} /> )}

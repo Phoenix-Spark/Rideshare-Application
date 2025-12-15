@@ -47,6 +47,12 @@ export default function UserVehicleForm({ user, vehicles }: any) {
         </div>
       </Form>
 
+      {user?.isDriver && vehicles?.length === 0 && (
+          <div className="bg-red-100 p-2 rounded-lg border border-1 border-red-400">
+          <p className="text-black">Please add a vehicle to your account to complete driver setup.</p>
+        </div>
+        )}
+
       {user?.isDriver && vehicles?.length > 0 && (
         <div className="space-y-4">
           <h4 className="text-xl font-semibold text-gray-900">
