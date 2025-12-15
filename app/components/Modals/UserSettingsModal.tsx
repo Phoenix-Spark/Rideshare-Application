@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { UserIcon } from "../Icons/UserIcon";
 import { LockIcon } from "../Icons/LockIcon";
 import { VehicleIcon } from "../Icons/VehicleIcon";
@@ -22,7 +22,8 @@ export default function UserSettingsModal({
   vehicles,
   invite,
 }: any) {
-  const [selectedTab, setSelectedTab] = useState("profile");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedTab, setSelectedTab] = useState(searchParams.get("tab") ?? "profile");
 
   const tabs = [
     {

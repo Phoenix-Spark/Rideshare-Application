@@ -7,7 +7,8 @@ export async function registerUser(
   lastName: string,
   email: string,
   phoneNumber: string,
-  password: string
+  password: string,
+  base: string,
 ) {
   const existingEmail = await prisma.user.findFirst({
     where: {
@@ -84,6 +85,7 @@ export async function registerUser(
       isAdmin,
       inviteId,
       emailVerified,
+      baseId: base,
     },
   });
 

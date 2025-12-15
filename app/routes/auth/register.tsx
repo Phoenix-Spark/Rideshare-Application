@@ -1,7 +1,14 @@
 import { redirect } from "react-router";
+import { prisma } from "server/db.server";
 import { registerUser } from "server/queries/auth.queries.server";
 import RegisterForm from "~/components/Forms/RegisterForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
+import type { Route } from "./+types/register";
+
+export const loader = async ({}) => {
+  const bases = await prisma.base.findMany()
+  return {bases}
+}
 
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
@@ -11,6 +18,7 @@ export const action = async ({ request }: { request: Request }) => {
   const email = formData.get("email") as string;
   const phoneNumber = formData.get("phoneNumber") as string;
   const password = formData.get("password") as string;
+  const base = formData.get("base") as string;
 
   const result = await registerUser(
     inviteCode,
@@ -18,7 +26,8 @@ export const action = async ({ request }: { request: Request }) => {
     lastName,
     email,
     phoneNumber,
-    password
+    password,
+    base,
   );
 
   if (result?.error) {
@@ -28,8 +37,9 @@ export const action = async ({ request }: { request: Request }) => {
   return redirect("/login");
 };
 
-export default function Register() {
-  return <RegisterForm />;
+export default function Register({ loaderData }: Route.ComponentProps) {
+  const {bases} = loaderData;
+  return <RegisterForm bases={bases}/>;
 }
 
 export { ErrorBoundary };

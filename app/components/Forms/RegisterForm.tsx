@@ -3,7 +3,7 @@ import { Form, useActionData } from "react-router";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 
-export default function Register() {
+export default function Register({bases}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [useInvite, setUseInvite] = useState(false);
   const actionData = useActionData<{ error?: string }>();
@@ -11,6 +11,7 @@ export default function Register() {
   const fields = [
     { label: "First Name", name: "firstName", type: "text", placeholder: "John" },
     { label: "Last Name", name: "lastName", type: "text", placeholder: "Doe" },
+    { label: "Base", name: "base", type: "select", placeholder: "Select your base..."},
     { label: "Email Address", name: "email", type: "email", placeholder: "john.doe@us.af.mil" },
     { label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "(123) 456-7890", maxLength: 14 },
   ];
@@ -97,7 +98,14 @@ export default function Register() {
                 <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor={field.name}>
                   {field.label}
                 </label>
-                <input
+                {field.type === "select" ? (
+                  <select name={field.name} required className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900">
+                    <option id="" value="">{field.placeholder}</option>
+                    {bases.map(base => 
+                      <option id={base.id} value={base.id}>{base.name}</option>
+                    )}
+                  </select>
+                ) : <input
                   type={field.type}
                   id={field.name}
                   name={field.name}
@@ -105,7 +113,9 @@ export default function Register() {
                   maxLength={field.maxLength}
                   required
                   className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
-                />
+                />}
+
+                
               </div>
             ))}
 
