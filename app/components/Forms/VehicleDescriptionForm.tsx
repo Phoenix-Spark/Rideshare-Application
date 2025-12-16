@@ -95,20 +95,26 @@ export default function VehicleDescriptionForm() {
           className="rounded-xl border-2 border-gray-200 px-4 py-2.5 text-gray-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300"
         />
         <input type="hidden" name="color" value={carColor} />
-        {colorBox && <div className="col-span-5 grid grid-cols-5 gap-4 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-gray-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300">
-          {colors.map((c, index) => 
-          <div className={`inline-flex items-center gap-2 text-slate-800 p-2 rounded-lg hover:bg-slate-200 hover:border-2 ${c.label === carColor ? "bg-slate-200 border-2": "border-none bg-none"}`} onClick={() => {setCarColor(prev => {
-            if(prev === c.label){
-              return ""
-            }else{
-              return c.label
-            }}
-            )}}>
-            <p className={`rounded-full w-fit p-4 border-2 border-gray-500 ${c.bg}`}>
-              </p>
-              <p>{c.label}</p>
-            </div>)}
-        </div>}
+        {colorBox && (
+          <div className="col-span-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-4 gap-4 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-gray-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300">
+            {colors.map((c, index) => (
+              <div
+                key={index}
+                className={`inline-flex items-center gap-2 text-slate-800 p-2 rounded-lg hover:bg-slate-200 hover:border-2 cursor-pointer transition-colors ${
+                  c.label === carColor 
+                    ? "bg-slate-200 border-2 border-slate-400" 
+                    : "border-2 border-transparent"
+                }`}
+                onClick={() => {
+                  setCarColor(prev => prev === c.label ? "" : c.label);
+                }}
+              >
+                <div className={`rounded-full w-8 h-8 flex-shrink-0 border-2 border-gray-500 ${c.bg}`} />
+                <p className="truncate flex-1 min-w-0">{c.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
       </div>
       <button
