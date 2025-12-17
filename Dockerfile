@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -12,8 +12,9 @@ RUN npm ci
 # Copy application code
 COPY . .
 
-# Generate Prisma Client (since you have a prisma directory)
-RUN npx prisma generate
+# Generate Prisma Client with a placeholder DATABASE_URL
+# (actual DATABASE_URL will be provided at runtime)
+RUN DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder" npx prisma generate
 
 # Build the application
 RUN npm run build
