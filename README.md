@@ -1,4 +1,4 @@
-# Base Bound 🇺🇸
+# Base Bound
 
 > Get Where You Need to Go, Together
 
