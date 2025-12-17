@@ -97,10 +97,10 @@ export default function LandingPage() {
                 <span className="text-xs text-white font-medium">Powered by</span>
                 <a href="https://www.travisspark.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
                   <img 
-                    width={85} 
-                    src="https://lh3.googleusercontent.com/sitesv/AAzXCkeBZ4CnadObHjNht4DayPeK1IQ_TdzUFMAas3I4x-0g1d8A2DItFK6FhY8Q9FL_b_VixsM6cOJ9fWFG714yfHHPtKCHIEeXLQHtaHlzpR1NHF2fPwQvLAYpLlsgCyGK9ABLDNFRJZ7bSVLFNrm0hT6HU60DDAo1vA13QrG3bzxxD2xyXyQyzWaHN2U=w16383" 
+                    width={85}
+                    src="/public/SparkLogo.png" 
                     alt="Phoenix Spark"
-                    className="h-10 w-auto"
+                    className="h-20 w-auto"
                   />
                 </a>
               </div>
@@ -122,7 +122,7 @@ export default function LandingPage() {
             <a href="https://www.travisspark.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img 
                 width={75} 
-                src="https://lh3.googleusercontent.com/sitesv/AAzXCkeBZ4CnadObHjNht4DayPeK1IQ_TdzUFMAas3I4x-0g1d8A2DItFK6FhY8Q9FL_b_VixsM6cOJ9fWFG714yfHHPtKCHIEeXLQHtaHlzpR1NHF2fPwQvLAYpLlsgCyGK9ABLDNFRJZ7bSVLFNrm0hT6HU60DDAo1vA13QrG3bzxxD2xyXyQyzWaHN2U=w16383" 
+                src="/public/SparkLogo.png" 
                 alt="Phoenix Spark"
                 className="h-8 w-auto"
               />
