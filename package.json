@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "react-router dev --port 3000",
+    "dev": "concurrently \"react-router dev --port 3000 --host\" \"npm run dev:ws\"",
     "dev:ws": "tsx watch server/websocket-server.js",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev:ws\"",
+    "dev:all": "npx concurrently \"npm run dev\" \"npm run dev:ws\"",
     "build": "react-router build",
     "start": "react-router-serve ./build/server/index.js",
     "ws:start": "tsx server/websocket-server.ts"
@@ -40,6 +40,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.1.9",
     "@types/ws": "^8.18.1",
+    "concurrently": "^9.2.1",
     "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.11",
     "react-router-devtools": "^6.0.0",

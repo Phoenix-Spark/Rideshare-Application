@@ -86,7 +86,9 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
   const previousMessagesRef = useRef<RideMessage[]>([]);
   useEffect(() => {
     if (actionData?.success) {
-      toast.success(actionData.message);
+      if(actionData.message.length > 0){ 
+        toast.success(actionData.message);
+      }
     }
     if (actionData && !actionData?.success) {
       toast.error(actionData.message);
