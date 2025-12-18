@@ -10,20 +10,20 @@ import {
 import { ToastContainer } from "react-toastify";
 import type { Route } from "./+types/root";
 import "./app.css";
-import crypto from "crypto";
 
 export const headers: HeadersFunction = () => {
+  // Use environment variable for WebSocket server in production
   const WS_URL = process.env.WS_URL || "ws://localhost:3001";
-
-  const nonce = crypto.randomBytes(16).toString("base64");
 
   return {
     "Content-Security-Policy": [
       "default-src 'self'",
-      `script-src 'self' 'nonce-${nonce}'`,
-      `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://cdn.jsdelivr.net`,
+      // Keep unsafe-inline for now to support Remix hydration
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
       "font-src 'self' https://fonts.gstatic.com",
-      `img-src 'self' data: https://tile.openstreetmap.org`,
+      "img-src 'self' data: https://tile.openstreetmap.org",
+      // Restrict connect-src to only your app and necessary external services
       `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
       "worker-src 'self' blob:",
       "frame-ancestors 'none'",
@@ -34,10 +34,8 @@ export const headers: HeadersFunction = () => {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
-    "X-Content-Security-Nonce": nonce,
   };
 };
-
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
