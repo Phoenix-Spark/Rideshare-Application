@@ -24,34 +24,27 @@ export async function loader() {
 
 export const headers: HeadersFunction = () => {
   const WS_URL = process.env.WS_URL || "ws://localhost:3001";
-  const isProduction = process.env.NODE_ENV === "production";
-
-  const cspDirectives = [
-    "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
-    "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://tile.openstreetmap.org",
-    `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
-    "worker-src 'self' blob:",
-    "frame-ancestors 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-  ];
-
-  // CRITICAL: Only add upgrade-insecure-requests in production
-  if (isProduction) {
-    cspDirectives.push("upgrade-insecure-requests");
-  }
 
   return {
-    "Content-Security-Policy": cspDirectives.join("; "),
+    "Content-Security-Policy": [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+      `font-src 'self' https://fonts.gstatic.com`,
+      `img-src 'self' data: https://tile.openstreetmap.org`,
+      `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
+      "worker-src 'self' blob:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+    ].join("; "),
     "X-Frame-Options": "DENY",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
   };
 };
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
