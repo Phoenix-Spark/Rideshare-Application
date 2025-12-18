@@ -7,8 +7,6 @@ export default function MiddlePanelForm({ user, vehicles }: any) {
   const isDriver = !!user?.isDriver;
   const isVehicle = vehicles;
 
-  console.log(vehicles)
-
   const hasVehicleError = isDriver && isVehicle.length === 0;
   const noErrors = hasBase && !isReset;
 

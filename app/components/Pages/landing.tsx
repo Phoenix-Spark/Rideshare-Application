@@ -122,7 +122,7 @@ export default function LandingPage() {
             <a href="https://www.travisspark.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img 
                 width={75} 
-                src="/public/SparkLogo.png" 
+                src="/SparkLogo.png" 
                 alt="Phoenix Spark"
                 className="h-8 w-auto"
               />
@@ -390,34 +390,6 @@ export default function LandingPage() {
                 © 2025 Base Bound. Volunteer-driven community service.
               </p>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">How It Works</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Safety Guidelines</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-            <div className="flex-1">
-                  <div className='inline-flex items-center gap-2'>
-              <img width={50} height={50} src="https://lh3.googleusercontent.com/sitesv/AAzXCkeBZ4CnadObHjNht4DayPeK1IQ_TdzUFMAas3I4x-0g1d8A2DItFK6FhY8Q9FL_b_VixsM6cOJ9fWFG714yfHHPtKCHIEeXLQHtaHlzpR1NHF2fPwQvLAYpLlsgCyGK9ABLDNFRJZ7bSVLFNrm0hT6HU60DDAo1vA13QrG3bzxxD2xyXyQyzWaHN2U=w16383" alt="logo"/>
-              <p className="text-sm text-slate-500">Phoenix Spark 2025</p>
-                  </div>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
-            <p>Base Bound is an unofficial community service and is not affiliated with or endorsed by the United States Air Force.</p>
           </div>
         </div>
       </footer>

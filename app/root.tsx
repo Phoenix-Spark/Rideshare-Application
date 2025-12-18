@@ -1,7 +1,39 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLocation } from "react-router";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLocation,
+  type HeadersFunction,
+} from "react-router";
 import { ToastContainer } from "react-toastify";
 import type { Route } from "./+types/root";
 import "./app.css";
+
+export const headers: HeadersFunction = () => {
+  const WS_URL = process.env.WS_URL || "ws://localhost:3001";
+
+  return {
+    "Content-Security-Policy": [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+      "font-src 'self' https://fonts.gstatic.com",
+      `img-src 'self' data: https://tile.openstreetmap.org`,
+      `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
+      "worker-src 'self' blob:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+    ].join("; "),
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+  };
+};
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -22,7 +54,8 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const isLandingPage = location.pathname === '/';
+  const isLandingPage = location.pathname === "/";
+
   return (
     <html lang="en">
       <head>
@@ -31,7 +64,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className={`w-screen h-screen ${isLandingPage ? 'overflow-y-scroll' : 'overflow-hidden'}`}>
+      <body
+        className={`w-screen h-screen ${
+          isLandingPage ? "overflow-y-scroll" : "overflow-hidden"
+        }`}
+      >
         {children}
         <ScrollRestoration />
         <Scripts />
