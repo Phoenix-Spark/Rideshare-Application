@@ -101,8 +101,8 @@ export default function RegisterForm({bases}: any) {
                 {field.type === "select" ? (
                   <select name={field.name} required className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900">
                     <option id="" value="">{field.placeholder}</option>
-                    {bases.map((base: any) => 
-                      <option id={base.id} value={base.id}>{base.name}</option>
+                    {bases?.map((base: any) => 
+                      <option id={base?.id} value={base?.id}>{base?.name}</option>
                     )}
                   </select>
                 ) : <input

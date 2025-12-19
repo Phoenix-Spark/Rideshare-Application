@@ -22,32 +22,32 @@ export async function loader() {
   };
 }
 
-export const headers: HeadersFunction = () => {
-  const WS_URL = process.env.WS_URL || "ws://localhost:3001";
+// export const headers: HeadersFunction = () => {
+//   const WS_URL = process.env.WS_URL || "ws://localhost:3001";
 
-  return {
-    "Content-Security-Policy": [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https://tile.openstreetmap.org",
-      `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
-      "worker-src 'self' blob:",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-    ].join("; "),
-    "X-Frame-Options": "DENY",
-    "X-Content-Type-Options": "nosniff",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-    "Cache-Control": "no-store, no-cache, must-revalidate, private",
-    "Pragma": "no-cache",
-    "Expires": "0",
-  };
-};
+//   return {
+//     "Content-Security-Policy": [
+//       "default-src 'self'",
+//       "script-src 'self' 'unsafe-inline'",
+//       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+//       "font-src 'self' https://fonts.gstatic.com",
+//       "img-src 'self' data: https://tile.openstreetmap.org",
+//       `connect-src 'self' ${WS_URL} https://tile.openstreetmap.org`,
+//       "worker-src 'self' blob:",
+//       "frame-ancestors 'none'",
+//       "base-uri 'self'",
+//       "form-action 'self'",
+//     ].join("; "),
+//     "X-Frame-Options": "DENY",
+//     "X-Content-Type-Options": "nosniff",
+//     "Referrer-Policy": "strict-origin-when-cross-origin",
+//     "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+//     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+//     "Cache-Control": "no-store, no-cache, must-revalidate, private",
+//     "Pragma": "no-cache",
+//     "Expires": "0",
+//   };
+// };
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
