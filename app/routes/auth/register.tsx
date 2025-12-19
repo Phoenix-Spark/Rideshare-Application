@@ -42,4 +42,4 @@ export default function Register({ loaderData }: Route.ComponentProps) {
   return <RegisterForm bases={bases}/>;
 }
 
-// export { ErrorBoundary };
+export { ErrorBoundary };
