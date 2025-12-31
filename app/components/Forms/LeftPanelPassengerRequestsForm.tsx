@@ -224,7 +224,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                 timeLeft > 0 ? (
                   <button
                     type="submit"
-                    className="px-4 py-1 font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
+                    className="px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
                   >
                     Cancel Request
                   </button>
@@ -241,20 +241,20 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
 
   return (
     <div
-      className={`fixed md:absolute transition-all bottom-0 left-0 md:bottom-10 md:left-8 z-51 md:z-40 ${showRequests ? "max-h-80" : " "} w-full md:w-96 bg-white md:rounded-2xl shadow-xl md:border border-gray-100 overflow-hidden`}
+      className={`md:fixed transition-all md:bottom-10 md:left-8 md:z-40 ${showRequests ? "max-h-80" : ""} md:w-96 w-full bg-white rounded-2xl md:shadow-xl md:border border border-gray-200 md:border-gray-100 overflow-hidden`}
     >
       <div
         className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white flex"
         onClick={() => setShowRequests(!showRequests)}
       >
-        <div className="flex justify-between items-center gap-x-63">
+        <div className="flex w-full justify-between items-center ">
           <h3 className="text-lg font-semibold">Requests</h3>
 
           {requestInfo.length > 0 &&
             requestInfo.some(
               (r: any) => r.status === "Accepted" || r.status === "Pending"
             ) && (
-              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+              <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                 {
                   requestInfo.filter(
                     (r: any) =>

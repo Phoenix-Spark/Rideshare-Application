@@ -20,7 +20,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
   };
 
   return (
-    <div className="fixed md:absolute bottom-0 left-0 w-full md:bottom-10 md:left-8 z-51 md:z-40 md:w-96 bg-white md:rounded-2xl shadow-xl md:border border-gray-100 overflow-hidden">
+    <div className="md:fixed md:bottom-10 md:left-8 md:z-40 md:w-96 w-full bg-white rounded-2xl md:shadow-xl md:border border border-gray-200 md:border-gray-100 overflow-hidden">
       <div
         className="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 text-white cursor-pointer"
         onClick={() => setShowRequests(!showRequests)}
@@ -127,7 +127,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
                         name="submit"
                         value="confirm"
                         disabled={isPickupSubmitting}
-                        className="w-full px-4 py-2 font-semibold rounded-lg bg-green-500 text-white hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                        className="w-full px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-green-500 text-white hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
                         >
                         {isPickupSubmitting ? (
                           <>
@@ -143,7 +143,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
                         name="submit"
                         value="cancel"
                         disabled={isPickupSubmitting}
-                        className="px-4 font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
+                        className="px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
                         >
                         Cancel
                       </button>
@@ -163,7 +163,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
                       <button
                         type="submit"
                         disabled={isDropoffSubmitting}
-                        className="w-full px-4 py-2 font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                        className="w-full px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
                       >
                         {isDropoffSubmitting ? (
                           <>

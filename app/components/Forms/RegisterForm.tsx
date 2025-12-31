@@ -17,14 +17,14 @@ export default function RegisterForm({bases}: any) {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-30 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center md:block bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative md:py-12">
+      <div className="hidden md:block absolute inset-0 opacity-30 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative bg-white rounded-3xl shadow-xl border border-gray-100 w-full max-w-[550px] p-10 flex flex-col items-center">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 rounded-t-full" />
+      <div className="relative bg-white md:rounded-3xl md:shadow-xl md:border border-gray-100 w-full min-h-screen md:min-h-0 md:h-auto md:max-w-[550px] md:mx-auto p-6 md:p-10 flex flex-col items-center">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 md:rounded-t-full" />
 
         <div className="mb-8 text-center">
           <div className="flex flex-col items-center gap-4">
@@ -145,7 +145,7 @@ export default function RegisterForm({bases}: any) {
 
             <button
               type="submit"
-              className="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+              className="w-full mb-8 md:mb-0 py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
             >
               Create Account
             </button>

@@ -74,7 +74,8 @@ export default function UserSettingsModal({
   
   return (
     <div className="fixed inset-0 z-50 flex md:items-center md:justify-center bg-black/50 to-black/50 backdrop-blur-lg md:p-4 w-screen">
-      <div className="bg-white/95 backdrop-blur-xl md:rounded-3xl shadow-2xl md:w-[1100px] md:h-[700px] flex overflow-hidden relative border border-gray-200/50">
+      <div className="fixed inset-0 md:relative md:w-[1100px] md:h-[700px] bg-white/95 backdrop-blur-xl md:rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden border-0 md:border border-gray-200/50">
+        {/* Desktop Sidebar - keep existing */}
         <aside className="hidden md:block w-80 bg-gradient-to-b from-indigo-50 via-white to-indigo-50/50 p-8 flex-col gap-2 border-r border-indigo-100/50 relative overflow-hidden">
           <div className="relative z-10">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
@@ -123,6 +124,26 @@ export default function UserSettingsModal({
           {!user?.isInvite && selectedTab === "invites" && ( <UserInviteForm user={user} invite={invite} /> )}
           {selectedTab === "deactivation" && <UserDeleteForm user={user} />}
         </div>
+
+        {/* Mobile Bottom Tab Bar */}
+        <nav className="md:hidden flex overflow-x-auto bg-white border-t border-gray-200 px-2 py-1 safe-area-inset-bottom">
+          {tabs.map((tab) => (
+            <button
+              key={tab.name}
+              type="button"
+              onClick={() => setSelectedTab(tab.name)}
+              className={`flex-shrink-0 flex flex-col items-center gap-1 px-3 py-2 min-w-[72px] relative ${
+                selectedTab === tab.name ? 'text-indigo-600' : 'text-gray-600'
+              }`}
+            >
+              <span className="text-lg">{tab.icon}</span>
+              <span className="text-xs font-medium truncate max-w-[60px]">{tab.label}</span>
+              {tab.badge && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+              )}
+            </button>
+          ))}
+        </nav>
       </div>
     </div>
   );

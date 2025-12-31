@@ -19,6 +19,7 @@ export default function LeftSideRidePanelForm({
 }: any) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [isSheetExpanded, setIsSheetExpanded] = useState(false);
   const mode = searchParams.get("mode") || "passenger";
   const [isDriverMode, setIsDriverMode] = useState(
     mode === "driver" ? true : false
@@ -58,13 +59,27 @@ export default function LeftSideRidePanelForm({
       )}
 
       {showMain && (
-        <div className="absolute top-0 left-0 md:top-8 md:left-8 z-50 w-screen md:w-96 h-screen md:h-fit bg-white md:rounded-2xl shadow-2xl md:border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white flex items-center justify-between gap-3">
+        <div className={`fixed md:absolute bottom-0 md:top-8 left-0 md:left-8 right-0 md:right-auto w-full md:w-96 ${isSheetExpanded ? 'h-screen' : 'h-[60vh]'} md:h-fit md:rounded-2xl z-50 bg-white shadow-2xl md:border border-gray-100 overflow-y-auto transition-[height] duration-500 ease-out`}>
+          {/* Mobile drag handle */}
+          {!isSheetExpanded && <div
+            className={`md:hidden flex justify-center py-2 rounded-t-4xl bg-gradient-to-br from-blue-600 to-indigo-700 cursor-pointer active:bg-indigo-800 transition-transform duration-500 ease-out translate-y-0`}
+            onClick={() => setIsSheetExpanded(true)}
+          >
+            <div className="w-12 h-1.5 bg-white/30 rounded-full" />
+          </div>}
+
+          <div
+            className="sticky top-0 z-10 bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white flex items-center justify-between gap-3 md:cursor-default cursor-pointer active:bg-indigo-800"
+            onClick={() => setIsSheetExpanded(false)}
+          >
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div
-                  className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl md:cursor-default cursor-pointer"
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-3.5 md:p-2.5 bg-white/20 backdrop-blur-sm rounded-xl md:cursor-default cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMobileMenu(!showMobileMenu);
+                  }}
                 >
                   <BaseBoundIcon className="w-6 h-6" />
                 </div>
@@ -90,10 +105,11 @@ export default function LeftSideRidePanelForm({
                       <Form method="post" action="/logout">
                         {tabs.map((t) => (
                           <Link
+                            key={t.name}
                             to={t.to as string}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium text-gray-600 border-b border-gray-200"
+                            className="relative w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium text-gray-600 border-b border-gray-200"
                           >
-                            
+
                             <span className="text-xl">{t.icon}</span>
                             <span>{t.label}</span>
 
@@ -133,7 +149,10 @@ export default function LeftSideRidePanelForm({
                 </span>
                 <button
                   type="button"
-                  onClick={toggleMode}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMode();
+                  }}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
                     isDriverMode ? "bg-indigo-600" : "bg-gray-300"
                   }`}
@@ -148,7 +167,7 @@ export default function LeftSideRidePanelForm({
             )}
           </div>
 
-          <div className="p-6 bg-white">
+          <div className={`p-6 bg-white ${isSheetExpanded ? 'flex flex-col min-h-[calc(100vh-5rem)]' : ''}`}>
             {!isDriverMode ? (
               <>
                 <LeftPanelPassengerForm
@@ -166,17 +185,32 @@ export default function LeftSideRidePanelForm({
                 />
               )
             )}
+
+            {/* Spacer when expanded to push request panel to bottom */}
+            {isSheetExpanded && <div className="flex-grow md:hidden" />}
+
+            {/* Mobile: Render request panels inside bottom sheet */}
+            <div className={`md:hidden ${isSheetExpanded ? 'pt-6 pb-6' : 'mt-6'}`}>
+              {!isDriverMode ? (
+                <LeftPanelPassengerRequestsForm requestInfo={requestInfo} />
+              ) : (
+                user?.isDriver && (
+                  <LeftPanelDriverRequestForm accepted={accepted} />
+                )
+              )}
+            </div>
           </div>
         </div>
       )}
 
+      {/* Desktop: Render request panels as floating panels */}
       {!isDriverMode ? (
-        <div className="absolute bottom-0">
+        <div className="hidden md:block absolute bottom-0">
           <LeftPanelPassengerRequestsForm requestInfo={requestInfo} />
         </div>
       ) : (
         user?.isDriver && (
-          <div className="absolute bottom-0 w-screen">
+          <div className="hidden md:block absolute bottom-0 w-screen">
             <LeftPanelDriverRequestForm accepted={accepted} />
           </div>
         )

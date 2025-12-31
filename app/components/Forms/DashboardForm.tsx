@@ -33,8 +33,8 @@ export default function Dashboard({
       <div className="hidden md:block absolute top-8 right-8 h-full md:z-10">
         <RightSideUserPanelForm user={user} />
       </div>
-      <div className="absolute top-25 right-8">
-      <div className="flex items-start gap-3 mt-5 p-4 w-[350px] bg-gray-300/70 rounded-xl border border-gray-500">
+      <div className="hidden md:block absolute top-25 right-8 max-w-[350px]">
+      <div className="flex items-start gap-3 mt-5 p-4 w-full max-w-[350px] bg-gray-300/70 rounded-xl border border-gray-500">
         <span className="text-black text-sm text-pretty">
           This platform is a community-driven tool, not a guaranteed or
           on-demand service. Please keep in mind that everything depends on the

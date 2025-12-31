@@ -71,6 +71,8 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+  const allowScroll = isLandingPage || isAuthPage;
 
   return (
     <html lang="en">
@@ -82,7 +84,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body
         className={`w-screen h-screen ${
-          isLandingPage ? "overflow-y-scroll" : "overflow-hidden"
+          allowScroll ? "overflow-y-scroll" : "overflow-hidden"
         }`}
       >
         {children}

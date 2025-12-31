@@ -17,7 +17,7 @@ export default function MiddlePanelForm({ user, vehicles }: any) {
       {!hasBase && (
         <Link
           to="/dashboard/settings"
-          className="flex w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200 
+          className="flex w-full max-w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200
              hover:bg-red-100 hover:cursor-pointer transition-colors"
         >
           <WarningIcon className="w-5 h-5 text-red-500" />
@@ -30,7 +30,7 @@ export default function MiddlePanelForm({ user, vehicles }: any) {
       {hasVehicleError && (
         <Link
           to="/dashboard/settings"
-          className="flex w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200 
+          className="flex w-full max-w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200
              hover:bg-red-100 hover:cursor-pointer transition-colors"
         >
           <WarningIcon className="w-5 h-5 text-red-500" />
@@ -43,7 +43,7 @@ export default function MiddlePanelForm({ user, vehicles }: any) {
       {isReset && (
         <Link
           to="/dashboard/settings"
-          className="flex w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200
+          className="flex w-full max-w-[500px] items-center gap-3 bg-white text-red-700 px-4 py-3 rounded-lg border border-red-200 shadow-lg animate-in fade-in duration-200
              hover:bg-red-100 hover:cursor-pointer transition-colors"
         >
           <WarningIcon className="w-5 h-5 text-red-500" />
