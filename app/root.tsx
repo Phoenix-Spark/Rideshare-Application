@@ -24,7 +24,6 @@ export async function loader() {
 
 export const headers: HeadersFunction = () => {
   const WS_URL = process.env.WS_URL || "ws://localhost:3001";
-
   return {
     "Content-Security-Policy": [
       "default-src 'self'",
@@ -46,6 +45,11 @@ export const headers: HeadersFunction = () => {
     "Cache-Control": "no-store, no-cache, must-revalidate, private",
     "Pragma": "no-cache",
     "Expires": "0",
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "Clear-Site-Data": '"cache", "cookies", "storage"',
   };
 };
 

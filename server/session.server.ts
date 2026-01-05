@@ -10,7 +10,7 @@ if (!sessionSecret) {
 export const storage = createCookieSessionStorage({
   cookie: {
     name: "session-cookies",
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV == "production",
     secrets: [sessionSecret],
     sameSite: "strict",
     path: "/",
