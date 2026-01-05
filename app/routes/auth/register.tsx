@@ -4,6 +4,8 @@ import { registerUser } from "server/queries/auth.queries.server";
 import RegisterForm from "~/components/Forms/RegisterForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import type { Route } from "./+types/register";
+import { getUserId as getUserIdFromEmail } from "server/queries/user.queries.server";
+import { createUserSession } from "server/session.server";
 
 export const loader = async () => {
   const bases = await prisma.base.findMany()
@@ -33,8 +35,8 @@ export const action = async ({ request }: { request: Request }) => {
   if (result?.error) {
     return { error: result.error };
   }
-
-  return redirect("/login");
+  const {id} = (await getUserIdFromEmail(email))!
+  return await createUserSession(id, "/login")
 };
 
 export default function Register({ loaderData }: Route.ComponentProps) {

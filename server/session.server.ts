@@ -29,7 +29,7 @@ export async function getSession(request: Request) {
 export async function createUserSession(userId: string, redirectTo: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
-
+  console.log('cus', userId, redirectTo)
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),
@@ -66,6 +66,7 @@ export async function logoutUser(request: Request) {
 // Require userId for protected routes
 export async function requireUserId(request: Request, redirectTo = "/login") {
   const userId = await getUserId(request);
+  console.log(userId)
 
   if (!userId) {
     throw redirect(redirectTo);

@@ -15,10 +15,14 @@ function generateVerificationCode(length = 8): string {
 
 export async function sendVerificationCode(userId: string, email: string) {
   try {
+    console.log('userId: ', userId, email)
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { emailVerificationCodeSendLimit: true }
     });
+
+    console.log('user: ', user)
 
     if (user?.emailVerificationCodeSendLimit && user.emailVerificationCodeSendLimit > new Date()) {
       return { error: "Please try again in 5 minutes." };

@@ -10,6 +10,8 @@ import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
+
+  // console.log('uId: ',userId)
   if (userId) return redirect("/dashboard");
 }
 

@@ -11,6 +11,15 @@ function generateRandomCode(length = 10) {
   return result;
 }
 
+export async function getUserId(email: string){
+  return await prisma.user.findUnique({
+    where:{
+      email
+    },
+    select: {id: true}
+  })
+}
+
 export async function getUserInfo(intent: string, userId: string) {
   switch (intent) {
     case "dashboard":

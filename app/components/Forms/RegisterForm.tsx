@@ -11,13 +11,12 @@ export default function RegisterForm({bases}: any) {
   const fields = [
     { label: "First Name", name: "firstName", type: "text", placeholder: "John" },
     { label: "Last Name", name: "lastName", type: "text", placeholder: "Doe" },
-    { label: "Base", name: "base", type: "select", placeholder: "Select your base..."},
     { label: "Email Address", name: "email", type: "email", placeholder: "john.doe@us.af.mil" },
     { label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "(123) 456-7890", maxLength: 14 },
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center md:block bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative md:py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative md:py-12">
       <div className="hidden md:block absolute inset-0 opacity-30 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl" />
@@ -98,14 +97,7 @@ export default function RegisterForm({bases}: any) {
                 <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor={field.name}>
                   {field.label}
                 </label>
-                {field.type === "select" ? (
-                  <select name={field.name} required className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900">
-                    <option id="" value="">{field.placeholder}</option>
-                    {bases?.map((base: any) => 
-                      <option id={base?.id} value={base?.id}>{base?.name}</option>
-                    )}
-                  </select>
-                ) : <input
+                <input
                   type={field.type}
                   id={field.name}
                   name={field.name}
@@ -113,9 +105,7 @@ export default function RegisterForm({bases}: any) {
                   maxLength={field.maxLength}
                   required
                   className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
-                />}
-
-                
+                />
               </div>
             ))}
 

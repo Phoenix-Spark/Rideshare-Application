@@ -23,7 +23,8 @@ export async function loader() {
 }
 
 export const headers: HeadersFunction = () => {
-  const WS_URL = process.env.WS_URL || "ws://localhost:3001";
+  const WS_URL = process.env.WS_API_URL || "ws://localhost:3001";
+
   return {
     "Content-Security-Policy": [
       "default-src 'self'",

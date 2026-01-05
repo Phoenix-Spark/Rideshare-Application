@@ -59,7 +59,7 @@ export default function LeftSideRidePanelForm({
       )}
 
       {showMain && (
-        <div className={`fixed md:absolute bottom-0 md:top-8 left-0 md:left-8 right-0 md:right-auto w-full md:w-96 ${isSheetExpanded ? 'h-screen' : 'h-[60vh]'} md:h-fit md:rounded-2xl z-50 bg-white shadow-2xl md:border border-gray-100 overflow-y-auto transition-[height] duration-500 ease-out`}>
+        <div className={`fixed md:absolute bottom-0 md:top-8 left-0 md:left-8 right-0 md:right-auto w-full md:w-96 ${isSheetExpanded ? 'h-[92vh]' : 'h-[60vh]'} md:h-fit md:rounded-2xl z-50 bg-white shadow-2xl md:border border-gray-100 overflow-y-auto transition-[height] duration-500 ease-out`}>
           {/* Mobile drag handle */}
           {!isSheetExpanded && <div
             className={`md:hidden flex justify-center py-2 rounded-t-4xl bg-gradient-to-br from-blue-600 to-indigo-700 cursor-pointer active:bg-indigo-800 transition-transform duration-500 ease-out translate-y-0`}
@@ -190,7 +190,7 @@ export default function LeftSideRidePanelForm({
             {isSheetExpanded && <div className="flex-grow md:hidden" />}
 
             {/* Mobile: Render request panels inside bottom sheet */}
-            <div className={`md:hidden ${isSheetExpanded ? 'pt-6 pb-6' : 'mt-6'}`}>
+            <div className={`md:hidden ${isSheetExpanded ? 'pt-6 pb-20' : 'mt-6'}`}>
               {!isDriverMode ? (
                 <LeftPanelPassengerRequestsForm requestInfo={requestInfo} />
               ) : (
