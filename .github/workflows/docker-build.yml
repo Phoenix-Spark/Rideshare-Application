@@ -1,4 +1,4 @@
-name: Build, Push Docker & SonarQube Scan
+name: Build, Push Docker & SonarCloud Scan
 
 on:
   push:
@@ -32,6 +32,7 @@ jobs:
           else
             echo "TAGS=${{ secrets.DOCKER_USERNAME }}/rideshare:${GITHUB_SHA}" >> $GITHUB_ENV
           fi
+          echo "Docker tags set to: $TAGS"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.18.0
@@ -40,13 +41,13 @@ jobs:
           push: true
           tags: ${{ env.TAGS }}
 
-      - name: SonarQube Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://your-sonarqube.example.com
-          SONAR_PROJECT_KEY: rideshare
-          SONAR_ORGANIZATION: your-org
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           projectBaseDir: .
           args: >
