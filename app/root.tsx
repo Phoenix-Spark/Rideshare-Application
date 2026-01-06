@@ -50,7 +50,7 @@ export const headers: HeadersFunction = () => {
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
     "X-Permitted-Cross-Domain-Policies": "none",
-    "Clear-Site-Data": '"cache", "cookies", "storage"',
+    // "Clear-Site-Data": '"cache", "cookies", "storage"',
   };
 };
 

@@ -1,15 +1,34 @@
-import { PrismaClient } from "@prisma/client";
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 
-declare global {
-    var __db: PrismaClient | undefined;
+const { Pool } = pg;
+
+// Ensure environment variable is available
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is not set');
 }
 
-export const prisma =
-    global.__db ||
-    new PrismaClient({
-        log: ["query"],
-    });
+// Create connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
+});
 
-if (process.env.NODE_ENV !== "production") {
-    global.__db == prisma;
-}
+// Create the adapter
+const adapter = new PrismaPg(pool);
+
+// Create and export Prisma Client with adapter
+export const prisma = new PrismaClient({
+  adapter,
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
+});
+
+// Handle graceful shutdown
+process.on('beforeExit', async () => {
+  await prisma.$disconnect();
+  await pool.end();
+});

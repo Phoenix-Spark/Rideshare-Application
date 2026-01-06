@@ -1,7 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../server/db.server';
 
 async function main() {
 
