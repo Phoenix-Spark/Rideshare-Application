@@ -1,8 +1,8 @@
-name: Build & Push Docker Image
+name: Build & Push Docker Image (Prod)
 on:
   push:
     branches:
-      - main
+      - prod
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -22,5 +22,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rideshare:latest
-            ${{ secrets.DOCKER_USERNAME }}/rideshare:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/rideshare:prod
+            ${{ secrets.DOCKER_USERNAME }}/rideshare:prod-${{ github.sha }}
