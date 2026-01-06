@@ -6,12 +6,29 @@ import type { Route } from "./+types/register";
 import { getUserId as getUserIdFromEmail } from "server/queries/user.queries.server";
 import { createUserSession } from "server/session.server";
 
+import { csrf } from "server/csrf.server";
+import { CSRFError } from "remix-utils/csrf/server";
+import { requireSameOrigin } from "server/session.server";
+
 export const loader = async () => {
   const bases = await prisma.base.findMany()
   return {bases}
 }
 
 export const action = async ({ request }: { request: Request }) => {
+
+  requireSameOrigin(request);
+
+  try {
+    await csrf.validate(request);
+  } catch (error) {
+    if (error instanceof CSRFError) {
+      console.error("CSRF validation failed:", error.message);
+      return { error: "Invalid security token. Please refresh and try again." };
+    }
+    throw error;
+  }
+
   const formData = await request.formData();
   const inviteCode = formData.get("inviteCode") as string | null;
   const firstName = formData.get("firstName") as string;

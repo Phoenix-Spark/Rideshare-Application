@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, useActionData } from "react-router";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function RegisterForm({bases}: any) {
   const [showPassword, setShowPassword] = useState(false);
@@ -47,6 +48,7 @@ export default function RegisterForm({bases}: any) {
 
         <div className="w-full flex justify-center">
           <Form method="POST" action="/register" className="w-full max-w-md space-y-5">
+            <AuthenticityTokenInput />
 
             {actionData?.error && (
               <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md text-red-700">

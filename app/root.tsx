@@ -5,27 +5,35 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
+  useLoaderData,
   type HeadersFunction,
 } from "react-router";
 import { ToastContainer } from "react-toastify";
+import { AuthenticityTokenProvider } from "remix-utils/csrf/react";
+import { csrf } from "server/csrf.server";
 import type { Route } from "./+types/root";
 import "./app.css";
 
-export async function loader() {
+export async function loader({ request }: Route.LoaderArgs) {
   const nonce = Array.from(
     crypto.getRandomValues(new Uint8Array(16)),
     (byte) => byte.toString(16).padStart(2, "0")
   ).join("");
 
+  const [token] = await csrf.commitToken(request);
+
   return {
     nonce,
+    csrf: token,
   };
 }
 
-export const headers: HeadersFunction = () => {
+export const headers: HeadersFunction = ({ loaderHeaders }) => {
   const WS_URL = process.env.WS_API_URL || "ws://localhost:3001";
-
-  return {
+  
+  const setCookie = loaderHeaders.get("set-cookie");
+  
+  const headers: Record<string, string> = {
     "Content-Security-Policy": [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",
@@ -50,8 +58,13 @@ export const headers: HeadersFunction = () => {
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
     "X-Permitted-Cross-Domain-Policies": "none",
-    // "Clear-Site-Data": '"cache", "cookies", "storage"',
   };
+
+  if (setCookie) {
+    headers["Set-Cookie"] = setCookie;
+  }
+
+  return headers;
 };
 
 export const links: Route.LinksFunction = () => [
@@ -101,10 +114,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { csrf } = useLoaderData<typeof loader>();
+
   return (
-    <div>
-      <ToastContainer position="top-center" />
-      <Outlet />
-    </div>
+    <AuthenticityTokenProvider token={csrf}>
+      <div>
+        <ToastContainer position="top-center" />
+        <Outlet />
+      </div>
+    </AuthenticityTokenProvider>
   );
 }
