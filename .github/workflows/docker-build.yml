@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Set Docker tags based on branch
+      - name: Set Docker tags
         id: docker-tags
         run: |
           BRANCH=${GITHUB_REF##*/}
@@ -43,15 +43,10 @@ jobs:
           tags: ${{ env.TAGS }}
 
       - name: SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          BRANCH=${GITHUB_REF##*/}
-          echo "Running SonarQube analysis on branch: $BRANCH"
-          sonar-scanner \
-            -Dsonar.projectKey=rideshare \
-            -Dsonar.organization=your-org \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://your-sonarqube.example.com \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.branch.name=$BRANCH
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectKey: rideshare
+          organization: your-org
+          token: ${{ secrets.SONAR_TOKEN }}
+          extraProperties: |
+            sonar.branch.name=${GITHUB_REF##*/}
