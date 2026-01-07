@@ -45,7 +45,7 @@ export default function MiddlePanelForm({ user, vehicles, bases }: any) {
 
                 <div className="space-y-2">
                   <input type="hidden" name="intent" value="initialSetup" />
-                  <input type="hidden" name="userId" value={user.id} />
+                  <input type="hidden" name="userId" value={user?.id} />
                   <label
                     htmlFor="baseId"
                     className="block text-sm font-semibold text-gray-700"
