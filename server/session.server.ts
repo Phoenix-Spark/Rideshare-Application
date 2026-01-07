@@ -65,8 +65,7 @@ export async function logoutUser(request: Request) {
 
 // Require userId for protected routes
 export async function requireUserId(request: Request, redirectTo = "/login") {
-  // const userId = await getUserId(request);
-  const userId = "TESTUSER";
+  const userId = await getUserId(request);
 
   if (!userId) {
     throw redirect(redirectTo);
