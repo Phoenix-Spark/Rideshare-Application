@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ClockIcon } from "../Icons/ClockIcon";
 import { UserIcon } from "../Icons/UserIcon";
+import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftPanelRequestsForm({ requestInfo }: any) {
   if (!requestInfo) requestInfo = [];
@@ -108,15 +110,13 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             {getStatusBadge()}
           </div>
         ) : (
-          <form
-            method="post"
-            action="/dashboard"
-            key={request.id}
+          <Form method="post" action="/dashboard" key={request.id}
             className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow cursor-pointer"
             onClick={() =>
               request.status !== "Active" && setExpanded(!expanded)
             }
           >
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="requestDelete" />
             <input type="hidden" name="requestId" value={request.id} />
 
@@ -132,31 +132,6 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                   {request.user.phoneNumber || "No phone"}
                 </p>
               </div>
-
-              {/* {request.status === "Active" && (
-                <div className="flex items-center gap-1 text-xs">
-                  <ClockIcon
-                    className={`w-5 h-5 ${
-                      isExpired
-                        ? "text-gray-400"
-                        : isEndingSoon
-                          ? "text-red-500"
-                          : "text-gray-500"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm font-medium ${
-                      isExpired
-                        ? "text-gray-400"
-                        : isEndingSoon
-                          ? "text-red-500"
-                          : "text-gray-700"
-                    }`}
-                  >
-                    {isExpired ? "Expired" : formatCountdown(timeLeft)}
-                  </span>
-                </div>
-              )} */}
             </div>
 
             <div className="space-y-2">
@@ -214,7 +189,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                 </button>
               )}
             </div>
-          </form>
+          </Form>
         )}
       </div>
     );

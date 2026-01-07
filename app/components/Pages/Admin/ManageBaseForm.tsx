@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { AdminIcon } from "~/components/Icons/AdminIcon";
 import { EllipsisIcon } from "~/components/Icons/EllipsisIcon";
 
@@ -111,6 +112,7 @@ export default function ManageBaseForm({ base }: any) {
                 <div className="p-5">
                   <Form method="post" action="/dashboard/admin?page=bases" className="space-y-4"
                   >
+                    <AuthenticityTokenInput />
                     <input type="hidden" name="id" value={b.id} />
                     <input type="hidden" name="intent" value="updateBase" />
 
@@ -379,6 +381,7 @@ export default function ManageBaseForm({ base }: any) {
         </button>
 
         <Form method="post" action="/dashboard/admin?page=bases" className="inline">
+          <AuthenticityTokenInput />
           <input type="hidden" name="intent" value="deleteBase" />
           <input type="hidden" name="id" value={deletingBase.id} />
           <button

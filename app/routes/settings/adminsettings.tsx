@@ -9,6 +9,8 @@ import { checkEmailVerification, requireAdminId, requireSameOrigin, requireUserI
 import AdminSettingsModal from "~/components/Modals/AdminSettingsModal";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import type { Route } from "./+types/adminsettings";
+import { CSRFError } from "remix-utils/csrf/server";
+import { csrf } from "server/csrf.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId   = await requireUserId(request);
@@ -23,6 +25,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   requireSameOrigin(request);
+  try {
+    await csrf.validate(request);
+  } catch (error) {
+    if (error instanceof CSRFError) {
+      return {success: false, message: "Invalid Security Token"}
+    }
+    return {success: false, message: error}
+  }
+
   const loggedinUserId = await requireUserId(request);
   await requireAdminId(loggedinUserId)
 

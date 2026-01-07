@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form } from "react-router";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { NavigationIcon } from "../Icons/NavigationIcon";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftSidePassengerForm({ user, station, params }: any) {
   const [fromLocation, setFromLocation] = useState(params?.pickupId ?? "");
@@ -16,6 +17,7 @@ export default function LeftSidePassengerForm({ user, station, params }: any) {
 
   return (
     <Form method="post" >
+      <AuthenticityTokenInput />
       <input type="hidden" name="intent" value="createRequest" />
       <input type="hidden" name="userId" value={user?.id} />
       <input type="hidden" name="baseId" value={user?.base?.id} />

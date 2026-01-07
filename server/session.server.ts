@@ -122,29 +122,3 @@ export async function requireAdminId(userId: string) {
 
   return user;
 }
-
-// Generate or reuse CSRF token for the session
-export async function getCsrfToken(request: Request) {
-  const session = await getSession(request);
-
-  let token = session.get("csrf");
-  if (!token) {
-    token = crypto.randomUUID();
-    session.set("csrf", token);
-  }
-
-  return {
-    csrfToken: token,
-    session,
-  };
-}
-
-// Validate CSRF token on POST
-export function validateCsrf(
-  formToken: FormDataEntryValue | null,
-  sessionToken: string | undefined
-) {
-  if (!formToken || !sessionToken || formToken !== sessionToken) {
-    throw new Response("Invalid CSRF token", { status: 403 });
-  }
-}

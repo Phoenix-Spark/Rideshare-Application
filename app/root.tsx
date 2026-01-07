@@ -20,14 +20,21 @@ export async function loader({ request }: Route.LoaderArgs) {
     (byte) => byte.toString(16).padStart(2, "0")
   ).join("");
 
-  const [token] = await csrf.commitToken(request);
+  const [token, cookieHeader] = await csrf.commitToken(request);
 
-  return {
-    nonce,
-    csrf: token,
-  };
+  const headers = new Headers();
+  if (cookieHeader) {
+    headers.set("Set-Cookie", cookieHeader);
+  }
+
+  return Response.json(
+    {
+      nonce,
+      csrf: token,
+    },
+    { headers }
+  );
 }
-
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
   const WS_URL = process.env.WS_API_URL || "ws://localhost:3001";
   

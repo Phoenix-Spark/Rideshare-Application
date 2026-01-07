@@ -1,4 +1,5 @@
 import { Form, useActionData } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function CreateUserForm() {
   const actionData = useActionData<{ error?: string }>();
@@ -21,6 +22,7 @@ export default function CreateUserForm() {
       )}
 
       <Form method="post" action="/dashboard/admin" className="space-y-5">
+        <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="createUser" />
 
         <div className="grid grid-cols-2 gap-4">

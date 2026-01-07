@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ButtonControls from "~/components/Buttons/ButtonControls";
 import { LockIcon } from "~/components/Icons/LockIcon";
 import { PhoneIcon } from "~/components/Icons/PhoneIcon";
@@ -11,6 +12,7 @@ export default function UserSecurityForm({ user }: any) {
 
   return (
     <Form method="post" action="/dashboard/settings">
+      <AuthenticityTokenInput />
       <input type="hidden" name="intent" value="user" />
       <div className="flex flex-col min-h-full space-y-6">
         <div className="border-l-4 border-indigo-500 pl-6">

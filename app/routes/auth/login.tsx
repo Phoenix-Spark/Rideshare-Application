@@ -19,15 +19,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export const action = async ({ request }: { request: Request }) => {
   requireSameOrigin(request);
-  
   try {
     await csrf.validate(request);
   } catch (error) {
     if (error instanceof CSRFError) {
-      console.error("CSRF validation failed:", error.message);
-      throw new Response("Invalid CSRF token", { status: 403 });
+      return {success: false, message: "Invalid Security Token"}
     }
-    throw error;
+    return {success: false, message: error}
   }
 
   const formData = await request.formData();

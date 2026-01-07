@@ -5,6 +5,7 @@ import { NavigationIcon } from "../Icons/NavigationIcon";
 import LeftPanelRequestsForm from "./LeftPanelRequestsForm";
 import { MagnifyIcon } from "../Icons/MagnifyIcon";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftSideRidePanelForm({ user, station, requestInfo }: any) {
   const [fromLocation, setFromLocation] = useState("");
@@ -90,6 +91,7 @@ export default function LeftSideRidePanelForm({ user, station, requestInfo }: an
 
         <div className="p-6">
           <Form method="post" action="/dashboard">
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="createRequest" />
             <input type="hidden" name="userId" value={user?.id} />
 

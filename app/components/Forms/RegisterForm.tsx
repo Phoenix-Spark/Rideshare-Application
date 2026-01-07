@@ -4,7 +4,7 @@ import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
-export default function RegisterForm({bases}: any) {
+export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [useInvite, setUseInvite] = useState(false);
   const actionData = useActionData<{ error?: string }>();

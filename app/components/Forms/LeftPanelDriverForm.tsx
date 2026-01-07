@@ -1,4 +1,5 @@
 import { Form, useNavigation } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftPanelDriverForm({ user, activeRequests }: any) {
   const navigation = useNavigation();
@@ -59,6 +60,7 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
 
           return (
             <Form method="post" action="/dashboard?mode=driver" key={request.id}>
+              <AuthenticityTokenInput />
               <input type="hidden" name="intent" value="acceptRequest" />
               <input type="hidden" name="requestId" value={request.id} />
               <input type="hidden" name="driverId" value={user.id} />

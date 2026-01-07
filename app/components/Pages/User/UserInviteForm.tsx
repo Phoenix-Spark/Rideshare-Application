@@ -6,6 +6,7 @@ import { EyeClosedIcon } from "~/components/Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "~/components/Icons/EyeOpenIcon";
 import { RefreshIcon } from "~/components/Icons/RefreshIcon";
 import { CheckMarkIcon } from "~/components/Icons/CheckMarkIcon";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function UserInviteForm({ invite }: any) {
   const actionData = useActionData();
@@ -39,11 +40,8 @@ export default function UserInviteForm({ invite }: any) {
           </p>
         </div>
 
-        <Form
-          method="post"
-          action="/dashboard/settings"
-          className="space-y-5"
-        >
+        <Form method="post" action="/dashboard/settings" className="space-y-5" >
+          <AuthenticityTokenInput />
           <input type="hidden" name="intent" value="create-invite" />
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
@@ -155,15 +153,9 @@ export default function UserInviteForm({ invite }: any) {
                     )}
 
                     {inv.isActive && (
-                      <Form
-                        method="post"
-                        action="/dashboard/settings"
-                      >
-                        <input
-                          type="hidden"
-                          name="intent"
-                          value="regenerate-invite"
-                        />
+                      <Form method="post" action="/dashboard/settings">
+                        <AuthenticityTokenInput />
+                        <input type="hidden" name="intent" value="regenerate-invite"/>
                         <input type="hidden" name="id" value={inv.id} />
                         {new Date().getTime() -
                           new Date(inv.updatedAt).getTime() >
@@ -186,17 +178,9 @@ export default function UserInviteForm({ invite }: any) {
                       </Form>
                     )}
 
-                    <Form
-                      method="post"
-                      action="/dashboard/settings"
-                    >
-                      <input
-                        type="hidden"
-                        name="intent"
-                        value={
-                          inv.isActive ? "disable-invite" : "enable-invite"
-                        }
-                      />
+                    <Form method="post" action="/dashboard/settings" >
+                      <AuthenticityTokenInput />
+                      <input type="hidden" name="intent" value={ inv.isActive ? "disable-invite" : "enable-invite" } />
                       <input type="hidden" name="id" value={inv.id} />
                       <button
                         type="submit"
@@ -215,15 +199,9 @@ export default function UserInviteForm({ invite }: any) {
                       </button>
                     </Form>
 
-                    <Form
-                      method="post"
-                      action="/dashboard/settings"
-                    >
-                      <input
-                        type="hidden"
-                        name="intent"
-                        value="delete-invite"
-                      />
+                    <Form method="post" action="/dashboard/settings" >
+                      <AuthenticityTokenInput />
+                      <input type="hidden" name="intent" value="delete-invite" />
                       <input type="hidden" name="id" value={inv.id} />
                       <button
                         type="submit"
