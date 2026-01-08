@@ -58,6 +58,7 @@ export default function VehicleDescriptionForm() {
   const handleColorSelect = (hex: any, label: any) => {
     setCarColorHex(hex);
     setCarColorLabel(label);
+    showColorBox(false);
   };
 
   const handleCustomColorChange = (e: any) => {
