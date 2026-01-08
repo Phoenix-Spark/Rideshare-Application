@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ClockIcon } from "../Icons/ClockIcon";
 import { UserIcon } from "../Icons/UserIcon";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftPanelRequestsForm({ requestInfo }: any) {
   if (!requestInfo) requestInfo = [];
@@ -116,12 +117,11 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <div className="flex items-center gap-2">{getStatusBadge()}</div>
           </div>
         ) : (
-          <Form
-            method="post"
-            action="/dashboard?mode=passenger"
+          <Form method="post" action="/dashboard?mode=passenger"
             key={request.id}
             className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow"
           >
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="cancelRequest" />
             <input type="hidden" name="requestId" value={request.id} />
             <input type="hidden" name="driverId" value={request.driverId} />

@@ -1,4 +1,5 @@
 import { Form, useActionData } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ButtonControls from "~/components/Buttons/ButtonControls";
 import { KeyIcon } from "~/components/Icons/KeyIcon";
 import { MailIcon } from "~/components/Icons/MailIcon";
@@ -20,6 +21,7 @@ export default function UserProfileForm({ user }: any) {
       </div>
 
       <Form method="post" action="/dashboard/settings">
+        <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="user" />
         <div className="flex flex-col min-h-full space-y-5">
           

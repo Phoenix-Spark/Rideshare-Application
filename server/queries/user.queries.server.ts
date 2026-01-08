@@ -73,6 +73,7 @@ export async function getUserInfo(intent: string, userId: string) {
       return await prisma.user.findUnique({
         where: { id: userId },
         select: {
+          id: true,
           firstName: true,
           lastName: true,
           email: true,

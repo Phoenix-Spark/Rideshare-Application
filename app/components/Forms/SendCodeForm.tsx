@@ -1,4 +1,5 @@
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function SendCodeForm({ user }: any) {
   return (
@@ -30,6 +31,7 @@ export default function SendCodeForm({ user }: any) {
 
         <Form method="post" action="/send">
           <div className="flex flex-col justify-between items-center">
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="sendCode" />
             <input type="hidden" name="userId" value={user?.id} />
             <input type="hidden" name="email" value={user?.email} />

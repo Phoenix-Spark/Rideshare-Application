@@ -5,6 +5,10 @@ import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import type { Route } from "./+types/send";
 import SendCodeForm from "~/components/Forms/SendCodeForm";
 import { sendVerificationCode } from "server/queries/verify.queries.server";
+import { CSRFError } from "remix-utils/csrf/server";
+import { csrf } from "server/csrf.server";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export async function loader ({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -16,6 +20,15 @@ export async function loader ({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   requireSameOrigin(request);
+  try {
+    await csrf.validate(request);
+  } catch (error) {
+    if (error instanceof CSRFError) {
+      return {success: false, message: "Invalid Security Token"}
+    }
+    return {success: false, message: error}
+  }
+  
   const formData = await request.formData();
   const intent = formData.get("intent") as string;
   const userId = formData.get("userId") as string;
@@ -26,8 +39,19 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function Send({ loaderData }: Route.ComponentProps) {
+export default function Send({ loaderData, actionData }: Route.ComponentProps) {
   const { user } = loaderData;
+
+  useEffect(() => {
+    if (actionData?.success) {
+      if(actionData.message.length > 0){ 
+        toast.success(actionData.message);
+      }
+    }
+    if (actionData && !actionData?.success) {
+      toast.error(actionData.message);
+    }
+  }, [actionData]);
   return <SendCodeForm user={user} />;
 }
 

@@ -5,29 +5,46 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
+  useLoaderData,
   type HeadersFunction,
 } from "react-router";
 import { ToastContainer } from "react-toastify";
+import { AuthenticityTokenProvider } from "remix-utils/csrf/react";
+import { csrf } from "server/csrf.server";
 import type { Route } from "./+types/root";
 import "./app.css";
 
-export async function loader() {
+export async function loader({ request }: Route.LoaderArgs) {
   const nonce = Array.from(
     crypto.getRandomValues(new Uint8Array(16)),
     (byte) => byte.toString(16).padStart(2, "0")
   ).join("");
 
-  return {
-    nonce,
-  };
+  const [token, cookieHeader] = await csrf.commitToken(request);
+
+  const headers = new Headers();
+  if (cookieHeader) {
+    headers.set("Set-Cookie", cookieHeader);
+  }
+
+  return Response.json(
+    {
+      nonce,
+      csrf: token,
+    },
+    { headers }
+  );
 }
 
-export const headers: HeadersFunction = () => {
+export const headers: HeadersFunction = ({ loaderHeaders }) => {
   const WS_URL = process.env.WS_API_URL || "ws://localhost:3001";
+  const setCookie = loaderHeaders.get("set-cookie");
 
-  return {
+  const headers: Record<string, string> = {
     "Content-Security-Policy": [
       "default-src 'self'",
+      // Note: 'unsafe-inline' is required for React Router v7 hydration scripts
+      // This is acceptable when combined with other security measures (CSRF tokens, strict headers)
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
       "font-src 'self' https://fonts.gstatic.com",
@@ -39,6 +56,7 @@ export const headers: HeadersFunction = () => {
       "form-action 'self'",
     ].join("; "),
     "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
@@ -50,8 +68,13 @@ export const headers: HeadersFunction = () => {
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
     "X-Permitted-Cross-Domain-Policies": "none",
-    // "Clear-Site-Data": '"cache", "cookies", "storage"',
   };
+
+  if (setCookie) {
+    headers["Set-Cookie"] = setCookie;
+  }
+
+  return headers;
 };
 
 export const links: Route.LinksFunction = () => [
@@ -70,13 +93,15 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://cdn.jsdelivr.net/npm/react-toastify@10/dist/ReactToastify.min.css",
     crossOrigin: "anonymous",
+    integrity: "sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb",
   },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/register";
   const allowScroll = isLandingPage || isAuthPage;
 
   return (
@@ -101,10 +126,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { csrf } = useLoaderData<typeof loader>();
+
   return (
-    <div>
-      <ToastContainer position="top-center" />
-      <Outlet />
-    </div>
+    <AuthenticityTokenProvider token={csrf}>
+      <div>
+        <ToastContainer position="top-center" />
+        <Outlet />
+      </div>
+    </AuthenticityTokenProvider>
   );
 }

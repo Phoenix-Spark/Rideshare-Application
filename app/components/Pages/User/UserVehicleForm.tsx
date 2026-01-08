@@ -1,4 +1,5 @@
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import VehicleDescriptionForm from "~/components/Forms/VehicleDescriptionForm";
 import { XMarkIcon } from "~/components/Icons/XMarkIcon";
 
@@ -6,6 +7,7 @@ export default function UserVehicleForm({ user, vehicles }: any) {
   return (
     <div className="space-y-8">
       <Form method="post" action="/dashboard/settings" className="space-y-6">
+        <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="vehicle-enable" />
 
         <div className="border-l-4 border-indigo-500 pl-6">
@@ -108,11 +110,8 @@ export default function UserVehicleForm({ user, vehicles }: any) {
                   </div>
                 </div>
 
-                <Form
-                  method="post"
-                  action="/dashboard/settings"
-                  className="ml-4"
-                >
+                <Form method="post" action="/dashboard/settings" className="ml-4" >
+                  <AuthenticityTokenInput />
                   <input type="hidden" name="intent" value="vehicle-delete" />
                   <input type="hidden" name="id" value={vehicle.id} />
                   <button
@@ -131,6 +130,7 @@ export default function UserVehicleForm({ user, vehicles }: any) {
 
       {user?.isDriver && vehicles.length === 0 && (
         <Form method="post" action="/dashboard/settings" className="space-y-4">
+          <AuthenticityTokenInput />
           <input type="hidden" name="intent" value="vehicle" />
           <VehicleDescriptionForm />
         </Form>

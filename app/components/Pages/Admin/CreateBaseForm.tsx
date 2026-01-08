@@ -1,4 +1,5 @@
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function CreateBaseForm() {
   return (
@@ -13,6 +14,7 @@ export default function CreateBaseForm() {
       </div>
 
       <Form method="post" action="/dashboard/admin">
+        <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="createBase" />
 
         <div className="space-y-5">

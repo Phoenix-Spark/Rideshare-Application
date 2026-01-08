@@ -26,6 +26,8 @@ import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import type { Route } from "./+types/dashboard";
 import { getVehicles } from "server/queries/vehicle.queries.server";
 import { getBase } from "server/queries/base.queries.server";
+import { CSRFError } from "remix-utils/csrf/server";
+import { csrf } from "server/csrf.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -43,6 +45,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   requireSameOrigin(request);
+  try {
+    await csrf.validate(request);
+  } catch (error) {
+    if (error instanceof CSRFError) {
+      return {success: false, message: "Invalid Security Token"}
+    }
+    return {success: false, message: error}
+  }
+
   const formData = await request.formData();
   const intent = formData.get("intent") as string;
   const requestId = (formData.get("requestId") as string) || undefined;
@@ -52,10 +63,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const pickupId = (formData.get("pickupId") as string) || undefined;
   const dropoffId = (formData.get("dropoffId") as string) || undefined;
   const rideConfirmOrCancel = (formData.get("submit") as string) || undefined
-  console.log('test----------------', formData)
   if (intent === "initialSetup"){
     updateUserInfo(userId!, {baseId})
-    console.log('test from dashboard')
     return {success: true, message: "Base updated!"}
   }
   if (intent === "createRequest") {

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Form, Link } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 
@@ -38,7 +39,9 @@ export default function LoginForm({ error }: any) {
           </p>
         </div>
 
-        <form method="POST" action="/login">
+        <Form method="post">
+          <AuthenticityTokenInput />
+
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-5">
               <p className="text-red-400 text-sm text-center">{error}</p>
@@ -73,6 +76,7 @@ export default function LoginForm({ error }: any) {
                   name="email"
                   placeholder="you@example.com"
                   required
+                  autoComplete="email"
                   className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 />
               </div>
@@ -105,6 +109,7 @@ export default function LoginForm({ error }: any) {
                   name="password"
                   placeholder="••••••••"
                   required
+                  autoComplete="current-password"
                   className="w-full pl-12 pr-12 py-3.5 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 />
 
@@ -149,7 +154,7 @@ export default function LoginForm({ error }: any) {
               Sign In
             </button>
           </div>
-        </form>
+        </Form>
 
         <p className="text-sm text-center text-gray-600 mt-8">
           Don't have an account?{" "}

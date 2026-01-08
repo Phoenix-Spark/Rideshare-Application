@@ -40,12 +40,20 @@ export async function createUserSession(userId: string, redirectTo: string) {
 // Belt and suspenders for XSS/CSRF Attacks
 export function requireSameOrigin(request: Request) {
   const origin = request.headers.get("Origin");
-  const requestOrigin = new URL(request.url).origin;
-  if (origin && origin !== requestOrigin) {
+  if (!origin) {
+    return;
+  }
+
+  const expectedOrigin = `https://${process.env.DOMAIN}`;
+  
+  if (origin !== expectedOrigin) {
+    console.error("Origin mismatch:", {
+      received: origin,
+      expected: expectedOrigin,
+    });
     throw new Response("Invalid origin", { status: 403 });
   }
 }
-
 
 // Read userId from session
 export async function getUserId(request: Request) {
@@ -66,12 +74,9 @@ export async function logoutUser(request: Request) {
 // Require userId for protected routes
 export async function requireUserId(request: Request, redirectTo = "/login") {
   const userId = await getUserId(request);
-  console.log(userId)
-
   if (!userId) {
     throw redirect(redirectTo);
   }
-
   return userId;
 }
 
@@ -121,30 +126,4 @@ export async function requireAdminId(userId: string) {
   }
 
   return user;
-}
-
-// Generate or reuse CSRF token for the session
-export async function getCsrfToken(request: Request) {
-  const session = await getSession(request);
-
-  let token = session.get("csrf");
-  if (!token) {
-    token = crypto.randomUUID();
-    session.set("csrf", token);
-  }
-
-  return {
-    csrfToken: token,
-    session,
-  };
-}
-
-// Validate CSRF token on POST
-export function validateCsrf(
-  formToken: FormDataEntryValue | null,
-  sessionToken: string | undefined
-) {
-  if (!formToken || !sessionToken || formToken !== sessionToken) {
-    throw new Response("Invalid CSRF token", { status: 403 });
-  }
 }

@@ -17,6 +17,24 @@ async function main() {
     },
   });
 
+  const testUser = await prisma.user.upsert({
+    where: { id: 'TESTUSER' },
+    update: {},
+    create: {
+      id: 'TESTUSER',
+      firstName: 'Test',
+      lastName: 'User',
+      baseId: '8b3084e4-abd4-4b68-90c8-98c603b4a3ed',
+      phoneNumber: '1234567890',
+      email: 'test.user@test.com',
+      emailVerified: true,
+      password: 'asdasdasdasd',
+      isAdmin: true,
+      isDriver: true,
+      isPassenger: true,
+    },
+  })
+
 
   // Create Stations
   const stations = [

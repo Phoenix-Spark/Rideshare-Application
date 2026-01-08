@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, useNavigation } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftPanelDriverRequestForm({ accepted }: any) {
   const [showRequests, setShowRequests] = useState(false);
@@ -114,6 +115,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
 
                   {!ride?.pickedUpAt && (
                     <Form method="post" action="/dashboard?mode=driver">
+                      <AuthenticityTokenInput />
                       <input
                         type="hidden"
                         name="intent"
@@ -153,6 +155,7 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
 
                   {ride.pickedUpAt && !ride.droppedOffAt && (
                     <Form method="post" action="/dashboard?mode=driver">
+                      <AuthenticityTokenInput />
                       <input
                         type="hidden"
                         name="intent"

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { MapPinIcon } from "~/components/Icons/MapPinIcon";
 import { EllipsisIcon } from "~/components/Icons/EllipsisIcon";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function ManageStopForm({ station, base }: any) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -45,6 +46,7 @@ export default function ManageStopForm({ station, base }: any) {
             Manage Stop Locations
           </h3>
           <select className="rounded-lg p-2 -mt-3 mr-2 border border-gray-200 text-black w-[300px]" onChange={(e) => setSelectedBase(e.currentTarget.value)}>
+            <option>Select Base</option>
            {base.map(b => <option value={b.id}>{b.name}</option>)}
           </select>
         </div>
@@ -63,6 +65,7 @@ export default function ManageStopForm({ station, base }: any) {
               {editingId === s.id ? (
                 <div className="p-5">
                   <Form method="post" action="/dashboard/admin?page=stops" className="space-y-4">
+                    <AuthenticityTokenInput />
                     <input type="hidden" name="id" value={s.id} />
                     <input type="hidden" name="intent" value="updateStop" />
 
@@ -320,6 +323,7 @@ export default function ManageStopForm({ station, base }: any) {
               </button>
 
               <Form method="post" action="/dashboard/admin?page=stops" className="inline">
+                <AuthenticityTokenInput />
                 <input type="hidden" name="intent" value="deleteStop" />
                 <input type="hidden" name="id" value={deletingStop.id} />
                 <button

@@ -1,4 +1,5 @@
-import { Link } from "react-router";
+import { Form, Link } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function Logout() {
   return (
@@ -27,23 +28,29 @@ export default function Logout() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">You’ve Logged Out</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign Out?</h1>
         <p className="text-gray-600 mb-6">
-          Your session has ended. You can safely close this window or log back in when you’re ready.
+          Would you like to sign out or return to the dashboard?
         </p>
 
         <div className="flex items-center justify-center gap-4">
           <Link
-            to="/login"
+            to="/dashboard"
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.03] active:scale-[0.97]"
           >
-            Sign In Again
+            Go Back
           </Link>
-        </div>
-      </div>
 
-      <div className="absolute bottom-6 text-center text-sm text-gray-500">
-        <p>Secured Shared Rides</p>
+          <Form method="post" action="/logout">
+            <AuthenticityTokenInput />
+            <button
+              type="submit"
+              className="px-6 py-3 bg-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.03] active:scale-[0.97]"
+            >
+              Sign out
+            </button>
+          </Form>
+        </div>
       </div>
     </div>
   );

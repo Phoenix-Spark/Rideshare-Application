@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ToggleSwitch from "~/components/Buttons/ToggleSwitch";
 import { WarningIcon } from "~/components/Icons/WarningIcon";
 
-export default function ManageUserForm({ accounts , base}: any) {
+export default function ManageUserForm({ accounts , base, user}: any) {
+  console.log('user: ', user)
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -83,17 +85,18 @@ export default function ManageUserForm({ accounts , base}: any) {
           })()}
 
         <div className="mt-5">
-          <Form
-            method="post"
-            action="/dashboard/admin?page=users"
+          <Form method="post" action="/dashboard/admin?page=users"
             className="space-y-5"
           >
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="updateUser" />
+            <input type="hidden" name="userId" value={user.id} />
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Select User
               </label>
               <select
+                required
                 name="userId"
                 value={selectedUserId}
                 onChange={handleUserChange}
@@ -114,6 +117,7 @@ export default function ManageUserForm({ accounts , base}: any) {
                   First Name
                 </label>
                 <input
+                  required
                   type="text"
                   name="firstName"
                   value={firstName}
@@ -127,6 +131,7 @@ export default function ManageUserForm({ accounts , base}: any) {
                   Last Name
                 </label>
                 <input
+                  required
                   type="text"
                   name="lastName"
                   value={lastName}
@@ -142,6 +147,7 @@ export default function ManageUserForm({ accounts , base}: any) {
                 Email
               </label>
               <input
+                required
                 type="email"
                 name="email"
                 value={email}
@@ -156,6 +162,7 @@ export default function ManageUserForm({ accounts , base}: any) {
                 Phone Number
               </label>
               <input
+                required
                 type="tel"
                 name="phoneNumber"
                 value={phoneNumber}
@@ -265,6 +272,7 @@ export default function ManageUserForm({ accounts , base}: any) {
                 Cancel
               </button>
               <Form method="post" action="/dashboard/admin?page=users">
+                <AuthenticityTokenInput />
                 <input type="hidden" name="intent" value="deleteUser" />
                 <input type="hidden" name="userId" value={deletingUser.id} />
                 <button

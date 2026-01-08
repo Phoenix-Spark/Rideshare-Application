@@ -1,4 +1,5 @@
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function VerifyCodeForm({ user, actionData, csrfToken}: any) {
   return (
@@ -37,7 +38,7 @@ export default function VerifyCodeForm({ user, actionData, csrfToken}: any) {
         )}
 
         <Form method="post" action="/verify">
-          <input type="hidden" name="_csrf" value={csrfToken} />
+          <AuthenticityTokenInput />
           <input type="hidden" name="intent" value="tryCode" />
           <input type="hidden" name="userId" value={user.id} />
           
@@ -70,7 +71,7 @@ export default function VerifyCodeForm({ user, actionData, csrfToken}: any) {
         <p className="text-center text-sm text-gray-600 mt-4">
           Didn't receive a code?{" "}
           <Form method="post" action="/verify" className="inline">
-            <input type="hidden" name="_csrf" value={csrfToken} />
+            <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="sendCode" />
             <input type="hidden" name="email" value={user?.email} />
             <input type="hidden" name="userId" value={user?.id} />

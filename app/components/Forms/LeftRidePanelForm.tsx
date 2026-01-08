@@ -9,6 +9,7 @@ import { LogoutIcon } from "../Icons/LogoutIcon";
 // import { tabs } from "~/lib/constants";
 import LeftPanelScheduleForm from "./LeftPanelScheduleForm";
 import UserSettingsModal, { createTabs } from "../Modals/UserSettingsModal";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function LeftSideRidePanelForm({
   user,
@@ -103,6 +104,7 @@ export default function LeftSideRidePanelForm({
                         </p>
                       </div>
                       <Form method="post" action="/logout">
+                        <AuthenticityTokenInput />
                         {tabs.map((t) => (
                           <Link
                             key={t.name}

@@ -1,4 +1,5 @@
 import { Form } from "react-router";
+import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ButtonControls from "~/components/Buttons/ButtonControls";
 
 export default function UserBaseForm({ user, base, userBase }: any) {
@@ -19,11 +20,10 @@ export default function UserBaseForm({ user, base, userBase }: any) {
         </div>
         )}
 
-      <Form
-        method="post"
-        action="/dashboard/settings"
+      <Form method="post" action="/dashboard/settings"
         className="flex flex-col flex-1"
       >
+        <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="user" />
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-700 mb-2">
