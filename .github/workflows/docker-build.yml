@@ -23,4 +23,3 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/rideshare:prod
-            ${{ secrets.DOCKER_USERNAME }}/rideshare:prod-${{ github.sha }}
