@@ -37,7 +37,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  const WS_URL = process.env.WS_API_URL || "ws://localhost:3001";
+  const WS_URL = `ws://${process.env.WS_DOMAIN}:${process.env.WS_PORT}`
   const setCookie = loaderHeaders.get("set-cookie");
 
   const headers: Record<string, string> = {
