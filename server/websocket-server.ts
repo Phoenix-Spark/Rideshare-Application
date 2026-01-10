@@ -5,10 +5,23 @@ import cors from "cors";
 
 const app = express();
 const PORT = process.env.VITE_WS_PORT || 3001;
+const WS_PATH = process.env.VITE_WS_PATH || "";
 
-// Enable CORS
+// Determine the origin based on environment
+const getOrigin = () => {
+  const protocol = process.env.VITE_WS_PROTOCOL === 'wss' ? 'https' : 'http';
+  const domain = process.env.VITE_DOMAIN || 'localhost';
+  const port = process.env.VITE_DOMAIN_PORT;
+  
+  if (port && (port !== '80' && port !== '443')) {
+    return `${protocol}://${domain}:${port}`;
+  }
+  return `${protocol}://${domain}`;
+};
+
+// Enable CORS for both HTTP and HTTPS
 app.use(cors({
-  origin: `http://${process.env.VITE_DOMAIN}:${process.env.VITE_DOMAIN_PORT}`,
+  origin: getOrigin(),
   credentials: true
 }));
 
@@ -22,7 +35,11 @@ app.get("/health", (req, res) => {
   res.json({ 
     status: "ok", 
     totalClients: Array.from(wsClients.values()).reduce((sum, set) => sum + set.size, 0),
-    connectedUsers: wsClients.size 
+    connectedUsers: wsClients.size,
+    environment: {
+      wsPath: WS_PATH,
+      origin: getOrigin()
+    }
   });
 });
 
@@ -75,6 +92,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
   let userId: string | null = null;
+  console.log("New WebSocket connection established");
 
   ws.on("message", async (message) => {
     try {
@@ -88,6 +106,7 @@ wss.on("connection", (ws) => {
         }
         wsClients.get(userId)!.add(ws);
         
+        console.log(`User ${userId} authenticated. Total connections: ${wsClients.get(userId)!.size}`);
         ws.send(JSON.stringify({ type: "auth", status: "success" }));
       }
       
@@ -108,6 +127,7 @@ wss.on("connection", (ws) => {
         if (userClients.size === 0) {
           wsClients.delete(userId);
         }
+        console.log(`User ${userId} disconnected. Remaining connections: ${userClients.size}`);
       }
     }
   });
@@ -120,4 +140,5 @@ wss.on("connection", (ws) => {
 server.listen(PORT, () => {
   console.log(`WebSocket server running on http://localhost:${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Origin: ${getOrigin()}`);
 });
