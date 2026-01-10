@@ -46,7 +46,7 @@ export function requireSameOrigin(request: Request) {
   const isProduction = process.env.NODE_ENV === "production";
   
   if (isProduction) {
-    const expectedOrigin = `https://${process.env.WEBSITE_DOMAIN}`;
+    const expectedOrigin = `${process.env.WEBSITE_DOMAIN}`;
     
     if (origin !== expectedOrigin) {
       console.error("Origin mismatch:", {
