@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 
 export interface RideMessage {
   rideId: string;
@@ -22,9 +22,16 @@ export function useWebSocket(userId: string | null) {
     const connect = () => {
       // Connect to external WebSocket server using the current page's hostname
       // This ensures WebSocket works when accessing via network IP, not just localhost
-      const wsHost = window.location.hostname;
-      const wsPort = import.meta.env.VITE_WS_PORT || "3001";
-      ws.current = new WebSocket(`ws://${wsHost}:${wsPort}`);
+      const isHttps = window.location.protocol === "https:";
+      const isLocalhost = window.location.hostname === "localhost";
+      let wsHost = isHttps ? "wss://" + window.location.hostname : "ws://" + window.location.hostname;
+      let wsPort;
+      if (isLocalhost) {
+        wsPort = (new URL(import.meta.url)).port || "3000";
+      } else {
+        wsPort = isHttps ? "443" : "80";
+      }
+      ws.current = new WebSocket(`${wsHost}:${wsPort}`);
 
       ws.current.onopen = () => {
         setIsConnected(true);

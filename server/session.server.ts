@@ -1,6 +1,5 @@
-import { createCookieSessionStorage, redirect } from "react-router";
-import { prisma } from "./db.server";
-import crypto from "crypto";
+import {createCookieSessionStorage, redirect} from "react-router";
+import {prisma} from "./db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
@@ -58,7 +57,7 @@ export function requireSameOrigin(request: Request) {
       throw new Response("Invalid origin", { status: 403 });
     }
   } else {
-    const port = process.env.VITE_DOMAIN_PORT;
+    const port = process.env.PORT;
     const originUrl = new URL(origin);
     
     const isValidDevOrigin = 
@@ -95,6 +94,7 @@ export async function logoutUser(request: Request) {
 // Require userId for protected routes
 export async function requireUserId(request: Request, redirectTo = "/login") {
   const userId = await getUserId(request);
+  console.log('requireUserId', userId, redirectTo)
   if (!userId) {
     throw redirect(redirectTo);
   }

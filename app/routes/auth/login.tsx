@@ -1,14 +1,10 @@
-import { redirect, type LoaderFunctionArgs, useActionData } from "react-router";
-import { authenticateUser } from "server/queries/auth.queries.server";
-import {
-  createUserSession,
-  getUserId,
-  requireSameOrigin,
-} from "server/session.server";
+import {type LoaderFunctionArgs, redirect, useActionData} from "react-router";
+import {authenticateUser} from "server/queries/auth.queries.server";
+import {createUserSession, getUserId, requireSameOrigin,} from "server/session.server";
 import LoginForm from "~/components/Forms/LoginForm";
-import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
-import { csrf } from "server/csrf.server";
-import { CSRFError } from "remix-utils/csrf/server";
+import {ErrorBoundary} from "~/components/Utilities/ErrorBoundary";
+import {csrf} from "server/csrf.server";
+import {CSRFError} from "remix-utils/csrf/server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
@@ -40,6 +36,8 @@ export const action = async ({ request }: { request: Request }) => {
   if (!user) {
     return { error: "Invalid credentials" };
   }
+
+  console.log(user)
 
   return createUserSession(user.id, "/dashboard");
 };

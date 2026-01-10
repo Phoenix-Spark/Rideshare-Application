@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { prisma } from '../server/db.server';
+import {prisma} from '../server/db.server';
 
 async function main() {
 
@@ -71,7 +71,7 @@ async function main() {
 
 }
 
-main()
+await main()
   .catch((e) => {
     console.error('❌ Seeding failed:', e);
     process.exit(1);
