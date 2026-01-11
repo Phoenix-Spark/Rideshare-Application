@@ -175,22 +175,6 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
   return (
     <div>
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
-        <div
-          className={`px-3 py-2 rounded-full text-sm flex items-center gap-2
-          ${isConnected
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-500"
-            }`}
-        >
-          <div
-            className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-500 animate-pulse" : "bg-gray-400"
-              }`}
-          />
-          {isConnected ? "Live" : "Offline"}
-        </div>
-      </div>
-
       <MapDisplay user={user} station={station} />
       <DashboardForm
         user={user}
