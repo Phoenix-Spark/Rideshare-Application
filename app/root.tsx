@@ -93,7 +93,6 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://cdn.jsdelivr.net/npm/react-toastify@10/dist/ReactToastify.min.css",
     crossOrigin: "anonymous",
-    integrity: "sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb",
   },
 ];
 

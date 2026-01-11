@@ -11,6 +11,7 @@ export default [
         route("settings", "./routes/settings/usersettings.tsx"),
         route("admin", "./routes/settings/adminsettings.tsx"),
     ]),
+    route("/broadcast/sse", "./routes/broadcast.sse.ts"),
     route("*", './routes/notfound.tsx'),
 
 ] satisfies RouteConfig;

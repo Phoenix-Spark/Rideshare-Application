@@ -176,7 +176,6 @@ export default function LeftSideRidePanelForm({
                   station={station}
                   params={searchParams}
                 />
-                {/* <LeftPanelScheduleForm /> */}
               </>
             ) : (
               user?.isDriver && (
