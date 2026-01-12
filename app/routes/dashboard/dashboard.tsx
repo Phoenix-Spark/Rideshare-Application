@@ -34,7 +34,7 @@ import {
   broadcastCancelAcceptedRide,
 } from "server/events/requestEvents.server";
 import { prisma } from "server/db.server";
-import { useBroadcastSSE } from "~/hooks/broadcast.sse";
+import { broadcastSSE } from "~/hooks/broadcast.sse";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -142,8 +142,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
   const { user, station, accepted, activeRequests, vehicles, requestInfo, bases } = loaderData;
 
-  // ✅ Changed to useBroadcastSSE and captured return value
-  const { isConnected, error } = useBroadcastSSE({
+  broadcastSSE({
     onNewRequest: (data) => {
       console.log('data: ', data?.request)
       const { id } = data?.request.user
@@ -187,12 +186,6 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
 
   return (
     <div>
-      {/* Optional: Show connection status */}
-      {!isConnected && error && (
-        <div className="bg-yellow-100 p-2 text-sm">
-          SSE disconnected - attempting to reconnect...
-        </div>
-      )}
       <MapDisplay user={user} station={station} />
       <DashboardForm
         user={user}
