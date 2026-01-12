@@ -20,40 +20,47 @@ export const createTabs = ({user, userBase, vehicles}: any) => [
   {
     label: "Profile",
     name: "profile",
+    to: 'settings?tab=profile',
     icon: <UserIcon className="size-6" />,
   },
   {
     label: "Permissions",
     name: "permissions",
+    to: 'settings?tab=permissions',
     icon: <LockIcon className="size-6" />,
   },
   { 
     label: "Base", 
     name: "base", 
+    to: 'settings?tab=base',
     icon: <BaseIcon className="size-6" />,
-    badge: !userBase?.base,
+    badge: !userBase?.base
   },
   {
     label: "Vehicles",
     name: "vehicles",
+    to: 'settings?tab=vehicles',
     icon: <VehicleIcon className="size-6" />,
     badge: user?.isDriver && vehicles.length === 0,
   },
   {
     label: "Security",
     name: "security",
+    to: 'settings?tab=security',
     icon: <ShieldIcon className="size-6" />,
     badge: user?.isReset,
   },
   {
     label: "Invites",
     name: "invites",
+    to: 'settings?tab=invites',
     icon: <KeyIcon className="size-6" />,
     hide: user?.isInvite,
   },
   {
     label: "Deactivation",
     name: "deactivation",
+    to: 'settings?tab=deactivation',
     icon: <WarningIcon className="size-6" />,
   },
 ].filter((tab) => !tab.hide);
@@ -126,7 +133,7 @@ export default function UserSettingsModal({
         </div>
 
         {/* Mobile Bottom Tab Bar */}
-        <nav className="md:hidden flex overflow-x-auto bg-white border-t border-gray-200 px-2 py-1 safe-area-inset-bottom">
+        {/* <nav className="md:hidden flex overflow-x-auto bg-white border-t border-gray-200 px-2 py-1 safe-area-inset-bottom">
           {tabs.map((tab) => (
             <button
               key={tab.name}
@@ -143,7 +150,7 @@ export default function UserSettingsModal({
               )}
             </button>
           ))}
-        </nav>
+        </nav> */}
       </div>
     </div>
   );
