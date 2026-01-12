@@ -67,8 +67,8 @@ model Station {
   id              String    @id @default(uuid())
   baseId          String
   name            String    @unique
-  longitude       String    @unique
-  latitude        String    @unique
+  longitude       String
+  latitude        String
   description     String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
