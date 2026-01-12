@@ -139,7 +139,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function Dashboard({ loaderData }: Route.ComponentProps) {
+export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
   const { user, station, accepted, activeRequests, vehicles, requestInfo, bases } = loaderData;
 
   broadcastSSE({
@@ -195,6 +195,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         activeRequests={activeRequests}
         requestInfo={requestInfo}
         bases={bases}
+        actionData={actionData}
       />
     </div>
   );

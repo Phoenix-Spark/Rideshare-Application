@@ -16,6 +16,7 @@ export default function LeftSideRidePanelForm({
   accepted,
   activeRequests,
   requestInfo,
+  actionData,
 }: any) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -175,6 +176,8 @@ export default function LeftSideRidePanelForm({
                   user={user}
                   station={station}
                   params={searchParams}
+                  activeRequests={activeRequests}
+                  actionData={actionData}
                 />
               </>
             ) : (

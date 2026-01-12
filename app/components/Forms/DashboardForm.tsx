@@ -11,6 +11,7 @@ export default function Dashboard({
   vehicles,
   requestInfo,
   bases,
+  actionData
 }: any) {
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ export default function Dashboard({
           station={station}
           accepted={accepted}
           activeRequests={activeRequests}
+          actionData={actionData}
           requestInfo={requestInfo}
           onLogout={() => navigate("/logout")}
         />

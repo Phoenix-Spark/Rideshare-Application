@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-router";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { NavigationIcon } from "../Icons/NavigationIcon";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
-export default function LeftSidePassengerForm({ user, station, params }: any) {
+export default function LeftSidePassengerForm({ user, station, params, activeRequests, actionData }: any) {
   const [fromLocation, setFromLocation] = useState(params?.pickupId ?? "");
   const [toLocation, setToLocation] = useState(params?.dropoffId ?? "");
+  
+  // Reset states when form is successfully submitted
+  useEffect(() => {
+    if (actionData?.success) {
+      setFromLocation("");
+      setToLocation("");
+    }
+  }, [actionData]);
+
+  const hasActiveRequest = activeRequests.some(r => r.user.id === user.id)
+  console.log(hasActiveRequest)
 
   const isButtonEnabled =
     !user?.isReset &&
     !!user?.base?.id &&
     fromLocation &&
     toLocation &&
-    fromLocation !== toLocation;
+    fromLocation !== toLocation &&
+    !hasActiveRequest;
 
   return (
     <Form method="post" >
