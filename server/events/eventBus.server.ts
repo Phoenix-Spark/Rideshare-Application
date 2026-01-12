@@ -1,7 +1,9 @@
 export type SSEEventType =
   | "new_request"
+  | "renew_request"
   | "request_accepted"
   | "request_cancelled"
+  | "request_cancelled_passenger"
   | "request_pickup"
   | "request_complete"
   | "connected"
@@ -57,6 +59,7 @@ class EventBus {
       drivers.forEach((subscriber) => {
         try {
           subscriber.callback(event);
+          console.log(drivers, event)
         } catch (error) {
           console.error(`Failed to notify driver ${subscriber.userId}:`, error);
         }
@@ -69,6 +72,7 @@ class EventBus {
     if (subscriber) {
       try {
         subscriber.callback(event);
+        console.log('sent message', event, subscriber)
       } catch (error) {
         console.error(`Failed to notify passenger ${userId}:`, error);
       }

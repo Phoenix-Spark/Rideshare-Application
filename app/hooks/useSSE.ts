@@ -3,8 +3,10 @@ import { useRevalidator } from "react-router";
 
 export type SSEEventType =
   | "new_request"
+  | "renew_request"
   | "request_accepted"
   | "request_cancelled"
+  | "request_cancelled_passenger"
   | "request_pickup"
   | "request_complete"
   | "connected"
@@ -12,6 +14,7 @@ export type SSEEventType =
 
 interface SSEOptions {
   onNewRequest?: (data: unknown) => void;
+  onRenewRequest?: (data: unknown) => void;
   onRequestAccepted?: (data: unknown) => void;
   onRequestCancelled?: (data: unknown) => void;
   onRequestPickup?: (data: unknown) => void;
@@ -107,6 +110,16 @@ export function useSSE(options: SSEOptions = {}) {
         }
       });
 
+      eventSource.addEventListener("renew_request", (e) => {
+        const data = JSON.parse(e.data);
+        console.log("[SSE] Received renew_request event", data);
+        setState((prev) => ({ ...prev, lastEventTime: Date.now() }));
+        optionsRef.current.onRenewRequest?.(data);
+        if (autoRevalidateRef.current) {
+          revalidatorRef.current.revalidate();
+        }
+      });
+
       eventSource.addEventListener("request_accepted", (e) => {
         const data = JSON.parse(e.data);
         console.log("[SSE] Received request_accepted event", data);
@@ -120,6 +133,16 @@ export function useSSE(options: SSEOptions = {}) {
       eventSource.addEventListener("request_cancelled", (e) => {
         const data = JSON.parse(e.data);
         console.log("[SSE] Received request_cancelled event", data);
+        setState((prev) => ({ ...prev, lastEventTime: Date.now() }));
+        optionsRef.current.onRequestCancelled?.(data);
+        if (autoRevalidateRef.current) {
+          revalidatorRef.current.revalidate();
+        }
+      });
+
+      eventSource.addEventListener("request_cancelled_passenger", (e) => {
+        const data = JSON.parse(e.data);
+        console.log("[SSE] Received request_cancelled_passenger event", data);
         setState((prev) => ({ ...prev, lastEventTime: Date.now() }));
         optionsRef.current.onRequestCancelled?.(data);
         if (autoRevalidateRef.current) {

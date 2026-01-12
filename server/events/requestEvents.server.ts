@@ -91,7 +91,8 @@ export async function broadcastRequestCancelled(
   driverId: string | null,
   cancelledBy: "passenger" | "driver"
 ): Promise<void> {
-  const payload = { requestId, cancelledBy };
+  const payload = { requestId, cancelledBy, userId: driverId ?? passengerId };
+  console.log(payload, passengerId, driverId, cancelledBy, baseId)
 
   if (cancelledBy === "passenger" && driverId) {
     eventBus.notifyPassenger(driverId, {
@@ -109,7 +110,7 @@ export async function broadcastRequestCancelled(
 
   if (baseId) {
     eventBus.notifyDriversAtBase(baseId, {
-      type: "request_cancelled",
+      type: "request_cancelled_passenger",
       payload,
     });
   }
@@ -166,7 +167,7 @@ export async function broadcastCancelAcceptedRide(
 
   if (request) {
     eventBus.notifyDriversAtBase(baseId, {
-      type: "new_request",
+      type: "renew_request",
       payload: { request },
     });
   }

@@ -144,8 +144,24 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
   useSSE({
     onNewRequest: (data) => {
-      console.log("[Dashboard] onNewRequest called, user.isDriver:", user?.isDriver, data);
-      setTimeout(() => toast.info("New ride request available!"), 0);
+      console.log('data: ', data.request)
+      const { id } = data?.request.user
+      if(user?.id === id){
+        toast.success('Your ride request was created!');
+      }
+    },
+    onRenewRequest: (data) => {
+      const {id} = data?.request.user;
+      if(id === user?.id){
+        toast.info('Your ride was cancelled by the driver, and was recreated!');
+      }
+    },
+    onRequestCancelled: (data) => {
+      console.log('data: ', data)
+     
+      if(data?.userId === user?.id){
+        toast.info("Your request was successfully cancelled!")
+      }
     },
     onRequestAccepted: (data) => {
       console.log("[Dashboard] onRequestAccepted called", data);
@@ -153,15 +169,16 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
       setTimeout(() => {
         if (driver) {
           toast.success(`Your ride was accepted by ${driver.firstName} ${driver.lastName}!`);
-        } else {
-          toast.info("Your ride was accepted!");
-        }
+        } 
+        // else {
+        //   toast.info("Your ride was accepted!");
+        // }
       }, 0);
     },
-    onRequestCancelled: (data) => {
-      console.log("[Dashboard] onRequestCancelled called", data);
-      setTimeout(() => toast.warning("A ride request was cancelled."), 0);
-    },
+    // onRequestCancelled: (data) => {
+    //   console.log("[Dashboard] onRequestCancelled called", data);
+    //   setTimeout(() => toast.warning("A ride request was cancelled."), 0);
+    // },
     onRequestPickup: (data) => {
       console.log("[Dashboard] onRequestPickup called", data);
       setTimeout(() => toast.info("Your driver has arrived!"), 0);
