@@ -91,7 +91,7 @@ export async function broadcastRequestCancelled(
   driverId: string | null,
   cancelledBy: "passenger" | "driver"
 ): Promise<void> {
-  const payload = { requestId, cancelledBy, userId: driverId ?? passengerId };
+  const payload = { requestId, cancelledBy, driverId, passengerId };
   console.log(payload, passengerId, driverId, cancelledBy, baseId)
 
   if (cancelledBy === "passenger" && driverId) {

@@ -146,9 +146,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     onNewRequest: (data) => {
       console.log('data: ', data?.request)
       const { id } = data?.request.user
-      if(user?.id === id){
-        toast.success('Your ride request was created!');
-      }
+      // if(user?.id === id){
+      //   toast.success('Your ride request was created!');
+      // }
     },
     onRenewRequest: (data) => {
       const {id} = data?.request.user;
@@ -158,9 +158,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     },
     onRequestCancelled: (data) => {
       console.log('data: ', data)
-     
-      if(data?.userId === user?.id){
-        toast.info("Your request was successfully cancelled!")
+      const {passengerId, driverId} = data
+      // if(passengerId === user?.id){
+      //   toast.info("Your request was successfully cancelled!")
+      // }
+      if(driverId === user?.id){
+        toast.info("User cancelled ride")
       }
     },
     onRequestAccepted: (data) => {
