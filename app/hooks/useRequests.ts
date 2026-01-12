@@ -19,7 +19,7 @@ export function useRequestSSE({ onNewRequest }: any) {
       return;
     }
 
-    const eventSource = new EventSource("/broadcast/sse");
+    const eventSource = new EventSource("/api/sse");
     eventSourceRef.current = eventSource;
 
     eventSource.onmessage = (event) => {
