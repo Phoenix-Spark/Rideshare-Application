@@ -1,12 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Form, useActionData } from "react-router";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
+declare global {
+  interface Window {
+    AwsWafCaptcha: {
+      renderCaptcha: (
+        container: HTMLElement | null,
+        options: {
+          apiKey: string;
+          onSuccess: (token: string) => void;
+          onError: (error: Error) => void;
+          dynamicWidth?: boolean;
+          skipTitle?: boolean;
+          disableLanguageSelector?: boolean;
+        }
+      ) => void;
+    };
+  }
+}
+
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [useInvite, setUseInvite] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const captchaContainerRef = useRef<HTMLDivElement>(null);
+  const captchaRenderedRef = useRef(false);
   const actionData = useActionData<{ error?: string }>();
 
   const fields = [
@@ -15,6 +37,45 @@ export default function RegisterForm() {
     { label: "Email Address", name: "email", type: "email", placeholder: "john.doe@us.af.mil" },
     { label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "(123) 456-7890", maxLength: 14 },
   ];
+
+  useEffect(() => {
+    if (captchaRenderedRef.current || !captchaContainerRef.current) return;
+    
+    console.log('test', window.AwsWafCaptcha)
+    const renderCaptcha = () => {
+      if (window.AwsWafCaptcha && captchaContainerRef.current) {
+        captchaRenderedRef.current = true;
+        window.AwsWafCaptcha.renderCaptcha(captchaContainerRef.current, {
+          apiKey: import.meta.env.VITE_AWS_CAPTCHA,
+          onSuccess: (token: string) => {
+            console.log('success: ', token)
+            setCaptchaToken(token);
+            setCaptchaError(null);
+          },
+          onError: (error: Error) => {
+            console.log('error: ', error)
+            setCaptchaError(error.message || "CAPTCHA verification failed");
+            setCaptchaToken(null);
+          },
+          dynamicWidth: true,
+          skipTitle: true,
+        });
+      }
+    };
+
+    if (window.AwsWafCaptcha) {
+      renderCaptcha();
+    } else {
+      const checkInterval = setInterval(() => {
+        if (window.AwsWafCaptcha) {
+          clearInterval(checkInterval);
+          renderCaptcha();
+        }
+      }, 100);
+
+      return () => clearInterval(checkInterval);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative md:py-12">
@@ -135,9 +196,31 @@ export default function RegisterForm() {
               </div>
             </div>
 
+            <div className="mt-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Security Verification
+              </label>
+              <div
+                ref={captchaContainerRef}
+                className="flex justify-center bg-gray-50 rounded-xl p-4 border border-gray-200"
+              />
+              {captchaError && (
+                <p className="mt-2 text-sm text-red-600">{captchaError}</p>
+              )}
+              {captchaToken && (
+                <p className="mt-2 text-sm text-green-600">Verification complete</p>
+              )}
+              <input type="hidden" name="captchaToken" value={captchaToken || ""} />
+            </div>
+
             <button
               type="submit"
-              className="w-full mb-8 md:mb-0 py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+              disabled={!captchaToken}
+              className={`w-full mb-8 md:mb-0 py-4 mt-6 rounded-xl font-semibold text-white text-lg transition-all shadow-lg ${
+                captchaToken
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transform hover:scale-[1.02] active:scale-[0.98] shadow-blue-500/30"
+                  : "bg-gray-400 cursor-not-allowed shadow-gray-300/30"
+              }`}
             >
               Create Account
             </button>

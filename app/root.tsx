@@ -42,12 +42,16 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
   const headers: Record<string, string> = {
     "Content-Security-Policy": [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
-      "font-src 'self' https://fonts.gstatic.com",
+      // Note: 'unsafe-inline' is required for React Router v7 hydration scripts
+      // This is acceptable when combined with other security measures (CSRF tokens, strict headers)
+      "script-src 'self' 'unsafe-inline' https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com https://*.us-east-1.token.awswaf.com https://*.token.awswaf.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://static.captcha.awswaf.com",
+      "font-src 'self' https://fonts.gstatic.com https://static.captcha.awswaf.com",
       "img-src 'self' data: https://tile.openstreetmap.org",
-      "connect-src 'self' https://tile.openstreetmap.org",
+      // Allow WebSocket from any origin for network IP access
+      "connect-src 'self' ws: wss: https://tile.openstreetmap.org https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com https://*.us-east-1.token.awswaf.com https://*.token.awswaf.com",
       "worker-src 'self' blob:",
+      "frame-src https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -88,7 +92,9 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://cdn.jsdelivr.net/npm/react-toastify@11/dist/ReactToastify.min.css",
+    href: "https://cdn.jsdelivr.net/npm/react-toastify@10/dist/ReactToastify.min.css",
+    crossOrigin: "anonymous",
+    integrity: "sha384-JnCg6eF8GhEGjdkqwV7E+UMYiG+IyoLTJbZYuNlVJ7QufeimSsCeUvy0dBRehb4T",
   },
 ];
 
@@ -104,6 +110,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script type="text/javascript" src="https://7b95b7d53ea3.us-east-1.captcha-sdk.awswaf.com/7b95b7d53ea3/jsapi.js" defer></script>
         <Meta />
         <Links />
       </head>
