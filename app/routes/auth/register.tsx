@@ -6,6 +6,7 @@ import { createUserSession } from "server/session.server";
 import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
 import { requireSameOrigin } from "server/session.server";
+import { sendWelcomeEmail } from "server/queries/verify.queries.server";
 
 export const action = async ({ request }: { request: Request }) => {
   requireSameOrigin(request);
@@ -27,6 +28,7 @@ export const action = async ({ request }: { request: Request }) => {
   const password = formData.get("password") as string;
   const base = formData.get("base") as string;
 
+
   const result = await registerUser(
     inviteCode,
     firstName,
@@ -40,7 +42,9 @@ export const action = async ({ request }: { request: Request }) => {
   if (result?.error) {
     return { error: result.error };
   }
+
   const {id} = (await getUserIdFromEmail(email))!
+  await sendWelcomeEmail(id, email)
   return await createUserSession(id, "/login")
 };
 

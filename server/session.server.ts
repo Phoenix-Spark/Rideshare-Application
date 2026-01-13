@@ -1,6 +1,5 @@
 import { createCookieSessionStorage, redirect } from "react-router";
 import { prisma } from "./db.server";
-import crypto from "crypto";
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
@@ -63,6 +62,51 @@ export function requireSameOrigin(request: Request) {
       throw new Response("Invalid origin", { status: 403 });
     }
   }
+}
+
+// Read url params and ensure the valid params exists in the url
+export async function requireMagicLink(url: string): Promise<true> {
+  const parsedUrl = new URL(url);
+  const params = parsedUrl.searchParams;
+  
+  const token = params.get("token");
+  const id = params.get("id");
+  const userId = params.get("userId");
+  const valid = params.get("valid");
+  const code = params.get("code");
+
+  if (!token || !id || !userId || !valid || !code) {
+    throw redirect("/login");
+  }
+
+  const validUntil = new Date(valid);
+  
+  if (Number.isNaN(validUntil.getTime())) {
+    throw redirect("/login");
+  }
+
+  const match = await prisma.reset.findFirst({
+    where: {
+      AND: [
+        { id },
+        { token },
+        { userId },
+        { code },
+        {
+          validUntil: {
+            gte: new Date(),
+          },
+        },
+      ],
+    },
+    select: { id: true },
+  });
+
+  if (!match) {
+    throw redirect("/login");
+  }
+
+  return true;
 }
 
 // Read userId from session

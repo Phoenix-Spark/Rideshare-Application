@@ -59,7 +59,7 @@ export function broadcastSSE(options: SSEOptions = {}) {
         eventSourceRef.current.close();
       }
 
-      const eventSource = new EventSource("/api/sse", {
+      const eventSource = new EventSource("/broadcast/sse", {
         withCredentials: true,
       });
       eventSourceRef.current = eventSource;

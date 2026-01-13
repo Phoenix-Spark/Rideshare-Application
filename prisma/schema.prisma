@@ -28,6 +28,7 @@ model User {
   invites                         Invite[]  @relation("InviteRelation")
   driver                          Request[] @relation("DriverRelation")
   requests                        Request[] @relation("PassengerRelation")
+  resets                          Reset[]   @relation("ResetLinks")
   base                            Base?     @relation(fields: [baseId], references: [id])
   invite                          Invite?   @relation("UserInviteRelation", fields: [inviteId], references: [id])
   vehicles                        Vehicle?
@@ -109,4 +110,15 @@ model Base {
   requests     Request[] @relation("BaseRelation")
   stations     Station[]
   users        User[]
+}
+
+model Reset {
+  id           String     @id @default(uuid())
+  token        String
+  userId       String
+  validUntil   DateTime
+  code         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User?      @relation("ResetLinks", fields: [userId], references: [id])
 }

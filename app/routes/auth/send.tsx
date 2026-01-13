@@ -35,7 +35,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const email =  formData.get("email") as string;
 
   if (intent === "sendCode") {
-    sendVerificationCode(userId, email)
+    await sendVerificationCode(userId, email)
   }
 }
 
