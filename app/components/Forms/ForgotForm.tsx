@@ -1,9 +1,12 @@
 import { Form, Link } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { useState } from "react";
+import Captcha from "../Input/Captcha";
 
 export default function ForgotForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 relative overflow-hidden">
@@ -38,9 +41,10 @@ export default function ForgotForm() {
                   placeholder="you@example.com"
                 />
               </div>
-
+              <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={error} setError={setError} />
               <button
                 type="submit"
+                disabled={turnstileToken ? false: true}
                 className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 Send Reset Link

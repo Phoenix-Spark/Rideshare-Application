@@ -7,31 +7,10 @@ import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
 import { requireSameOrigin } from "server/session.server";
 import { sendWelcomeEmail } from "server/queries/verify.queries.server";
+// import { validateTurnstile } from "~/components/Input/Captcha";
+import { validateTurnstileFromFormData } from "server/utils/turnstile.server";
 
-// Turnstile validation function
-async function validateTurnstile(token: string, remoteip: string) {
-  const formData = new FormData();
-  const key = process.env.VITE_CF_SECRET || process.env.CF_SECRET
-  formData.append('secret', key!); // ✓ Fixed: removed VITE_ prefix
-  formData.append('response', token); // ✓ Fixed: was 'reponse'
-  formData.append('remoteip', remoteip);
 
-  try {
-    const response = await fetch( // ✓ Fixed: was 'reponse'
-      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Turnstile validation error:', error);
-    return { success: false, 'error-codes': ['internal-error'] };
-  }
-}
 
 export const action = async ({ request }: { request: Request }) => {
   requireSameOrigin(request);
@@ -49,33 +28,10 @@ export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
 
   // ✓ ADDED: Validate Turnstile first
-  const turnstileToken = formData.get('cf-turnstile-response') as string; // ✓ Fixed: was 'reponse'
-  
-  if (!turnstileToken) {
-    return {
-      success: false,
-      error: "Security verification missing. Please complete the verification.",
-    };
+  const turnstileError = await validateTurnstileFromFormData(formData, request);
+  if (turnstileError) {
+    return turnstileError;
   }
-
-  const remoteIp =
-    request.headers.get('CF-Connecting-IP') ||
-    request.headers.get('X-Forwarded-For') ||
-    request.headers.get('X-Real-IP') ||
-    'unknown';
-
-  const validation = await validateTurnstile(turnstileToken, remoteIp);
-
-  if (!validation.success) {
-    console.error('Turnstile validation failed:', validation['error-codes']);
-    return {
-      success: false,
-      error: "Security verification failed. Please try again.",
-      errorCodes: validation['error-codes'],
-    };
-  }
-
-  console.log('✓ Turnstile validation successful from:', validation.hostname);
 
   // Extract form data
   const inviteCode = formData.get("inviteCode") as string | null;

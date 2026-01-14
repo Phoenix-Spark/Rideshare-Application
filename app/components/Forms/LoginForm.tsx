@@ -3,9 +3,12 @@ import { Form, Link } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
+import Captcha from "../Input/Captcha";
 
 export default function LoginForm({ error }: any) {
   const [showPassword, setShowPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [errorT, setErrorT] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative overflow-hidden">
@@ -146,10 +149,11 @@ export default function LoginForm({ error }: any) {
                 Forgot password?
               </Link>
             </div>
-
+            <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={errorT} setError={setErrorT} />
             <button
               type="submit"
-              className="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+              disabled={turnstileToken ? false: true}
+              className={`w-full py-4 mt-6 ${turnstileToken ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30': 'bg-gray-400 rounded-xl hover:cursor-not-allowed text-white'}`}
             >
               Sign In
             </button>

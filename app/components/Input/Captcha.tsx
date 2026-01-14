@@ -25,6 +25,31 @@ interface CaptchaProps {
   setError: (error: string | null) => void;
 }
 
+// Turnstile validation function
+export async function validateTurnstile(token: string, remoteip: string) {
+  const formData = new FormData();
+  const key = process.env.VITE_CF_SECRET || process.env.CF_SECRET
+  formData.append('secret', key!); // ✓ Fixed: removed VITE_ prefix
+  formData.append('response', token); // ✓ Fixed: was 'reponse'
+  formData.append('remoteip', remoteip);
+
+  try {
+    const response = await fetch( // ✓ Fixed: was 'reponse'
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Turnstile validation error:', error);
+    return { success: false, 'error-codes': ['internal-error'] };
+  }
+}
+
 export default function Captcha({ turnstileToken, setTurnstileToken, error, setError }: CaptchaProps) {
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
