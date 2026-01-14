@@ -27,5 +27,3 @@ jobs:
             VITE_CF_SITEKEY=${{ secrets.VITE_CF_SITEKEY }}
             VITE_DOMAIN=${{ secrets.VITE_DOMAIN }}
             VITE_DOMAIN_PORT=${{ secrets.VITE_DOMAIN_PORT }}
-            VITE_WS_DOMAIN=${{ secrets.VITE_WS_DOMAIN }}
-            VITE_WS_PORT=${{ secrets.VITE_WS_PORT }}
