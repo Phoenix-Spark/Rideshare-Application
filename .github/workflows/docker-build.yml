@@ -22,4 +22,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rideshare:main
+            ${{ secrets.DOCKER_USERNAME }}/rideshare:testing-unstable/email

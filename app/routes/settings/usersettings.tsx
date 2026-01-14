@@ -1,5 +1,4 @@
 import {
-  useLoaderData,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
 } from "react-router";
