@@ -2,7 +2,7 @@ name: Build & Push Docker Image (test-unstable)
 on:
   push:
     branches:
-      - testing-unstable/email
+      - testing-unstable
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -22,4 +22,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rideshare:testing-unstable/email
+            ${{ secrets.DOCKER_USERNAME }}/rideshare:testing-unstable
