@@ -44,14 +44,14 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
       "default-src 'self'",
       // Note: 'unsafe-inline' is required for React Router v7 hydration scripts
       // This is acceptable when combined with other security measures (CSRF tokens, strict headers)
-      "script-src 'self' 'unsafe-inline' https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com https://*.us-east-1.token.awswaf.com https://*.token.awswaf.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://static.captcha.awswaf.com",
-      "font-src 'self' https://fonts.gstatic.com https://static.captcha.awswaf.com",
+      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+      "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https://tile.openstreetmap.org",
       // Allow WebSocket from any origin for network IP access
-      "connect-src 'self' ws: wss: https://tile.openstreetmap.org https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com https://*.us-east-1.token.awswaf.com https://*.token.awswaf.com",
+      "connect-src 'self' ws: wss: https://tile.openstreetmap.org",
       "worker-src 'self' blob:",
-      "frame-src https://*.us-east-1.captcha-sdk.awswaf.com https://*.captcha-sdk.awswaf.com https://*.us-east-1.captcha.awswaf.com https://*.captcha.awswaf.com",
+      "frame-src https://challenges.cloudflare.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -110,7 +110,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script type="text/javascript" src="https://7b95b7d53ea3.us-east-1.captcha-sdk.awswaf.com/7b95b7d53ea3/jsapi.js" defer></script>
+        <script type="text/javascript" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
         <Meta />
         <Links />
       </head>
