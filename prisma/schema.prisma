@@ -123,12 +123,12 @@ model Reset {
   user         User?      @relation("ResetLinks", fields: [userId], references: [id])
 }
 
-model UsedTurnstileToken {
+model Token {
   id        String   @id @default(cuid())
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
 
   @@index([expiresAt])
-  @@map("used_turnstile_tokens")
+  @@map("Token")
 }

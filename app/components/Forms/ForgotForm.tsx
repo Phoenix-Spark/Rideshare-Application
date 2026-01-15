@@ -43,12 +43,12 @@ export default function ForgotForm() {
               </div>
               <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={error} setError={setError} />
               <button
-                type="submit"
-                disabled={turnstileToken ? false: true}
-                className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Send Reset Link
-              </button>
+              type="submit"
+              disabled={turnstileToken ? false: true}
+              className={`w-full py-4 ${turnstileToken ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30': 'bg-gray-400 rounded-xl hover:cursor-not-allowed text-white'}`}
+            >
+              Send Reset Link
+            </button>
             </Form>
 
             <div className="mt-6 text-center">

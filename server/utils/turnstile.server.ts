@@ -20,7 +20,6 @@ export async function validateTurnstileFromFormData(
 ): Promise<TurnstileValidationError | null> {
   const turnstileToken = formData.get('cf-turnstile-response') as string;
 
-  // Check token presence
   if (!turnstileToken) {
     return {
       success: false,
@@ -28,7 +27,6 @@ export async function validateTurnstileFromFormData(
     };
   }
 
-  // Check for token reuse
   const isUsed = await isTokenUsed(turnstileToken);
   if (isUsed) {
     console.warn('Attempted token reuse detected');
@@ -38,7 +36,6 @@ export async function validateTurnstileFromFormData(
     };
   }
 
-  // Get remote IP
   const remoteIp =
     request.headers.get('CF-Connecting-IP') ||
     request.headers.get('X-Forwarded-For') ||
@@ -47,7 +44,6 @@ export async function validateTurnstileFromFormData(
 
   console.log('Validating Turnstile token from IP:', remoteIp);
 
-  // Validate with Cloudflare
   const validation = await validateTurnstile(turnstileToken, remoteIp);
 
   if (!validation.success) {
@@ -59,35 +55,29 @@ export async function validateTurnstileFromFormData(
     };
   }
 
-  // Mark token as used
   await markTokenUsed(turnstileToken);
-
   console.log('✓ Turnstile validation successful from:', validation.hostname);
-
-  // Return null = success
   return null;
 }
 
-// Token reuse prevention
 async function isTokenUsed(token: string): Promise<boolean> {
-  const existing = await prisma.usedTurnstileToken.findUnique({
+  const existing = await prisma.token.findUnique({
     where: { token },
   });
   return !!existing;
 }
 
 async function markTokenUsed(token: string): Promise<void> {
-  await prisma.usedTurnstileToken.create({
+  await prisma.token.create({
     data: {
       token,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     },
   });
 }
 
-// Optional: Cleanup expired tokens (run this periodically via cron)
 export async function cleanupExpiredTurnstileTokens(): Promise<number> {
-  const result = await prisma.usedTurnstileToken.deleteMany({
+  const result = await prisma.token.deleteMany({
     where: {
       expiresAt: { lt: new Date() },
     },
