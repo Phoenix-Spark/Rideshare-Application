@@ -109,7 +109,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <s
+        <script type="text/javascript" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
         <Meta />
         <Links />
       </head>
