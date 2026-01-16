@@ -3,6 +3,7 @@ import { ClockIcon } from "../Icons/ClockIcon";
 import { UserIcon } from "../Icons/UserIcon";
 import { Form } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
+import { displayName } from "../Utilities/formatName";
 
 export default function LeftPanelRequestsForm({ requestInfo }: any) {
   if (!requestInfo) requestInfo = [];
@@ -105,7 +106,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             onClick={() => setExpanded(true)}
           >
             <p className="text-sm font-medium text-gray-900 truncate">
-              {request.user.firstName} {request.user.lastName}
+              {displayName(request.user.firstName, request.user.lastName)}
             </p>
             {getStatusBadge()}
           </div>
@@ -126,7 +127,7 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">
-                  {request.user.firstName} {request.user.lastName}
+                  {displayName(request.user.firstName, request.user.lastName)}
                 </p>
                 <p className="text-xs text-gray-500">
                   {request.user.phoneNumber || "No phone"}

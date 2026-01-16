@@ -4,6 +4,7 @@ import { AdminIcon } from "../Icons/AdminIcon";
 import { LogoutIcon } from "../Icons/LogoutIcon";
 import { Form, Link } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
+import { displayName, formatName } from "../Utilities/formatName";
 
 export default function RightSideUserPanelForm({ user }: any) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function RightSideUserPanelForm({ user }: any) {
       >
         <div className="flex flex-col text-left max-w-[70%]">
           <p className="text-gray-900 font-semibold text-lg truncate">
-            {user?.firstName} {user?.lastName}
+            {displayName(user.firstName, user.lastName)}
           </p>
           <p className="text-gray-500 text-sm truncate">{user?.email}</p>
         </div>

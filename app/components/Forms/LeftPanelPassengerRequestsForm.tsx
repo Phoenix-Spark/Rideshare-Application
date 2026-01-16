@@ -3,6 +3,7 @@ import { ClockIcon } from "../Icons/ClockIcon";
 import { UserIcon } from "../Icons/UserIcon";
 import { Form } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
+import { displayName } from "../Utilities/formatName";
 
 export default function LeftPanelRequestsForm({ requestInfo }: any) {
   if (!requestInfo) requestInfo = [];
@@ -38,7 +39,6 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
 
     const isActiveOrPending =
       request.status === "Accepted" || request.status === "Pending";
-
     useEffect(() => {
       if (!isActiveOrPending) return;
 
@@ -124,25 +124,49 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <input type="hidden" name="requestId" value={request.id} />
             <input type="hidden" name="driverId" value={request.driverId} />
 
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                <UserIcon className="w-4 h-4 text-white" />
-              </div>
-              <div
-                className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setExpanded(false);
-                }}
-              >
-                <p className="text-sm font-semibold text-gray-900 truncate">
-                  {request.user.firstName} {request.user.lastName}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {request.user.phoneNumber || "No phone"}
-                </p>
-              </div>
-            </div>
+            {request.driver && request.driverId && 
+  <div className="space-y-3 mb-3">
+    {/* Driver Info */}
+    <div className="flex items-center gap-2">
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+        <UserIcon className="w-4 h-4 text-white" />
+      </div>
+      <div
+        className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          setExpanded(false);
+        }}
+      >
+        <p className="text-sm font-semibold text-gray-900 truncate">
+          {displayName(request.driver.firstName, request.driver.lastName)}
+        </p>
+        <p className="text-xs text-gray-500">
+          {request.driver.phoneNumber || "No phone"}
+        </p>
+      </div>
+    </div>
+
+    {/* Vehicle Info */}
+    {request.vehicle && (
+      <div className="flex items-center gap-2">
+        
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-gray-900 truncate">
+            {[request.vehicle.year, request.vehicle.make, request.vehicle.model]
+              .filter(Boolean)
+              .join(" ")}
+          </p>
+          <p className="text-xs text-gray-500 truncate">
+            {[request.vehicle.color, request.vehicle.plate]
+              .filter(Boolean)
+              .join(" • ")}
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+}
 
             <div className="space-y-2">
               {["pickup", "dropoff"].map((type) => (
@@ -161,31 +185,6 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
                 </div>
               ))}
             </div>
-
-            {request.driver && (
-              <div className="mt-3 text-xs text-gray-500 space-y-1">
-                <p>
-                  <span className="font-medium text-gray-700">Driver:</span>{" "}
-                  {request.driver.firstName} {request.driver.lastName}{" "}
-                  {request.driver.phoneNumber &&
-                    `${request.driver.phoneNumber}`}
-                </p>
-                {request.vehicle && (
-                  <p>
-                    <span className="font-medium text-gray-700">Vehicle:</span>{" "}
-                    {[
-                      request.vehicle.year,
-                      request.vehicle.make,
-                      request.vehicle.model,
-                      request.vehicle.color,
-                      request.vehicle.plate,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  </p>
-                )}
-              </div>
-            )}
 
             {request.pickedUpAt && (
               <p className="mt-1 text-xs text-gray-500">

@@ -164,7 +164,7 @@ export default function Dashboard({ loaderData, actionData }: Route.ComponentPro
       const { driver } = data as { driver?: { firstName: string; lastName: string } };
       setTimeout(() => {
         if (driver) {
-          toast.success(`Your ride was accepted by ${driver.firstName} ${driver.lastName}!`);
+          toast.success(`Your ride was accepted by ${driver.firstName.slice(0,1).toUpperCase() + driver.firstName.slice(1)} ${driver.lastName.slice(0,1).toUpperCase() + driver.lastName.slice(1)}!`);
         } 
       }, 0);
     },

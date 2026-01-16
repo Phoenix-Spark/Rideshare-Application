@@ -1,5 +1,6 @@
 import { Form, useNavigation } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
+import { displayName } from "../Utilities/formatName";
 
 export default function LeftPanelDriverForm({ user, activeRequests }: any) {
   const navigation = useNavigation();
@@ -69,7 +70,7 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
                 <div className="grid grid-cols-2 gap-4 items-start">
                   <div>
                     <p className="font-semibold text-gray-700">
-                      {request.user.firstName} {request.user.lastName}
+                      {displayName(request.user.firstName, request.user.lastName)}
                     </p>
                     <p className="text text-gray-500">
                       {request.user.phoneNumber}
