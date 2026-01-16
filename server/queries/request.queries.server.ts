@@ -45,7 +45,7 @@ export async function createRequest(
 export async function getActiveRequest(baseId: string) {
   const request = await prisma.request.findMany({
     where: {
-      status: 'Pending',
+      // status: 'Pending',
       baseId,
     },
     select: {
