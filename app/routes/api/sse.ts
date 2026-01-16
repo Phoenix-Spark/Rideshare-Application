@@ -2,9 +2,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { 
   requireUserId, 
-  requireSameOrigin, 
-  requireSseConnection, 
-  releaseSseConnection 
+  requireSameOrigin,
 } from "server/session.server";
 import { eventBus } from "server/events/eventBus.server";
 import { prisma } from "server/db.server";
@@ -12,7 +10,6 @@ import { prisma } from "server/db.server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
   requireSameOrigin(request);
-  requireSseConnection(userId);
   
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -55,7 +52,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
       const cleanup = () => {
         unsubscribe();
-        releaseSseConnection(userId);
         try {
           controller.close();
         } catch {

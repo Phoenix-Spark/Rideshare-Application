@@ -38,7 +38,6 @@ export async function validateTurnstileFromFormData(
   const validation = await validateTurnstile(turnstileToken, remoteIp);
 
   if (!validation.success) {
-    console.error('Turnstile validation failed:', validation['error-codes']);
     return {
       success: false,
       error: "Security verification failed. Please try again.",

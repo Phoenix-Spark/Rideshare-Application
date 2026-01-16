@@ -188,8 +188,6 @@ export async function updateUserInfo(
     data,
   });
 
-  console.log('User Account Updated!')
-
   return { success: true, user };
 }
 

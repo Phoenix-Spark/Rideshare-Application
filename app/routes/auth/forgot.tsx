@@ -32,7 +32,6 @@ export const action = async ({ request }: { request: Request}) => {
   if (!email) {
     return { error: "Email is required" };
   }
-  console.log('test')
   await createReset(email)
   await sendMagicLink(email)
 }

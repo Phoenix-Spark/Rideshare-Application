@@ -81,6 +81,16 @@ export default function MiddlePanelForm({ user, vehicles, bases }: any) {
               <p className="text-xs text-gray-500 text-center mt-4">
                 You can change this later in your settings
               </p>
+
+              <Form method="post" action="/logout">
+                <AuthenticityTokenInput />
+                <button
+                  type="submit"
+                  className="px-6 w-full mt-5 py-3 bg-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  Sign out
+                </button>
+              </Form>
             </div>
           </dialog>
         </>

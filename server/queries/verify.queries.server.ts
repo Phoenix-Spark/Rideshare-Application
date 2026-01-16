@@ -176,7 +176,6 @@ export async function sendMagicLink(email: string) {
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to send magic link:', error);
     return { error: "Failed to send reset link. Please try again." };
   }
 }

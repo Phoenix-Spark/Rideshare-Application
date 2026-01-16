@@ -43,21 +43,20 @@ export function requireSameOrigin(request: Request) {
   }
 
   const isProduction = process.env.NODE_ENV === "production";
-  
+
   if (isProduction) {
     const expectedOrigin = `https://${process.env.WEBSITE_DOMAIN}`;
-    
+
     if (origin !== expectedOrigin) {
       throw new Response("Invalid origin", { status: 403 });
     }
   } else {
     const port = process.env.VITE_DOMAIN_PORT;
     const originUrl = new URL(origin);
-    
-    const isValidDevOrigin = 
-      originUrl.protocol === "http:" && 
-      originUrl.port === port;
-    
+
+    const isValidDevOrigin =
+      originUrl.protocol === "http:" && originUrl.port === port;
+
     if (!isValidDevOrigin) {
       throw new Response("Invalid origin", { status: 403 });
     }
@@ -68,7 +67,7 @@ export function requireSameOrigin(request: Request) {
 export async function requireMagicLink(url: string): Promise<true> {
   const parsedUrl = new URL(url);
   const params = parsedUrl.searchParams;
-  
+
   const token = params.get("token");
   const id = params.get("id");
   const userId = params.get("userId");
@@ -80,7 +79,7 @@ export async function requireMagicLink(url: string): Promise<true> {
   }
 
   const validUntil = new Date(valid);
-  
+
   if (Number.isNaN(validUntil.getTime())) {
     throw redirect("/login");
   }
@@ -146,6 +145,10 @@ export async function checkEmailVerification(userId: string, request: Request) {
     },
   });
 
+  if (!user) {
+    throw await logoutUser(request);
+  }
+
   const verificationCode = user?.emailVerificationCode;
   const expirationDate = user?.emailVerificationCodeExpiration;
   const emailVerified = user?.emailVerified;
@@ -176,45 +179,8 @@ export async function requireAdminId(userId: string) {
   });
 
   if (!user || !user.isAdmin) {
-    return ("Unauthorized user");
+    return "Unauthorized user";
   }
 
   return user;
-}
-
-
-const userConnections = new Map<string, number>();
-const MAX_CONNECTIONS_PER_USER = 5;
-
-export function requireSseConnection(userId: string): void {
-  const current = userConnections.get(userId) || 0;
-  
-  if (current >= MAX_CONNECTIONS_PER_USER) {
-    console.warn(`[SSE] User ${userId} exceeded connection limit (${current}/${MAX_CONNECTIONS_PER_USER})`);
-    throw new Response(
-      `Too many connections (${current}/${MAX_CONNECTIONS_PER_USER}). Please close an existing connection.`,
-      { 
-        status: 429,
-        headers: {
-          "Retry-After": "10",
-          "Content-Type": "text/plain"
-        }
-      }
-    );
-  }
-  
-  userConnections.set(userId, current + 1);
-  console.log(`[SSE] User ${userId} connected. Total connections: ${current + 1}`);
-}
-
-export function releaseSseConnection(userId: string): void {
-  const current = userConnections.get(userId) || 1;
-  
-  if (current <= 1) {
-    userConnections.delete(userId);
-    console.log(`[SSE] User ${userId} disconnected. Total connections: 0`);
-  } else {
-    userConnections.set(userId, current - 1);
-    console.log(`[SSE] User ${userId} disconnected. Total connections: ${current - 1}`);
-  }
 }

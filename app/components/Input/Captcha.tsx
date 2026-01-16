@@ -45,7 +45,6 @@ export async function validateTurnstile(token: string, remoteip: string) {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error('Turnstile validation error:', error);
     return { success: false, 'error-codes': ['internal-error'] };
   }
 }
@@ -65,8 +64,6 @@ export default function Captcha({ turnstileToken, setTurnstileToken, error, setE
       if (!window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
 
       hasRenderedRef.current = true;
-      console.log("Rendering Turnstile on:", window.location.hostname);
-      console.log("Using sitekey:", import.meta.env.VITE_CF_SITEKEY ? "env key" : "test key");
 
       try {
         widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
@@ -74,17 +71,14 @@ export default function Captcha({ turnstileToken, setTurnstileToken, error, setE
           appearance: "always",
           theme: "auto",
           callback: (token: string) => {
-            console.log("Turnstile success, token received");
             setTurnstileToken(token);
             setError(null);
           },
           "error-callback": () => {
-            console.error("Turnstile error callback triggered");
             setError("Verification failed. Please try again.");
           },
         });
       } catch (e) {
-        console.error("Turnstile render error:", e);
         setError("Failed to load verification widget.");
       }
     };
