@@ -1,6 +1,3 @@
-// server/utils/turnstile.server.ts
-import { validateTurnstile } from "~/components/Input/Captcha";
-
 interface TurnstileValidationError {
   success: false;
   error: string;
@@ -8,9 +5,49 @@ interface TurnstileValidationError {
 }
 
 /**
- * Validates Turnstile token from formData and prevents token reuse
- * @param formData - The FormData from the request
- * @param request - The Request object (for IP extraction)
+ * SERVER-ONLY: Validates Turnstile token with Cloudflare
+ */
+async function validateTurnstileToken(token: string, remoteip: string) {
+  const secret = process.env.CF_SECRET;
+
+  if (!secret) {
+    console.error('❌ CF_SECRET environment variable not set');
+    throw new Error('Turnstile secret not configured');
+  }
+
+  const formData = new FormData();
+  formData.append('secret', secret);
+  formData.append('response', token);
+  formData.append('remoteip', remoteip);
+
+  console.log('🔐 Validating Turnstile token for IP:', remoteip);
+
+  try {
+    const response = await fetch(
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+    
+    console.log('Turnstile API response:', {
+      success: result.success,
+      errorCodes: result['error-codes'],
+      hostname: result.hostname,
+    });
+
+    return result;
+  } catch (error) {
+    console.error('❌ Turnstile validation error:', error);
+    return { success: false, 'error-codes': ['internal-error'] };
+  }
+}
+
+/**
+ * Validates Turnstile token from formData
  * @returns null if valid, error object if invalid
  */
 export async function validateTurnstileFromFormData(
@@ -19,6 +56,8 @@ export async function validateTurnstileFromFormData(
 ): Promise<TurnstileValidationError | null> {
   const turnstileToken = formData.get('cf-turnstile-response') as string;
 
+  console.log('🎫 Turnstile token present:', !!turnstileToken);
+
   if (!turnstileToken) {
     return {
       success: false,
@@ -26,16 +65,18 @@ export async function validateTurnstileFromFormData(
     };
   }
 
+  // Extract real IP (prioritize Cloudflare header)
   const remoteIp =
     request.headers.get('CF-Connecting-IP') ||
-    request.headers.get('X-Forwarded-For') ||
+    request.headers.get('X-Forwarded-For')?.split(',')[0].trim() ||
     request.headers.get('X-Real-IP') ||
     'unknown';
 
   // Validate with Cloudflare
-  const validation = await validateTurnstile(turnstileToken, remoteIp);
+  const validation = await validateTurnstileToken(turnstileToken, remoteIp);
 
   if (!validation.success) {
+    console.error('❌ Turnstile validation failed:', validation['error-codes']);
     return {
       success: false,
       error: "Security verification failed. Please try again.",
@@ -43,6 +84,6 @@ export async function validateTurnstileFromFormData(
     };
   }
 
-  // Return null = success
-  return null;
+  console.log('✅ Turnstile validation successful');
+  return null; // Success
 }

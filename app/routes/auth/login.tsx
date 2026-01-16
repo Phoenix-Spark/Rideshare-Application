@@ -9,7 +9,6 @@ import LoginForm from "~/components/Forms/LoginForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
-import { validateTurnstile } from "~/components/Input/Captcha";
 import { validateTurnstileFromFormData } from "server/utils/turnstile.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {

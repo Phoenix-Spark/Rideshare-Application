@@ -25,37 +25,20 @@ interface CaptchaProps {
   setError: (error: string | null) => void;
 }
 
-// Turnstile validation function
-export async function validateTurnstile(token: string, remoteip: string) {
-  const formData = new FormData();
-  const key = process.env.VITE_CF_SECRET || process.env.CF_SECRET
-  formData.append('secret', key!); // ✓ Fixed: removed VITE_ prefix
-  formData.append('response', token); // ✓ Fixed: was 'reponse'
-  formData.append('remoteip', remoteip);
+// ❌ DELETE THE validateTurnstile FUNCTION - IT SHOULD NOT BE HERE!
+// Validation MUST happen server-side only
 
-  try {
-    const response = await fetch( // ✓ Fixed: was 'reponse'
-      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, 'error-codes': ['internal-error'] };
-  }
-}
-
-export default function Captcha({ turnstileToken, setTurnstileToken, error, setError }: CaptchaProps) {
+export default function Captcha({ 
+  turnstileToken, 
+  setTurnstileToken, 
+  error, 
+  setError 
+}: CaptchaProps) {
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const hasRenderedRef = useRef(false);
 
   useEffect(() => {
-    // Prevent multiple render attempts
     if (hasRenderedRef.current) return;
 
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -66,19 +49,30 @@ export default function Captcha({ turnstileToken, setTurnstileToken, error, setE
       hasRenderedRef.current = true;
 
       try {
+        const sitekey = import.meta.env.VITE_CF_SITEKEY;
+        
+        if (!sitekey) {
+          console.error('VITE_CF_SITEKEY not set');
+          setError("Configuration error");
+          return;
+        }
+
         widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: import.meta.env.VITE_CF_SITEKEY || import.meta.env.CF_SITEKEY,//"1x00000000000000000000AA",
+          sitekey,
           appearance: "always",
           theme: "auto",
           callback: (token: string) => {
+            console.log('✓ Turnstile token received');
             setTurnstileToken(token);
             setError(null);
           },
           "error-callback": () => {
+            console.error('✗ Turnstile error');
             setError("Verification failed. Please try again.");
           },
         });
       } catch (e) {
+        console.error('Failed to render Turnstile:', e);
         setError("Failed to load verification widget.");
       }
     };
@@ -97,11 +91,10 @@ export default function Captcha({ turnstileToken, setTurnstileToken, error, setE
     return () => {
       if (interval) clearInterval(interval);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setTurnstileToken, setError]);
 
   return (
-    <div className="pt-2 ">
+    <div className="pt-2">
       <div ref={turnstileRef} className="flex justify-center" />
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       <input type="hidden" name="cf-turnstile-response" value={turnstileToken || ""} />
