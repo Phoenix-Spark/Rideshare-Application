@@ -13,12 +13,10 @@ COPY . .
 
 # Accept build arguments for Vite
 ARG VITE_CF_SITEKEY
-ARG VITE_CF_SECRET
 ARG VITE_DOMAIN
 
 # Set them as ENV variables so Vite can access during build
 ENV VITE_CF_SITEKEY=$VITE_CF_SITEKEY
-ENV VITE_CF_SECRET=$VITE_CF_SECRET
 ENV VITE_DOMAIN=$VITE_DOMAIN
 
 # Database URL for Prisma generation
