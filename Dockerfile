@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
+RUN apk --no-cache add curl
+
 WORKDIR /app
 
 # Copy package files
