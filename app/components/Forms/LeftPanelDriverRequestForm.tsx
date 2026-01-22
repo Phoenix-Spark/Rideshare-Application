@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, useNavigation } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { displayName } from "../Utilities/formatName";
+import StarRating from "../Utilities/StarRating";
 
 export default function LeftPanelDriverRequestForm({ accepted }: any) {
   const [showRequests, setShowRequests] = useState(false);
@@ -88,8 +89,9 @@ export default function LeftPanelDriverRequestForm({ accepted }: any) {
 
                   <div className=" flex items-center justify-between mb-3 border-b border-gray-200">
                     <div className="">
-                      <p className="font-bold text-gray-900">
+                      <p className="flex gap-2 font-bold text-gray-900">
                         {displayName(ride?.user?.firstName, ride?.user?.lastName)}
+                        <StarRating length="short"/>
                       </p>
                       {ride.user?.phoneNumber && (
                         <p className="text-sm text-gray-600">

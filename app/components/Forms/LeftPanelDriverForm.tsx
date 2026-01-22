@@ -1,6 +1,7 @@
 import { Form, useNavigation } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { displayName } from "../Utilities/formatName";
+import StarRating from "../Utilities/StarRating";
 
 export default function LeftPanelDriverForm({ user, activeRequests }: any) {
   const navigation = useNavigation();
@@ -72,6 +73,7 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
                     <p className="font-semibold text-gray-700">
                       {displayName(request.user.firstName, request.user.lastName)}
                     </p>
+                    <StarRating length="long"/>
                     <p className="text text-gray-500">
                       {request.user.phoneNumber}
                     </p>

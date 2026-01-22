@@ -5,6 +5,8 @@ import { LogoutIcon } from "../Icons/LogoutIcon";
 import { Form, Link } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import { displayName, formatName } from "../Utilities/formatName";
+import { StarIcon } from "../Icons/Star";
+import StarRating from "../Utilities/StarRating";
 
 export default function RightSideUserPanelForm({ user }: any) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -38,9 +40,13 @@ export default function RightSideUserPanelForm({ user }: any) {
         aria-label="Toggle profile menu"
       >
         <div className="flex flex-col text-left max-w-[70%]">
+          <div className="flex gap-2 items-center">
+
           <p className="text-gray-900 font-semibold text-lg truncate">
             {displayName(user.firstName, user.lastName)}
           </p>
+          <StarRating length="short" showRatingCount/>
+          </div>
           <p className="text-gray-500 text-sm truncate">{user?.email}</p>
         </div>
 
