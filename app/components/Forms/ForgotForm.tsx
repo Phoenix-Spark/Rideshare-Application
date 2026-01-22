@@ -1,12 +1,29 @@
 import { Form, Link } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Captcha from "../Input/Captcha";
 
 export default function ForgotForm() {
   const [submitted, setSubmitted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [showCaptcha, setShowCaptcha] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    if (!turnstileToken) {
+      e.preventDefault();
+      setShowCaptcha(true);
+    } else {
+      setSubmitted(true);
+    }
+  };
+
+  useEffect(() => {
+    if (turnstileToken && formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  }, [turnstileToken]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 relative overflow-hidden">
@@ -22,7 +39,7 @@ export default function ForgotForm() {
               password.
             </p>
 
-            <Form method="post" action="/forgot" className="space-y-6" onSubmit={() => setSubmitted(true)} >
+            <Form ref={formRef} method="post" action="/forgot" className="space-y-6" onSubmit={handleSubmit}>
               <AuthenticityTokenInput />
 
               <div>
@@ -41,14 +58,13 @@ export default function ForgotForm() {
                   placeholder="you@example.com"
                 />
               </div>
-              <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={error} setError={setError} />
+              <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={error} setError={setError} show={showCaptcha} />
               <button
-              type="submit"
-              disabled={turnstileToken ? false: true}
-              className={`w-full py-4 ${turnstileToken ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30': 'bg-gray-400 rounded-xl hover:cursor-not-allowed text-white'}`}
-            >
-              Send Reset Link
-            </button>
+                type="submit"
+                className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
+              >
+                Send Reset Link
+              </button>
             </Form>
 
             <div className="mt-6 text-center">

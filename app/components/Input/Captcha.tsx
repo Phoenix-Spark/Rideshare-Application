@@ -9,11 +9,13 @@ declare global {
           sitekey: string;
           callback?: (token: string) => void;
           "error-callback"?: () => void;
-          appearance?: "always";
+          "expired-callback"?: () => void;
+          appearance?: "always" | "execute" | "interaction-only";
           theme?: "light" | "dark" | "auto";
         }
       ) => string;
       remove: (widgetId: string) => void;
+      reset: (widgetId: string) => void;
     };
   }
 }
@@ -23,36 +25,42 @@ interface CaptchaProps {
   setTurnstileToken: (token: string | null) => void;
   error: string | null;
   setError: (error: string | null) => void;
+  show?: boolean;
 }
 
-// ❌ DELETE THE validateTurnstile FUNCTION - IT SHOULD NOT BE HERE!
-// Validation MUST happen server-side only
-
-export default function Captcha({ 
-  turnstileToken, 
-  setTurnstileToken, 
-  error, 
-  setError 
+export default function Captcha({
+  turnstileToken,
+  setTurnstileToken,
+  error,
+  setError,
+  show = true,
 }: CaptchaProps) {
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
-  const hasRenderedRef = useRef(false);
 
   useEffect(() => {
-    if (hasRenderedRef.current) return;
+    if (!show) return;
 
     let interval: ReturnType<typeof setInterval> | null = null;
 
     const renderWidget = () => {
-      if (!window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
+      if (!window.turnstile || !turnstileRef.current) return;
 
-      hasRenderedRef.current = true;
+      // Remove existing widget if any
+      if (widgetIdRef.current) {
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+        } catch (e) {
+          // ignore
+        }
+        widgetIdRef.current = null;
+      }
 
       try {
         const sitekey = import.meta.env.VITE_CF_SITEKEY;
-        
+
         if (!sitekey) {
-          console.error('VITE_CF_SITEKEY not set');
+          console.error("VITE_CF_SITEKEY not set");
           setError("Configuration error");
           return;
         }
@@ -62,17 +70,19 @@ export default function Captcha({
           appearance: "always",
           theme: "auto",
           callback: (token: string) => {
-            console.log('✓ Turnstile token received');
             setTurnstileToken(token);
             setError(null);
           },
           "error-callback": () => {
-            console.error('✗ Turnstile error');
             setError("Verification failed. Please try again.");
+          },
+          "expired-callback": () => {
+            setTurnstileToken(null);
+            setError("Verification expired. Please try again.");
           },
         });
       } catch (e) {
-        console.error('Failed to render Turnstile:', e);
+        console.error("Failed to render Turnstile:", e);
         setError("Failed to load verification widget.");
       }
     };
@@ -90,8 +100,20 @@ export default function Captcha({
 
     return () => {
       if (interval) clearInterval(interval);
+      if (widgetIdRef.current && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+        } catch (e) {
+          // ignore
+        }
+        widgetIdRef.current = null;
+      }
     };
-  }, [setTurnstileToken, setError]);
+  }, [show, setTurnstileToken, setError]);
+
+  if (!show) {
+    return <input type="hidden" name="cf-turnstile-response" value="" />;
+  }
 
   return (
     <div className="pt-2">
