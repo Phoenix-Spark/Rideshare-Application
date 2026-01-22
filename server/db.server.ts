@@ -10,23 +10,15 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is not set');
 }
 
-console.log('DATABASE_URL:', process.env.DATABASE_URL?.replace(/:[^:@]+@/, ':****@'));
-
-// Create connection pool
+// Create connection pool with SSL enabled
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
-});
-
-// Test the connection
-pool.on('connect', (client) => {
-  console.log('Pool connected to database');
-});
-
-pool.on('error', (err) => {
-  console.error('Unexpected pool error:', err);
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 // Create the adapter
