@@ -25,6 +25,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/rideshare:${{ github.ref_name }}
           build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
             VITE_CF_SITEKEY=${{ secrets.VITE_CF_SITEKEY }}
             VITE_DOMAIN=${{ secrets.VITE_DOMAIN }}
             VITE_DOMAIN_PORT=${{ secrets.VITE_DOMAIN_PORT }}
