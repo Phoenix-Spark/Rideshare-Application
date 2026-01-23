@@ -8,7 +8,6 @@ export default function ForgotForm() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-6 relative overflow-hidden">
       <div className="relative bg-white md:rounded-3xl shadow-xl border border-gray-100 p-10 w-screen md:w-[550px]">
-
         {!submitted ? (
           <>
             <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
@@ -18,10 +17,8 @@ export default function ForgotForm() {
               Enter your email address and we'll send you a link to reset your
               password.
             </p>
-
-            <Form  method="post" action="/forgot" className="space-y-6">
+            <Form method="post" action="/forgot" className="space-y-6">
               <AuthenticityTokenInput />
-
               <div>
                 <label
                   htmlFor="email"
@@ -40,12 +37,12 @@ export default function ForgotForm() {
               </div>
               <button
                 type="submit"
+                onClick={() => setSubmitted(true)}
                 className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30"
               >
                 Send Reset Link
               </button>
             </Form>
-
             <div className="mt-6 text-center">
               <Link
                 to="/login"
@@ -64,7 +61,6 @@ export default function ForgotForm() {
               If the email you entered is valid, we will send a password reset
               link within the next 10 minutes. Please check your inbox.
             </p>
-
             <div className="mt-6 text-center">
               <Link
                 to="/login"
@@ -75,7 +71,6 @@ export default function ForgotForm() {
             </div>
           </>
         )}
-
       </div>
     </div>
   );
