@@ -12,7 +12,9 @@ export default [
     route("/broadcast/sse", "./routes/api/sse.ts"),
     route("/dashboard", "./routes/dashboard/dashboard.tsx", [
         route("settings", "./routes/settings/usersettings.tsx"),
-        route("admin", "./routes/settings/adminsettings.tsx"),
+        route("admin", "./routes/settings/adminsettings.tsx", [
+            route("rides", "./routes/auth/rides.tsx"),
+        ]),
     ]),
     route("*", './routes/notfound.tsx'),
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import CreateBaseForm from "../Pages/Admin/CreateBaseForm";
 import ManageBaseForm from "../Pages/Admin/ManageBaseForm";
 import CreateStopForm from "../Pages/Admin/CreateStopForm";
@@ -9,12 +9,64 @@ import CreateUserForm from "../Pages/Admin/CreateUserForm";
 import { AdminIcon } from "../Icons/AdminIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
+import { SettingsIcon } from "../Icons/SettingsIcon";
+import { VehicleIcon } from "../Icons/VehicleIcon";
+// import CreateRidesTable from "../Forms/CreateRidesTable";
+// import Rides from "~/routes/auth/rides";
 
 export default function AdminSettingsModal({ user, base, station, accounts }: any) {
-  const [activeTab, setActiveTab] = useState("bases");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isRidesRoute = location.pathname.includes("/admin/rides");
+  const [activeTab, setActiveTab] = useState(isRidesRoute ? "rides" : "bases");
+
+  useEffect(() => {
+    if (isRidesRoute) {
+      setActiveTab("rides");
+    }
+  }, [isRidesRoute]);
+
+  const menuTabs = [
+    {
+      label: "Manage Bases",
+      tab: "bases",
+      Icon: AdminIcon,
+      enabled: true,
+    },
+    {
+      label: "Manage Stops",
+      tab: "stops",
+      Icon: MapPinIcon,
+      enabled: true,
+    },
+    {
+      label: "Manage Users",
+      tab: "users",
+      Icon: UserIcon,
+      enabled: true,
+    },
+    {
+      label: "Ride Records",
+      tab: "rides",
+      Icon: VehicleIcon,
+      enabled: true,
+    },
+    {
+      label: "Metrics",
+      tab: "metrics",
+      Icon: AdminIcon,
+      enabled: false,
+    },
+  ]
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    if (tab === "rides") {
+      navigate("/dashboard/admin/rides");
+    } else if (isRidesRoute) {
+      navigate("/dashboard/admin");
+    }
   };
 
   const renderContent = () => {
@@ -38,6 +90,14 @@ export default function AdminSettingsModal({ user, base, station, accounts }: an
           <div className="space-y-8">
             <CreateUserForm />
             <ManageUserForm accounts={accounts} base={base} user={user}/>
+          </div>
+        );
+      case "rides":
+        return <Outlet />;
+      case "metrics":
+        return (
+          <div className="space-y-8">
+            {/* <CreateRidesTable /> */}
           </div>
         );
       default:
@@ -71,7 +131,19 @@ export default function AdminSettingsModal({ user, base, station, accounts }: an
           </div>
 
           <nav className="flex-1 flex flex-col p-4 gap-2">
-            <button
+            {menuTabs.filter(tab => tab.enabled).map(item => 
+              <button
+                onClick={() => handleTabChange(item.tab)}
+                className={`flex items-center gap-3 text-left px-4 py-3.5 rounded-xl font-semibold transition-all ${
+                activeTab === item.tab
+                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}>
+                <item.Icon className="size-6" />
+                <span>{item.label}</span>
+              </button>
+            )}
+            {/* <button
               onClick={() => handleTabChange("bases")}
               className={`flex items-center gap-3 text-left px-4 py-3.5 rounded-xl font-semibold transition-all ${
                 activeTab === "bases"
@@ -105,7 +177,7 @@ export default function AdminSettingsModal({ user, base, station, accounts }: an
             >
               <UserIcon className="size-6" />
               <span>Manage Users</span>
-            </button>
+            </button> */}
           </nav>
 
           <div className="border-t border-gray-200 p-4 bg-gray-50">
