@@ -9,7 +9,6 @@ import LoginForm from "~/components/Forms/LoginForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
-import { validateTurnstileFromFormData } from "server/utils/turnstile.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
@@ -41,11 +40,6 @@ export const action = async ({ request }: { request: Request }) => {
   if (!user) {
     return { error: "Invalid credentials" };
   }
-
-   const turnstileError = await validateTurnstileFromFormData(formData, request);
-     if (turnstileError) {
-       return turnstileError;
-     }
 
   return createUserSession(user.id, "/dashboard");
 };

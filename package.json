@@ -3,10 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "react-router dev --port 3000",
+    "dev": "concurrently -n \"APP,WORKER\" -c \"blue,green\" \"npm:dev:app\" \"npm:dev:worker\"",
+    "dev:app": "react-router dev --port 3000",
+    "dev:worker": "tsx watch worker/index.ts",
     "dev:all": "npm run dev",
     "build": "react-router build",
-    "start": "react-router-serve ./build/server/index.js --host 0.0.0.0",
+    "start": "concurrently -n \"APP,WORKER\" -c \"blue,green\" \"npm:start:app\" \"npm:start:worker\"",
+    "start:app": "react-router-serve ./build/server/index.js --host 0.0.0.0",
+    "start:worker": "tsx worker/index.ts",
     "start:prod": "npm start"
   },
   "dependencies": {
@@ -19,6 +23,7 @@
     "@types/nodemailer": "^7.0.4",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "cron": "^4.4.0",
     "dotenv": "^17.2.3",
     "isbot": "^5.1.31",
     "maplibre-gl": "^5.13.0",
@@ -28,8 +33,7 @@
     "react-dom": "^19.1.1",
     "react-router": "^7.9.2",
     "react-toastify": "^11.0.5",
-    "remix-utils": "^9.0.0",
-    "tsx": "^4.20.6"
+    "remix-utils": "^9.0.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.9.2",
@@ -41,12 +45,14 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.1.9",
     "baseline-browser-mapping": "^2.9.14",
+    "concurrently": "^9.2.1",
     "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.11",
     "prisma": "^7.2.0",
     "react-router-devtools": "^6.0.0",
     "tailwindcss": "^4.1.13",
     "terser": "^5.44.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
     "vite-tsconfig-paths": "^5.1.4"

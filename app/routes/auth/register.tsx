@@ -7,15 +7,10 @@ import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
 import { requireSameOrigin } from "server/session.server";
 import { sendWelcomeEmail } from "server/queries/verify.queries.server";
-// import { validateTurnstile } from "~/components/Input/Captcha";
-import { validateTurnstileFromFormData } from "server/utils/turnstile.server";
-
-
 
 export const action = async ({ request }: { request: Request }) => {
   requireSameOrigin(request);
 
-  // CSRF validation
   try {
     await csrf.validate(request);
   } catch (error) {
@@ -27,13 +22,6 @@ export const action = async ({ request }: { request: Request }) => {
 
   const formData = await request.formData();
 
-  // ✓ ADDED: Validate Turnstile first
-  const turnstileError = await validateTurnstileFromFormData(formData, request);
-  if (turnstileError) {
-    return turnstileError;
-  }
-
-  // Extract form data
   const inviteCode = formData.get("inviteCode") as string | null;
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
@@ -42,7 +30,6 @@ export const action = async ({ request }: { request: Request }) => {
   const password = formData.get("password") as string;
   const base = formData.get("base") as string;
 
-  // Register user
   const result = await registerUser(
     inviteCode,
     firstName,
@@ -57,11 +44,9 @@ export const action = async ({ request }: { request: Request }) => {
     return { error: result.error };
   }
 
-  // Get user ID and send welcome email
   const { id } = (await getUserIdFromEmail(email))!;
   await sendWelcomeEmail(id, email);
 
-  // Create session and redirect
   return await createUserSession(id, "/login");
 };
 

@@ -1,40 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Form, useActionData } from "react-router";
 import { EyeClosedIcon } from "../Icons/EyeClosedIcon";
 import { EyeOpenIcon } from "../Icons/EyeOpenIcon";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
-import Captcha from "../Input/Captcha";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [useInvite, setUseInvite] = useState(false);
   const actionData = useActionData<{ error?: string }>();
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [showCaptcha, setShowCaptcha] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    if (!turnstileToken) {
-      e.preventDefault();
-      setShowCaptcha(true);
-    }
-  };
-
-  useEffect(() => {
-    if (turnstileToken && formRef.current) {
-      formRef.current.requestSubmit();
-    }
-  }, [turnstileToken]);
-
   const fields = [
     { label: "First Name", name: "firstName", type: "text", placeholder: "John" },
     { label: "Last Name", name: "lastName", type: "text", placeholder: "Doe" },
     { label: "Email Address", name: "email", type: "email", placeholder: "john.doe@us.af.mil" },
     { label: "Phone Number", name: "phoneNumber", type: "tel", placeholder: "(123) 456-7890", maxLength: 14 },
   ];
-
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 md:p-6 relative md:py-12">
@@ -67,7 +46,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="w-full flex justify-center">
-          <Form ref={formRef} method="POST" action="/register" className="w-full max-w-md space-y-5" onSubmit={handleSubmit}>
+          <Form method="POST" action="/register" className="w-full max-w-md space-y-5">
             <AuthenticityTokenInput />
 
             {actionData?.error && (
@@ -155,11 +134,8 @@ export default function RegisterForm() {
               </div>
             </div>
 
-            <Captcha turnstileToken={turnstileToken} setTurnstileToken={setTurnstileToken} error={error} setError={setError} show={showCaptcha} />
-
             <button
               type="submit"
-              // disabled={turnstileToken ? false : true}
               className={`w-full mb-8 md:mb-0 py-4 mt-6 rounded-xl font-semibold text-white text-lg transition-all shadow-lg ${true ?'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transform hover:scale-[1.02] active:scale-[0.98] shadow-blue-500/30' : 'bg-gray-400 hover:cursor-not-allowed'}`}
             >
               Create Account
