@@ -295,3 +295,126 @@ export async function getUserBase(userId: string) {
 
   return base;
 }
+
+interface GetRidesParams {
+  baseId: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+}
+
+export async function getRidesByBase({ baseId, page = 1, pageSize = 25, search }: GetRidesParams) {
+  const skip = (page - 1) * pageSize;
+
+  const where: any = { baseId };
+
+  if (search) {
+    where.OR = [
+      { user: { firstName: { contains: search, mode: 'insensitive' } } },
+      { user: { lastName: { contains: search, mode: 'insensitive' } } },
+      { driver: { firstName: { contains: search, mode: 'insensitive' } } },
+      { driver: { lastName: { contains: search, mode: 'insensitive' } } },
+    ];
+  }
+
+  const [rides, totalCount] = await Promise.all([
+    prisma.request.findMany({
+      where,
+      skip,
+      take: pageSize,
+      select: {
+        id: true,
+        status: true,
+        dropoff: {
+          select: {
+            name: true,
+          }
+        },
+        pickup: {
+          select: {
+            name: true,
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        driver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        }
+      },
+      orderBy: {
+        id: 'desc'
+      }
+    }),
+    prisma.request.count({ where })
+  ]);
+
+  return {
+    rides,
+    totalCount,
+    totalPages: Math.ceil(totalCount / pageSize),
+    currentPage: page,
+  };
+}
+
+interface GetAllRidesParams {
+  baseId: string;
+  search?: string;
+}
+
+export async function getAllRidesForExport({ baseId, search }: GetAllRidesParams) {
+  const where: any = { baseId };
+
+  if (search) {
+    where.OR = [
+      { user: { firstName: { contains: search, mode: 'insensitive' } } },
+      { user: { lastName: { contains: search, mode: 'insensitive' } } },
+      { driver: { firstName: { contains: search, mode: 'insensitive' } } },
+      { driver: { lastName: { contains: search, mode: 'insensitive' } } },
+    ];
+  }
+
+  return await prisma.request.findMany({
+    where,
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      dropoff: {
+        select: {
+          name: true,
+        }
+      },
+      pickup: {
+        select: {
+          name: true,
+        }
+      },
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      driver: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+}
