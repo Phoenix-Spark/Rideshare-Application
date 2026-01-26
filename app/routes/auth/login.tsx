@@ -9,6 +9,7 @@ import LoginForm from "~/components/Forms/LoginForm";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
 import { csrf } from "server/csrf.server";
 import { CSRFError } from "remix-utils/csrf/server";
+import type { Route } from "./+types/login";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
@@ -31,21 +32,26 @@ export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  
+  try{
 
-  if (!email || !password) {
-    return { error: "Email and password are required" };
+    if (!email || !password) {
+      return { error: "Email and password are required" };
+    }
+    
+    const user = await authenticateUser(email, password);
+    if (!user) {
+      return { error: "Invalid credentials" };
+    }
+    
+    return await createUserSession(user.id, "/dashboard");
+  }catch(error){
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, message }
   }
-
-  const user = await authenticateUser(email, password);
-  if (!user) {
-    return { error: "Invalid credentials" };
-  }
-
-  return createUserSession(user.id, "/dashboard");
 };
 
-export default function Login() {
-  const actionData = useActionData<{ error?: string }>();
+export default function Login({ actionData }: Route.ComponentProps) {
   return <LoginForm error={actionData?.error} />;
 }
 
