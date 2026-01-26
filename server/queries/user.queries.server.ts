@@ -275,9 +275,9 @@ export async function deleteUserAccount(userId: string) {
 
 export async function getAccounts() {
   const account = await prisma.user.findMany({
-    where: {
-      isDeleted: false,
-    },
+    // where: {
+    //   isDeleted: false,
+    // },
     select: {
       id: true,
       firstName: true,

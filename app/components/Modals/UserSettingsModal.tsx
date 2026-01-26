@@ -57,12 +57,12 @@ export const createTabs = ({user, userBase, vehicles}: any) => [
     icon: <KeyIcon className="size-6" />,
     hide: user?.isInvite,
   },
-  {
-    label: "Deactivation",
-    name: "deactivation",
-    to: 'settings?tab=deactivation',
-    icon: <WarningIcon className="size-6" />,
-  },
+  // {
+  //   label: "Deactivation",
+  //   name: "deactivation",
+  //   to: 'settings?tab=deactivation',
+  //   icon: <WarningIcon className="size-6" />,
+  // },
 ].filter((tab) => !tab.hide);
 
 
@@ -128,7 +128,7 @@ export default function UserSettingsModal({
           {selectedTab === "vehicles" && ( <UserVehicleForm user={user} vehicles={vehicles} /> )}
           {selectedTab === "security" && <UserSecurityForm user={user} />}
           {!user?.isInvite && selectedTab === "invites" && ( <UserInviteForm user={user} invite={invite} /> )}
-          {selectedTab === "deactivation" && <UserDeleteForm user={user} />}
+          {/* {selectedTab === "deactivation" && <UserDeleteForm user={user} />} */}
         </div>
 
         {/* Mobile Bottom Tab Bar */}

@@ -13,7 +13,7 @@ import {
   updateInvite,
 } from "server/queries/invite.queries.server";
 import {
-  deleteUserAccount,
+  // deleteUserAccount,
   getBaseInfo,
   getUserBase,
   getUserInfo,
@@ -89,8 +89,8 @@ export async function action({ request }: ActionFunctionArgs) {
         password,
         baseId,
       });
-    } else if (intent === "user-delete") {
-      return deleteUserAccount(userId);
+    // } else if (intent === "user-delete") {
+    //   return deleteUserAccount(userId);
     } else if (intent === "vehicle") {
       return createVehicle(userId, year, make, model, color, plate);
     } else if (intent === "vehicle-enable") {

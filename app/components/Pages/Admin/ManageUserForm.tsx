@@ -216,7 +216,7 @@ export default function ManageUserForm({ accounts , base, user, actionData}: any
             </div>
 
             <div className="flex justify-end gap-3 pt-2">
-              <button
+              {/* <button
                 type="button"
                 onClick={() => {
                   const selectedUser = accounts.find(
@@ -237,7 +237,7 @@ export default function ManageUserForm({ accounts , base, user, actionData}: any
                 }`}
               >
                 Remove User
-              </button>
+              </button> */}
               <button
                 type="submit"
                 className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"

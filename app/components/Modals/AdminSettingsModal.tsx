@@ -9,7 +9,7 @@ import CreateUserForm from "../Pages/Admin/CreateUserForm";
 import { AdminIcon } from "../Icons/AdminIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
-import { SettingsIcon } from "../Icons/SettingsIcon";
+// import { SettingsIcon } from "../Icons/SettingsIcon";
 import { VehicleIcon } from "../Icons/VehicleIcon";
 // import CreateRidesTable from "../Forms/CreateRidesTable";
 // import Rides from "~/routes/auth/rides";

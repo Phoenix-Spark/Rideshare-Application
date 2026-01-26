@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { type LoaderFunctionArgs, type ActionFunctionArgs, useLoaderData } from "react-router";
+import { type LoaderFunctionArgs, type ActionFunctionArgs } from "react-router";
 import { toast } from "react-toastify";
 import { registerUser } from "server/queries/auth.queries.server";
 import { createBase, deleteBase, getBase, updateBase } from "server/queries/base.queries.server";
 import { createStop, deleteStop, getStop, updateStop } from "server/queries/station.queries.server";
-import { deleteUserAccount, getAccounts, getUserInfo, updateUserInfoAdmin } from "server/queries/user.queries.server";
+import { getAccounts, getUserInfo, updateUserInfoAdmin } from "server/queries/user.queries.server";
 import { checkEmailVerification, requireAdminId, requireSameOrigin, requireUserId } from "server/session.server";
 import AdminSettingsModal from "~/components/Modals/AdminSettingsModal";
 import { ErrorBoundary } from "~/components/Utilities/ErrorBoundary";
@@ -102,10 +102,10 @@ export async function action({ request }: ActionFunctionArgs) {
     await updateUserInfoAdmin( userId, {firstName, lastName, email, phoneNumber, isAdmin, isDriver, isPassenger, isReset })
     return { success: true, message: "User updated!", intent}
   }
-  if (intent === "deleteUser") {
-    await deleteUserAccount(userId)
-    return { success: true, message: "User deleted!", intent}
-  }
+  // if (intent === "deleteUser") {
+  //   await deleteUserAccount(userId)
+  //   return { success: true, message: "User deleted!", intent}
+  // }
   }catch(error){
     const message = error instanceof Error ? error.message : String(error);
     return { success: false, message }
