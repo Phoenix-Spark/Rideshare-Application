@@ -12,8 +12,8 @@ model User {
   baseId                          String?
   firstName                       String
   lastName                        String
-  phoneNumber                     String
-  email                           String    @unique
+  phoneNumber                     String?
+  email                           String?   @unique
   password                        String
   isAdmin                         Boolean   @default(false)
   isDriver                        Boolean   @default(false)
@@ -37,6 +37,7 @@ model User {
   emailVerificationCodeExpiration DateTime?
   emailVerificationAttempts       Int       @default(0)
   emailVerificationCodeSendLimit  DateTime?
+  isDeleted                       Boolean   @default(false)
 }
 
 model Invite {

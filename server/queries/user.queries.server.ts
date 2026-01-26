@@ -232,27 +232,52 @@ export async function updateUserInfoAdmin(
 }
 
 export async function deleteUserAccount(userId: string) {
-  const user = await prisma.user.delete({
-    where: { id: userId },
-  });
+  // const result = await prisma.$transaction([
+  //   prisma.request.updateMany({
+  //     where: { userId },
+  //     data: { userId: null }
+  //   }),
+  //   prisma.request.updateMany({
+  //     where: { driverId: userId },
+  //     data: { driverId: null }
+  //   }),
+  //   prisma.vehicle.deleteMany({
+  //     where: { userId: userId }
+  //   }),
+  //   prisma.reset.deleteMany({
+  //     where: { userId }
+  //   }),
+  //   prisma.user.delete({
+  //     where: { id: userId }
+  //   })
+  // ]);
 
-  let vehicle = null;
+  const userDelete = await prisma.user.updateMany({
+    where: {
+      id: userId,
+    },
+    data: {
+      email: null,
+      phoneNumber: null,
+      password: "",
+      isAdmin: false,
+      isDriver: false,
+      isInvite: false,
+      isPassenger: false,
+      isReset: false,
+      isDeleted: true,
+      emailVerified:false,
+    }
+  })
 
-  const existingVehicle = await prisma.vehicle.findUnique({
-    where: { userId: userId },
-  });
-
-  if (existingVehicle) {
-    vehicle = await prisma.vehicle.delete({
-      where: { userId: userId },
-    });
-  }
-
-  return user;
+  return userDelete// Return the deleted user
 }
 
 export async function getAccounts() {
   const account = await prisma.user.findMany({
+    where: {
+      isDeleted: false,
+    },
     select: {
       id: true,
       firstName: true,

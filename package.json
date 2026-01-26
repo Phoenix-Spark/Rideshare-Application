@@ -48,7 +48,7 @@
     "concurrently": "^9.2.1",
     "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.11",
-    "prisma": "^6.19.2",
+    "prisma": "^7.2.0",
     "react-router-devtools": "^6.0.0",
     "tailwindcss": "^4.1.13",
     "terser": "^5.44.1",

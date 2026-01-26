@@ -160,7 +160,7 @@ export default function CreateRidesTable({ rides, totalCount, totalPages, curren
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
                               {rides?.map((ride: any, index: number) =>
                                     <tr key={index}>
-                                          <td>{displayName(ride.user.firstName, ride.user.lastName)}</td>
+                                          <td>{displayName(ride.user?.firstName, ride.user?.lastName)}</td>
                                           <td>{ride.pickup.name}</td>
                                           <td>{ride.dropoff.name}</td>
                                           <td>{ride.driver ? displayName(ride.driver.firstName, ride.driver.lastName) : ""}</td>
