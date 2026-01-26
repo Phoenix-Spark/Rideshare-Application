@@ -148,7 +148,14 @@ export async function getDriverRequest(userId: string) {
 
 export async function getPassengerRequest(userId: string) {
   const requests = await prisma.request.findMany({
-    where: { userId },
+    where: { 
+      userId,
+      status: {
+        not: {
+          in: [ 'Cancelled', 'Completed']
+        }
+      }
+     },
     select: {
       id: true,
       createdAt: true,
