@@ -44,6 +44,7 @@ async function createUsers(users: any[]) {
         phoneNumber: user.phoneNumber,
         password: user.password,
         emailVerified: true,
+        baseId: user.baseId,
       },
       create: {
         firstName: user.firstName,
@@ -52,6 +53,7 @@ async function createUsers(users: any[]) {
         phoneNumber: user.phoneNumber,
         password: user.password,
         emailVerified: true,
+        baseId: user.baseId,
       },
     });
   }
@@ -105,6 +107,16 @@ function generateStationsForBase(baseId: string, baseLong: number, baseLat: numb
       description: `${stationType} ${buildingNumber}`,
     };
   });
+}
+
+// Shuffle array using Fisher-Yates algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = randomInt(0, i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 async function main() {
@@ -199,17 +211,42 @@ async function main() {
     email: `${firstName.toLowerCase()}.${lastNames[index].toLowerCase()}@us.af.mil`,
     phoneNumber: generatePhoneNumber(),
     password: hashedPassword,
-    
   }));
 
+  // Shuffle users and assign them evenly to bases
+  const shuffledUsers = shuffleArray(users);
+  const usersPerBase = Math.floor(shuffledUsers.length / bases.length);
+  const baseIds = [BASES.TRAVIS, BASES.VANDENBERG, BASES.EGLIN];
+  
+  const usersWithBases = shuffledUsers.map((user, index) => {
+    const baseIndex = Math.floor(index / usersPerBase);
+    // Handle any remainder users by assigning them to the last base
+    const assignedBaseId = baseIndex >= baseIds.length ? baseIds[baseIds.length - 1] : baseIds[baseIndex];
+    
+    return {
+      ...user,
+      baseId: assignedBaseId,
+    };
+  });
+
   // Create users
-  await createUsers(users);
+  await createUsers(usersWithBases);
+
+  // Count users per base for summary
+  const usersByBase = usersWithBases.reduce((acc, user) => {
+    acc[user.baseId] = (acc[user.baseId] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   console.log('\n🎉 Seeding completed successfully!');
   console.log(`📊 Summary:`);
   console.log(`   - ${bases.length} Bases`);
   console.log(`   - ${allStations.length} Stations`);
-  console.log(`   - ${users.length} Users`);
+  console.log(`   - ${usersWithBases.length} Users`);
+  console.log(`\n👥 Users per base:`);
+  bases.forEach(base => {
+    console.log(`   - ${base.name}: ${usersByBase[base.id]} users`);
+  });
 }
 
 main()
