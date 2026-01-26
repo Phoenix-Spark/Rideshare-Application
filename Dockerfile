@@ -13,14 +13,6 @@ RUN npm ci
 # Copy application code
 COPY . .
 
-# Accept build arguments for Vite
-ARG VITE_CF_SITEKEY
-ARG VITE_DOMAIN
-
-# Set them as ENV variables so Vite can access during build
-ENV VITE_CF_SITEKEY=$VITE_CF_SITEKEY
-ENV VITE_DOMAIN=$VITE_DOMAIN
-
 # Database URL for Prisma generation
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 
