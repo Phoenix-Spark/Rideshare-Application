@@ -35,7 +35,7 @@ import {
   broadcastCancelAcceptedRide,
 } from "server/events/requestEvents.server";
 import { prisma } from "server/db.server";
-import { broadcastSSE } from "~/hooks/broadcast.sse";
+import { broadcastSSE, type SSEData } from "~/hooks/broadcast.sse";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -65,113 +65,121 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const intent = formData.get("intent") as string;
-  const requestId = (formData.get("requestId") as string) || undefined;
-  const driverId = (formData.get("driverId") as string) || undefined;
-  const userId = (formData.get("userId") as string) || undefined;
-  const baseId = (formData.get("baseId") as string) || undefined;
-  const pickupId = (formData.get("pickupId") as string) || undefined;
-  const dropoffId = (formData.get("dropoffId") as string) || undefined;
-  const rideConfirmOrCancel = (formData.get("submit") as string) || undefined
-  if (intent === "initialSetup") {
-    updateUserInfo(userId!, { baseId })
-    return { success: true, message: "Base updated!" }
-  }
-  if (intent === "createRequest") {
-    const newRequest = await createRequest(userId!, baseId!, pickupId!, dropoffId!);
-    await broadcastNewRequest(newRequest.id, baseId!);
-    return {success: true, message: "Ride requested!"}
-  }
-  if (intent === "cancelRequest") {
-    const req = await prisma.request.findUnique({
-      where: { id: requestId },
-      select: { baseId: true, userId: true, driverId: true },
-    });
-    await cancelRequest(requestId!, driverId!);
-    if (req) {
-      await broadcastRequestCancelled(
-        requestId!,
-        req.baseId,
-        req.userId,
-        req.driverId,
-        "passenger"
-      );
-    }
-    return {success: true, message: "Ride cancelled!"}
-  }
-  if (intent === "acceptRequest") {
-    const req = await prisma.request.findUnique({
-      where: { id: requestId },
-      select: { baseId: true, userId: true },
-    });
-    await acceptRequest(requestId!, driverId!, userId!);
-    if (req?.baseId && req?.userId) {
-      await broadcastRequestAccepted(requestId!, req.baseId, req.userId, driverId!);
-    }
-    return {success: true, message: "Accepted ride!"}
-  }
-  if (intent === "pickupRequest") {
-    const req = await prisma.request.findUnique({
-      where: { id: requestId },
-      select: { baseId: true, userId: true },
-    });
-    if(rideConfirmOrCancel === "confirm"){
-      await pickupRequest(requestId!, userId!);
-      if (req?.userId) {
-        broadcastRequestPickup(requestId!, req.userId);
+  const requestId = formData.get("requestId") as string;
+  const driverId = formData.get("driverId") as string;
+  const userId = formData.get("userId") as string;
+  const baseId = formData.get("baseId") as string;
+  const pickupId = formData.get("pickupId") as string;
+  const dropoffId = formData.get("dropoffId") as string;
+  const rideConfirmOrCancel = formData.get("submit") as string
+  try {
+
+      if (intent === "initialSetup") {
+        updateUserInfo(userId, { baseId })
+        return { success: true, message: "Base updated!" }
       }
-      return {success: true, message: "Picked up passenger!"}
-    } else{
-      await cancelAcceptedRide(requestId!, userId!, pickupId!);
-      if (req?.baseId && req?.userId) {
-        await broadcastCancelAcceptedRide(requestId!, req.baseId, req.userId);
+      if (intent === "createRequest") {
+        const newRequest = await createRequest(userId, baseId, pickupId, dropoffId);
+        await broadcastNewRequest(newRequest.id, baseId);
+        return {success: true, message: "Ride requested!"}
       }
-      return {success: true, message: ""}
+      if (intent === "cancelRequest") {
+        const req = await prisma.request.findUnique({
+          where: { id: requestId },
+          select: { baseId: true, userId: true, driverId: true },
+        });
+        await cancelRequest(requestId, driverId);
+        if (req) {
+          await broadcastRequestCancelled(
+            requestId,
+            req.baseId,
+            req.userId,
+            req.driverId,
+            "passenger"
+          );
+        }
+        return {success: true, message: "Ride cancelled!"}
+      }
+      if (intent === "acceptRequest") {
+        const req = await prisma.request.findUnique({
+          where: { id: requestId },
+          select: { baseId: true, userId: true },
+        });
+        await acceptRequest(requestId, driverId, userId);
+        if (req?.baseId && req?.userId) {
+          await broadcastRequestAccepted(requestId, req.baseId, req.userId, driverId);
+        }
+        return {success: true, message: "Accepted ride!"}
+      }
+      if (intent === "pickupRequest") {
+        const req = await prisma.request.findUnique({
+          where: { id: requestId },
+          select: { baseId: true, userId: true },
+        });
+        if(rideConfirmOrCancel === "confirm"){
+          await pickupRequest(requestId, userId);
+          if (req?.userId) {
+            broadcastRequestPickup(requestId, req.userId);
+          }
+          return {success: true, message: "Picked up passenger!"}
+        } else{
+          await cancelAcceptedRide(requestId, userId, pickupId);
+          if (req?.baseId && req?.userId) {
+            await broadcastCancelAcceptedRide(requestId, req.baseId, req.userId);
+          }
+          return {success: true, message: ""}
+        }
+      }
+      if (intent === "dropOffRequest") {
+        const req = await prisma.request.findUnique({
+          where: { id: requestId },
+          select: { userId: true },
+        });
+        await dropOffRequest(requestId, userId);
+        if (req?.userId) {
+          broadcastRequestComplete(requestId, req.userId);
+        }
+        return {success: true, message: "Ride completed!"}
+      }
+    }catch(error){
+      const message = error instanceof Error ? error.message : String(error);
+      return { success: false, message }
     }
-  }
-  if (intent === "dropOffRequest") {
-    const req = await prisma.request.findUnique({
-      where: { id: requestId },
-      select: { userId: true },
-    });
-    await dropOffRequest(requestId!, userId!);
-    if (req?.userId) {
-      broadcastRequestComplete(requestId!, req.userId);
-    }
-    return {success: true, message: "Ride completed!"}
-  }
 }
+
+
 
 export default function Dashboard({ loaderData, actionData }: Route.ComponentProps) {
   const { user, station, accepted, activeRequests, vehicles, requestInfo, bases, activePassengerRequests } = loaderData;
 
   broadcastSSE({
-    onNewRequest: (data) => {
+    onNewRequest: (data: SSEData) => {
       const { id } = data?.request.user
     },
-    onRenewRequest: (data) => {
+    onRenewRequest: (data: SSEData) => {
       const {id} = data?.request.user;
       if(id === user?.id){
         toast.info('Your ride was cancelled by the driver, and was recreated!');
       }
     },
-    onRequestCancelled: (data) => {
+    onRequestCancelled: (data: SSEData) => {
       const {driverId} = data
       if(driverId === user?.id){
         toast.info("User cancelled ride")
       }
     },
-    onRequestAccepted: (data) => {
-      const { driver } = data as { driver?: { firstName: string; lastName: string } };
+    onRequestAccepted: (data: SSEData) => {
+      const { driver } = data;
       setTimeout(() => {
         if (driver) {
           toast.success(`Your ride was accepted by ${driver.firstName.slice(0,1).toUpperCase() + driver.firstName.slice(1)} ${driver.lastName.slice(0,1).toUpperCase() + driver.lastName.slice(1)}!`);
         } 
       }, 0);
     },
-    onRequestPickup: (data) => {
+    onRequestPickup: (data: SSEData) => {
       setTimeout(() => toast.info("Your driver has arrived!"), 0);
     },
-    onRequestComplete: (data) => {
+    onRequestComplete: (data: SSEData) => {
       setTimeout(() => toast.success("Ride completed. Thank you!"), 0);
     },
     autoRevalidate: true,
