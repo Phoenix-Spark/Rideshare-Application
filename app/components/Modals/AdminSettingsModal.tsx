@@ -9,12 +9,12 @@ import CreateUserForm from "../Pages/Admin/CreateUserForm";
 import { AdminIcon } from "../Icons/AdminIcon";
 import { MapPinIcon } from "../Icons/MapPinIcon";
 import { UserIcon } from "../Icons/UserIcon";
-import { SettingsIcon } from "../Icons/SettingsIcon";
+// import { SettingsIcon } from "../Icons/SettingsIcon";
 import { VehicleIcon } from "../Icons/VehicleIcon";
 // import CreateRidesTable from "../Forms/CreateRidesTable";
 // import Rides from "~/routes/auth/rides";
 
-export default function AdminSettingsModal({ user, base, station, accounts }: any) {
+export default function AdminSettingsModal({ user, base, station, accounts, actionData }: any) {
   const location = useLocation();
   const navigate = useNavigate();
   const isRidesRoute = location.pathname.includes("/admin/rides");
@@ -75,21 +75,21 @@ export default function AdminSettingsModal({ user, base, station, accounts }: an
         return (
           <div className="space-y-8">
             <CreateBaseForm />
-            <ManageBaseForm base={base} />
+            <ManageBaseForm base={base} actionData={actionData} />
           </div>
         );
       case "stops":
         return (
           <div className="space-y-8">
             <CreateStopForm base={base} />
-            <ManageStopForm station={station} base={base} />
+            <ManageStopForm base={base} station={station} actionData={actionData} />
           </div>
         );
       case "users":
         return (
           <div className="space-y-8">
             <CreateUserForm />
-            <ManageUserForm accounts={accounts} base={base} user={user}/>
+            <ManageUserForm accounts={accounts} base={base} user={user} actionData={actionData}/>
           </div>
         );
       case "rides":

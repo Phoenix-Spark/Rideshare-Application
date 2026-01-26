@@ -13,7 +13,7 @@ export default [
     route("/dashboard", "./routes/dashboard/dashboard.tsx", [
         route("settings", "./routes/settings/usersettings.tsx"),
         route("admin", "./routes/settings/adminsettings.tsx", [
-            route("rides", "./routes/auth/rides.tsx"),
+            route("rides", "./routes/settings/ridesettings.tsx"),
         ]),
     ]),
     route("*", './routes/notfound.tsx'),

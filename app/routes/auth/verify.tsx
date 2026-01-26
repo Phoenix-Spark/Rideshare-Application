@@ -38,11 +38,16 @@ export async function action({ request }: ActionFunctionArgs) {
   const email = formData.get("email") as string;
   const code = formData.get("code") as string;
 
-  if (intent === "tryCode") {
-    return tryVerificationCode(userId, code);
-  }
-  if (intent === "sendCode") {
-    return sendVerificationCode(userId, email);
+  try{
+    if (intent === "tryCode") {
+      return tryVerificationCode(userId, code);
+    }
+    if (intent === "sendCode") {
+      return sendVerificationCode(userId, email);
+    }
+  }catch(error){
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, message }
   }
 }
 

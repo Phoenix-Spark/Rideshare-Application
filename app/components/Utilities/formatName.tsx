@@ -3,5 +3,9 @@ export function formatName(name: string){
 }
 
 export function displayName(firstName: string, lastName: string){
-      return formatName(firstName) + " " + formatName(lastName)
+      if(!firstName || !lastName){
+            return ""
+      } else{
+            return formatName(firstName) + " " + formatName(lastName)
+      }
 }

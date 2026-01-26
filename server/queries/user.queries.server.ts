@@ -1,4 +1,3 @@
-import { truncate } from "fs";
 import { prisma } from "../db.server";
 import bcrypt from "bcryptjs";
 
@@ -191,28 +190,20 @@ export async function updateUserInfo(
   return { success: true, user };
 }
 
-export async function updateUserInfoAdmin({
-  userId,
-  firstName,
-  lastName,
-  email,
-  phoneNumber,
-  isAdmin,
-  isDriver,
-  isPassenger,
-  isReset,
-}: {
-  userId?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phoneNumber?: string;
-  isAdmin?: boolean;
-  isDriver?: boolean;
-  isPassenger?: boolean;
-  isReset?: boolean;
+export async function updateUserInfoAdmin(
+  userId: string,
+  options: {
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+    isAdmin: boolean,
+    isDriver: boolean,
+    isPassenger: boolean,
+    isReset: boolean,
 }) {
   if (!userId) throw new Error("userId is required");
+  const {firstName, lastName, email, phoneNumber, isAdmin, isDriver, isPassenger, isReset} = options
 
   const data: any = {
     firstName,
@@ -240,27 +231,51 @@ export async function updateUserInfoAdmin({
 }
 
 export async function deleteUserAccount(userId: string) {
-  const user = await prisma.user.delete({
-    where: { id: userId },
-  });
+  // const result = await prisma.$transaction([
+  //   prisma.request.updateMany({
+  //     where: { userId },
+  //     data: { userId: null }
+  //   }),
+  //   prisma.request.updateMany({
+  //     where: { driverId: userId },
+  //     data: { driverId: null }
+  //   }),
+  //   prisma.vehicle.deleteMany({
+  //     where: { userId: userId }
+  //   }),
+  //   prisma.reset.deleteMany({
+  //     where: { userId }
+  //   }),
+  //   prisma.user.delete({
+  //     where: { id: userId }
+  //   })
+  // ]);
 
-  let vehicle = null;
+  const userDelete = await prisma.user.updateMany({
+    where: {
+      id: userId,
+    },
+    data: {
+      email: null,
+      phoneNumber: null,
+      password: "",
+      isAdmin: false,
+      isDriver: false,
+      isInvite: false,
+      isPassenger: false,
+      isReset: false,
+      emailVerified:false,
+    }
+  })
 
-  const existingVehicle = await prisma.vehicle.findUnique({
-    where: { userId: userId },
-  });
-
-  if (existingVehicle) {
-    vehicle = await prisma.vehicle.delete({
-      where: { userId: userId },
-    });
-  }
-
-  return user;
+  return userDelete// Return the deleted user
 }
 
 export async function getAccounts() {
   const account = await prisma.user.findMany({
+    // where: {
+    //   isDeleted: false,
+    // },
     select: {
       id: true,
       firstName: true,
@@ -294,127 +309,4 @@ export async function getUserBase(userId: string) {
   });
 
   return base;
-}
-
-interface GetRidesParams {
-  baseId: string;
-  page?: number;
-  pageSize?: number;
-  search?: string;
-}
-
-export async function getRidesByBase({ baseId, page = 1, pageSize = 25, search }: GetRidesParams) {
-  const skip = (page - 1) * pageSize;
-
-  const where: any = { baseId };
-
-  if (search) {
-    where.OR = [
-      { user: { firstName: { contains: search, mode: 'insensitive' } } },
-      { user: { lastName: { contains: search, mode: 'insensitive' } } },
-      { driver: { firstName: { contains: search, mode: 'insensitive' } } },
-      { driver: { lastName: { contains: search, mode: 'insensitive' } } },
-    ];
-  }
-
-  const [rides, totalCount] = await Promise.all([
-    prisma.request.findMany({
-      where,
-      skip,
-      take: pageSize,
-      select: {
-        id: true,
-        status: true,
-        dropoff: {
-          select: {
-            name: true,
-          }
-        },
-        pickup: {
-          select: {
-            name: true,
-          }
-        },
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        driver: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        }
-      },
-      orderBy: {
-        id: 'desc'
-      }
-    }),
-    prisma.request.count({ where })
-  ]);
-
-  return {
-    rides,
-    totalCount,
-    totalPages: Math.ceil(totalCount / pageSize),
-    currentPage: page,
-  };
-}
-
-interface GetAllRidesParams {
-  baseId: string;
-  search?: string;
-}
-
-export async function getAllRidesForExport({ baseId, search }: GetAllRidesParams) {
-  const where: any = { baseId };
-
-  if (search) {
-    where.OR = [
-      { user: { firstName: { contains: search, mode: 'insensitive' } } },
-      { user: { lastName: { contains: search, mode: 'insensitive' } } },
-      { driver: { firstName: { contains: search, mode: 'insensitive' } } },
-      { driver: { lastName: { contains: search, mode: 'insensitive' } } },
-    ];
-  }
-
-  return await prisma.request.findMany({
-    where,
-    select: {
-      id: true,
-      status: true,
-      createdAt: true,
-      dropoff: {
-        select: {
-          name: true,
-        }
-      },
-      pickup: {
-        select: {
-          name: true,
-        }
-      },
-      user: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-        },
-      },
-      driver: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-        },
-      }
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
 }

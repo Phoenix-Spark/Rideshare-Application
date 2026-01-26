@@ -10,95 +10,98 @@ export async function registerUser(
   password: string,
   base: string,
 ) {
-  const existingEmail = await prisma.user.findFirst({
-    where: {
-      email: email.toLowerCase(),
-    },
-  });
-  if (existingEmail) {
-    return { error: "This email address is already registered" };
+  try{
+    const existingEmail = await prisma.user.findFirst({
+        where: {
+          email: email.toLowerCase(),
+        },
+      });
+      if (existingEmail) {
+        return { error: "This email address is already registered" };
+      }
+
+      const existingPhone = await prisma.user.findFirst({
+        where: {
+          phoneNumber,
+        },
+      });
+      if (existingPhone) {
+        return { error: "This phone number is already in use by another account" };
+      }
+
+      let inviteId: string | null = null;
+
+      if (inviteCode) {
+        const inviteExists = await prisma.invite.findFirst({
+          where: {
+            code: inviteCode,
+            isActive: true,
+          },
+          select: { id: true, email: true },
+        });
+        
+        if (!inviteExists) {
+          return { error: "Invalid or expired invite code" };
+        }
+        
+        if (inviteExists.email.toLowerCase() !== email.toLowerCase()) {
+          return { error: "Invalid invite code or email address" };
+        }
+        
+        inviteId = inviteExists.id;
+      } else {
+        const allowedDomains = [
+          "@us.af.mil",
+          "@army.mil",
+          "@mail.mil",
+          "@us.navy.mil",
+          "@uscg.mil",
+          "@usmc.mil",
+          "@spaceforce.mil",
+        ];
+        const emailLower = email.toLowerCase();
+        const isMilitaryEmail = allowedDomains.some((domain) =>
+          emailLower.endsWith(domain)
+        );
+        if (!isMilitaryEmail) {
+          return {
+            error:
+              "Only U.S. military email addresses are allowed without a valid invite code",
+          };
+        }
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const existingAdmin = await prisma.user.findFirst({
+        where: {
+          isAdmin: true,
+          emailVerified: true,
+        },
+      });
+
+      const isAdmin = existingAdmin?.isAdmin ? false : true;
+      const emailVerified = existingAdmin?.emailVerified ? false : true;
+
+      const user = await prisma.user.create({
+        data: {
+          firstName,
+          lastName,
+          email: email.toLowerCase(),
+          phoneNumber,
+          password: hashedPassword,
+          isAdmin,
+          inviteId,
+          isInvite: !!inviteId,
+          inviteCode,
+          emailVerified,
+          baseId: base,
+        },
+      });
+      return user
+  }catch(error){
+    return {success: false, message: error}
   }
-
-  const existingPhone = await prisma.user.findFirst({
-    where: {
-      phoneNumber,
-    },
-  });
-  if (existingPhone) {
-    return { error: "This phone number is already in use by another account" };
-  }
-
-  let inviteId: string | null = null;
-
-  if (inviteCode) {
-    const inviteExists = await prisma.invite.findFirst({
-      where: {
-        code: inviteCode,
-        isActive: true,
-      },
-      select: { id: true, email: true },
-    });
-    
-    if (!inviteExists) {
-      return { error: "Invalid or expired invite code" };
-    }
-    
-    if (inviteExists.email.toLowerCase() !== email.toLowerCase()) {
-      return { error: "Invalid invite code or email address" };
-    }
-    
-    inviteId = inviteExists.id;
-  } else {
-    const allowedDomains = [
-      "@us.af.mil",
-      "@army.mil",
-      "@mail.mil",
-      "@us.navy.mil",
-      "@uscg.mil",
-      "@usmc.mil",
-      "@spaceforce.mil",
-    ];
-    const emailLower = email.toLowerCase();
-    const isMilitaryEmail = allowedDomains.some((domain) =>
-      emailLower.endsWith(domain)
-    );
-    if (!isMilitaryEmail) {
-      return {
-        error:
-          "Only U.S. military email addresses are allowed without a valid invite code",
-      };
-    }
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const existingAdmin = await prisma.user.findFirst({
-    where: {
-      isAdmin: true,
-      emailVerified: true,
-    },
-  });
-
-  const isAdmin = existingAdmin?.isAdmin ? false : true;
-  const emailVerified = existingAdmin?.emailVerified ? false : true;
-
-  const user = await prisma.user.create({
-    data: {
-      firstName,
-      lastName,
-      email: email.toLowerCase(),
-      phoneNumber,
-      password: hashedPassword,
-      isAdmin,
-      inviteId,
-      isInvite: !!inviteId,
-      inviteCode,
-      emailVerified,
-      baseId: base,
-    },
-  });
-
-  return { success: true, user };
 }
 
 export async function authenticateUser(email: string, password: string) {

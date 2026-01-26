@@ -13,7 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await requireSameOrigin(request);
+  requireSameOrigin(request);
   await requireMagicLink(request.url);
   
   try {
@@ -41,9 +41,9 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   try {
-    await updateUserInfo(urlUserId!, { password });
-    await deleteReset(urlUserId!);
-    return await createUserSession(urlUserId!, "/dashboard");
+    await updateUserInfo(urlUserId, { password });
+    await deleteReset(urlUserId);
+    return await createUserSession(urlUserId, "/dashboard");
   } catch (error) {
     return { success: false, error: "Failed to reset password. Please try again." };
   }

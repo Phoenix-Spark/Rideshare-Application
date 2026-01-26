@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Form, useActionData } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 
 export default function CreateUserForm() {
   const actionData = useActionData<{ error?: string }>();
+  const [email, setEmail] = useState("")
+  const [showEmailError, setShowEmailError] = useState(false)
 
   return (
     <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
@@ -21,7 +24,17 @@ export default function CreateUserForm() {
         </div>
       )}
 
-      <Form method="post" action="/dashboard/admin" className="space-y-5">
+      <Form
+        method="post"
+        action="/dashboard/admin"
+        className="space-y-5"
+        onSubmit={(e) => {
+          if (!email.endsWith("us.af.mil")) {
+            e.preventDefault();
+            setShowEmailError(true);
+          }
+        }}
+      >
         <AuthenticityTokenInput />
         <input type="hidden" name="intent" value="createUser" />
 
@@ -72,9 +85,17 @@ export default function CreateUserForm() {
             required
             type="email"
             name="email"
-            placeholder="jane.smith@domain.com"
+            placeholder="jane.smith@us.af.mil"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (e.target.value.endsWith("us.af.mil")) {
+                setShowEmailError(false);
+              }
+            }}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition outline-none"
           />
+          {showEmailError && <label className="block text-sm font-semibold text-red-500 mb-2">Email must be a .mil address</label>}
         </div>
 
         <div>

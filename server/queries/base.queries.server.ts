@@ -69,9 +69,17 @@ export async function updateBase(
 }
 
 export async function deleteBase(id: string) {
-  const base = await prisma.base.delete({
-    where: { id },
-  });
+
+  const [stops, base] = await prisma.$transaction([
+    prisma.station.deleteMany({
+      where: {
+        baseId: id,
+     }
+    }),
+    prisma.base.delete({
+      where: { id },
+    })
+  ]);
 
   return base;
 }

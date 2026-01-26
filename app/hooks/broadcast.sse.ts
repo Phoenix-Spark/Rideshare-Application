@@ -12,14 +12,27 @@ export type SSEEventType =
   | "connected"
   | "heartbeat";
 
+export type SSEData = {
+  request:{
+    user:{
+      id:string
+    }
+  },
+  driverId: string,
+  driver:{
+    firstName: string,
+    lastName: string,
+  }
+}
+
 interface SSEOptions {
-  onNewRequest?: (data: unknown) => void;
-  onRenewRequest?: (data: unknown) => void;
-  onRequestAccepted?: (data: unknown) => void;
-  onRequestCancelled?: (data: unknown) => void;
-  onRequestPickup?: (data: unknown) => void;
-  onRequestComplete?: (data: unknown) => void;
-  onConnected?: (data: unknown) => void;
+  onNewRequest?: (data: SSEData) => void;
+  onRenewRequest?: (data: SSEData) => void;
+  onRequestAccepted?: (data: SSEData) => void;
+  onRequestCancelled?: (data: SSEData) => void;
+  onRequestPickup?: (data: SSEData) => void;
+  onRequestComplete?: (data: SSEData) => void;
+  onConnected?: (data: SSEData) => void;
   autoRevalidate?: boolean;
 }
 

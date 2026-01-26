@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ToggleSwitch from "~/components/Buttons/ToggleSwitch";
 import { WarningIcon } from "~/components/Icons/WarningIcon";
 
-export default function ManageUserForm({ accounts , base, user}: any) {
+export default function ManageUserForm({ accounts , base, user, actionData}: any) {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -47,6 +47,12 @@ export default function ManageUserForm({ accounts , base, user}: any) {
     }
   };
 
+  useEffect(() => {
+    if(actionData && actionData.success){
+      setDeletingUser(null)
+    }
+  }, [actionData])
+
   return (
     <>
       <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
@@ -56,6 +62,7 @@ export default function ManageUserForm({ accounts , base, user}: any) {
             Manage Users
           </h3>
           <select className="rounded-lg p-2 -mt-3 mr-2 border border-gray-200 text-black w-[300px]" onChange={(e) => setSelectedBase(e.currentTarget.value)}>
+            <option value="">-- Select a base --</option>
            {base.map(b => <option value={b.id}>{b.name}</option>)}
           </select>
         </div>
@@ -89,7 +96,6 @@ export default function ManageUserForm({ accounts , base, user}: any) {
           >
             <AuthenticityTokenInput />
             <input type="hidden" name="intent" value="updateUser" />
-            <input type="hidden" name="loggedInUserId" value={user.id} />
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Select User
@@ -210,7 +216,7 @@ export default function ManageUserForm({ accounts , base, user}: any) {
             </div>
 
             <div className="flex justify-end gap-3 pt-2">
-              <button
+              {/* <button
                 type="button"
                 onClick={() => {
                   const selectedUser = accounts.find(
@@ -231,7 +237,7 @@ export default function ManageUserForm({ accounts , base, user}: any) {
                 }`}
               >
                 Remove User
-              </button>
+              </button> */}
               <button
                 type="submit"
                 className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all"

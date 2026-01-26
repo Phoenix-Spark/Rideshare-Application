@@ -20,20 +20,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const formData = await request.formData();
+  
   const email = formData.get("email") as string;
-
+  
   if (!email) {
     return { success: false, message: "Email is required" };
   }
-
+  
   try {
-    await createReset(email);
-    await sendMagicLink(email);
-    return redirect("/login");
-  } catch {
-    
+    await createReset(email)
+    await sendMagicLink(email)
+
+  }catch(error){
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, message }
   }
-};
+}
 
 export default function Forgot() {
   return <ForgotForm />;

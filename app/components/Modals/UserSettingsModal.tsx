@@ -4,10 +4,8 @@ import { UserIcon } from "../Icons/UserIcon";
 import { LockIcon } from "../Icons/LockIcon";
 import { VehicleIcon } from "../Icons/VehicleIcon";
 import { ShieldIcon } from "../Icons/ShieldIcon";
-import { WarningIcon } from "../Icons/WarningIcon";
 import { BaseIcon } from "../Icons/BaseIcon";
 import { XMarkIcon } from "../Icons/XMarkIcon";
-import UserDeleteForm from "../Pages/User/UserDeleteForm";
 import UserSecurityForm from "../Pages/User/UserSecurityForm";
 import UserVehicleForm from "../Pages/User/UserVehicleForm";
 import UserBaseForm from "../Pages/User/UserBaseForm";
@@ -15,54 +13,63 @@ import UserPermissionForm from "../Pages/User/UserPermissionForm";
 import UserProfileForm from "../Pages/User/UserProfileForm";
 import UserInviteForm from "../Pages/User/UserInviteForm";
 import { KeyIcon } from "../Icons/KeyIcon";
+import { MetricsIcon } from "../Icons/MetricsIcon";
+import UserMetricsForm from "../Pages/User/UserMetricsForm";
 
 export const createTabs = ({user, userBase, vehicles}: any) => [
   {
     label: "Profile",
     name: "profile",
-    to: 'settings?tab=profile',
+    to: 'settings',
     icon: <UserIcon className="size-6" />,
   },
   {
     label: "Permissions",
     name: "permissions",
-    to: 'settings?tab=permissions',
+    to: 'settings',
     icon: <LockIcon className="size-6" />,
   },
   { 
     label: "Base", 
     name: "base", 
-    to: 'settings?tab=base',
+    to: 'settings',
     icon: <BaseIcon className="size-6" />,
     badge: !userBase?.base
   },
   {
     label: "Vehicles",
     name: "vehicles",
-    to: 'settings?tab=vehicles',
+    to: 'settings',
     icon: <VehicleIcon className="size-6" />,
     badge: user?.isDriver && vehicles.length === 0,
   },
   {
+    label: "Metrics",
+    name: "metrics",
+    to: 'settings',
+    icon: <MetricsIcon className="size-6" />,
+  },
+  {
     label: "Security",
     name: "security",
-    to: 'settings?tab=security',
+    to: 'settings',
     icon: <ShieldIcon className="size-6" />,
     badge: user?.isReset,
   },
   {
     label: "Invites",
     name: "invites",
-    to: 'settings?tab=invites',
+    to: 'settings',
     icon: <KeyIcon className="size-6" />,
     hide: user?.isInvite,
   },
-  {
-    label: "Deactivation",
-    name: "deactivation",
-    to: 'settings?tab=deactivation',
-    icon: <WarningIcon className="size-6" />,
-  },
+  
+  // {
+  //   label: "Deactivation",
+  //   name: "deactivation",
+  //   to: 'settings?tab=deactivation',
+  //   icon: <WarningIcon className="size-6" />,
+  // },
 ].filter((tab) => !tab.hide);
 
 
@@ -73,6 +80,7 @@ export default function UserSettingsModal({
   userBase,
   vehicles,
   invite,
+  rides
 }: any) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState(searchParams.get("tab") ?? "profile");
@@ -128,7 +136,9 @@ export default function UserSettingsModal({
           {selectedTab === "vehicles" && ( <UserVehicleForm user={user} vehicles={vehicles} /> )}
           {selectedTab === "security" && <UserSecurityForm user={user} />}
           {!user?.isInvite && selectedTab === "invites" && ( <UserInviteForm user={user} invite={invite} /> )}
-          {selectedTab === "deactivation" && <UserDeleteForm user={user} />}
+          {selectedTab === "metrics" && <UserMetricsForm rides={rides} />}
+          {/* {selectedTab === "deactivation" && <UserDeleteForm user={user} />} */}
+          
         </div>
 
         {/* Mobile Bottom Tab Bar */}

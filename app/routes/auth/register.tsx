@@ -30,24 +30,28 @@ export const action = async ({ request }: { request: Request }) => {
   const password = formData.get("password") as string;
   const base = formData.get("base") as string;
 
-  const result = await registerUser(
-    inviteCode,
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-    password,
-    base
-  );
-
-  if (result?.error) {
-    return { error: result.error };
+  try{
+    const result = await registerUser(
+      inviteCode,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      password,
+      base
+    );
+    
+    if (result?.error) {
+      return { error: result.error };
+    }
+    const { id } = (await getUserIdFromEmail(email))!;
+    await sendWelcomeEmail(id, email);
+    
+    return await createUserSession(id, "/login");
+  }catch(error){
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, message }
   }
-
-  const { id } = (await getUserIdFromEmail(email))!;
-  await sendWelcomeEmail(id, email);
-
-  return await createUserSession(id, "/login");
 };
 
 export default function Register() {

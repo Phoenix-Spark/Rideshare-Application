@@ -57,7 +57,7 @@ const VALID_STATES = [
   "Wyoming",
 ];
 
-export default function ManageBaseForm({ base }: any) {
+export default function ManageBaseForm({ base, actionData }: any) {
   const [editingId, setEditingId] = useState(null);
   const [deletingBase, setDeletingBase] = useState(null);
   const [deleteConfirmName, setDeleteConfirmName] = useState("");
@@ -80,6 +80,12 @@ export default function ManageBaseForm({ base }: any) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [openMenuId]);
+
+  useEffect(() => {
+    if(actionData && actionData.success){
+      setDeletingBase(null)
+    }
+  }, [actionData])
 
   const handleDeleteClick = (b: any) => {
     setDeletingBase(b);
@@ -331,6 +337,7 @@ export default function ManageBaseForm({ base }: any) {
         <p className="text-gray-600">
           This will permanently delete{" "}
           <span className="font-semibold text-gray-900">{deletingBase.name}</span>
+          <span className="text-gray-600"> and all of its pick-up and drop-off locations</span>
         </p>
       </div>
 
