@@ -19,14 +19,21 @@ export const action = async ({ request }: { request: Request}) => {
   }
 
   const formData = await request.formData();
-
+  
   const email = formData.get("email") as string;
-
+  
   if (!email) {
     return { error: "Email is required" };
   }
-  await createReset(email)
-  await sendMagicLink(email)
+  
+  try {
+    await createReset(email)
+    await sendMagicLink(email)
+
+  }catch(error){
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, message }
+  }
 }
 
 export default function Forgot() {
