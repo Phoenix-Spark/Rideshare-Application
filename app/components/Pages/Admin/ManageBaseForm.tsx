@@ -337,7 +337,7 @@ export default function ManageBaseForm({ base, actionData }: any) {
         <p className="text-gray-600">
           This will permanently delete{" "}
           <span className="font-semibold text-gray-900">{deletingBase.name}</span>
-          and all of its pick-up and drop-off locations
+          <span className="text-gray-600"> and all of its pick-up and drop-off locations</span>
         </p>
       </div>
 
