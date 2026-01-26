@@ -4,7 +4,6 @@ import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ButtonControls from "~/components/Buttons/ButtonControls";
 import { LockIcon } from "~/components/Icons/LockIcon";
 import { MailIcon } from "~/components/Icons/MailIcon";
-import { PhoneIcon } from "~/components/Icons/PhoneIcon";
 
 export default function UserSecurityForm({ user }: any) {
   const [password, setPassword] = useState("");

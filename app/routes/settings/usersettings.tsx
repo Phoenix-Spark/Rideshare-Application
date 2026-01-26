@@ -36,6 +36,7 @@ import type { Route } from "./+types/usersettings";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { sendInvitationEmail } from "server/queries/verify.queries.server";
+import { getRidesByUser } from "server/queries/request.queries.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
@@ -45,8 +46,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const base = await getBaseInfo();
   const userBase = await getUserBase(userId);
   const invite = await getInvites(userId);
+  const rides = await getRidesByUser(userId);
 
-  return { user, base, userBase, vehicles, invite };
+  console.log({rides})
+
+  return { user, base, userBase, vehicles, invite, rides };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -121,7 +125,9 @@ export async function action({ request }: ActionFunctionArgs) {
 }
   
 export default function UserSettings({loaderData, actionData}: Route.ComponentProps) {
-  const { user, base, userBase, vehicles, invite } = loaderData;
+  const { user, base, userBase, vehicles, invite, rides } = loaderData;
+
+  console.log(rides)
 
   useEffect(() => {
     if (!actionData) return;
@@ -142,6 +148,7 @@ export default function UserSettings({loaderData, actionData}: Route.ComponentPr
       vehicles={vehicles}
       invite={invite}
       userBase={userBase}
+      rides={rides}
     />
   );
 }

@@ -14,7 +14,6 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
     Pending: 2,
     Completed: 3,
     Cancelled: 4,
-    Expired: 5,
   };
 
   const sortedRequests = [...requestInfo].sort((a, b) => {
@@ -81,12 +80,6 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
               Pending
             </span>
           );
-        case "Expired":
-          return (
-            <span className={`${baseClass} bg-red-100 text-red-700`}>
-              Expired
-            </span>
-          );
         case "Cancelled":
           return (
             <span className={`${baseClass} bg-gray-200 text-gray-500`}>
@@ -110,12 +103,15 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             onClick={() => setExpanded(true)}
           >
             <p className="text-sm font-medium text-gray-900 truncate">
-              {request.pickup.name} {"-> "}{request.dropoff.name}
+              {request.pickup.name} {"-> "}
+              {request.dropoff.name}
             </p>
             <div className="flex items-center gap-2">{getStatusBadge()}</div>
           </div>
         ) : (
-          <Form method="post" action="/dashboard?mode=passenger"
+          <Form
+            method="post"
+            action="/dashboard?mode=passenger"
             key={request.id}
             className="bg-white p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow"
           >
@@ -124,49 +120,55 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <input type="hidden" name="requestId" value={request.id} />
             <input type="hidden" name="driverId" value={request.driverId} />
 
-            {request.driver && request.driverId && 
-  <div className="space-y-3 mb-3">
-    {/* Driver Info */}
-    <div className="flex items-center gap-2">
-      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-        <UserIcon className="w-4 h-4 text-white" />
-      </div>
-      <div
-        className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
-        onClick={(e) => {
-          e.stopPropagation();
-          setExpanded(false);
-        }}
-      >
-        <p className="text-sm font-semibold text-gray-900 truncate">
-          {displayName(request.driver.firstName, request.driver.lastName)}
-        </p>
-        <p className="text-xs text-gray-500">
-          {request.driver.phoneNumber || "No phone"}
-        </p>
-      </div>
-    </div>
+            {request.driver && request.driverId && (
+              <div className="space-y-3 mb-3">
+                {/* Driver Info */}
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                    <UserIcon className="w-4 h-4 text-white" />
+                  </div>
+                  <div
+                    className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpanded(false);
+                    }}
+                  >
+                    <p className="text-sm font-semibold text-gray-900 truncate">
+                      {displayName(
+                        request.driver.firstName,
+                        request.driver.lastName,
+                      )}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {request.driver.phoneNumber || "No phone"}
+                    </p>
+                  </div>
+                </div>
 
-    {/* Vehicle Info */}
-    {request.vehicle && (
-      <div className="flex items-center gap-2">
-        
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">
-            {[request.vehicle.year, request.vehicle.make, request.vehicle.model]
-              .filter(Boolean)
-              .join(" ")}
-          </p>
-          <p className="text-xs text-gray-500 truncate">
-            {[request.vehicle.color, request.vehicle.plate]
-              .filter(Boolean)
-              .join(" • ")}
-          </p>
-        </div>
-      </div>
-    )}
-  </div>
-}
+                {/* Vehicle Info */}
+                {request.vehicle && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {[
+                          request.vehicle.year,
+                          request.vehicle.make,
+                          request.vehicle.model,
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {[request.vehicle.color, request.vehicle.plate]
+                          .filter(Boolean)
+                          .join(" • ")}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
               {["pickup", "dropoff"].map((type) => (
@@ -202,18 +204,14 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
             <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
               {getStatusBadge()}
 
-              {isActiveOrPending ? (
-                timeLeft > 0 ? (
-                  <button
-                    type="submit"
-                    className="px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
-                  >
-                    Cancel Request
-                  </button>
-                ) : (
-                  <span className="text-xs text-gray-400">Expired</span>
-                )
-              ) : null}
+              {isActiveOrPending && (
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 min-h-[44px] font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600"
+                >
+                  Cancel Request
+                </button>
+              )}
             </div>
           </Form>
         )}
@@ -234,13 +232,13 @@ export default function LeftPanelRequestsForm({ requestInfo }: any) {
 
           {requestInfo.length > 0 &&
             requestInfo.some(
-              (r: any) => r.status === "Accepted" || r.status === "Pending"
+              (r: any) => r.status === "Accepted" || r.status === "Pending",
             ) && (
               <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                 {
                   requestInfo.filter(
                     (r: any) =>
-                      r.status === "Accepted" || r.status === "Pending"
+                      r.status === "Accepted" || r.status === "Pending",
                   ).length
                 }
               </span>
