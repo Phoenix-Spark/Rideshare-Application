@@ -77,7 +77,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const make = formData.get("make") as string ;
   const model = formData.get("model") as string ;
   const color = formData.get("color") as string ;
-  const plate = (formData.get("plate") as string).toUpperCase();
+  const plate = formData.get("plate")?.toString().toUpperCase() || undefined;
 
   try{
     if (intent === "user") {
