@@ -89,7 +89,7 @@ export default function AdminSettingsModal({ user, base, station, accounts, acti
         return (
           <div className="space-y-8">
             <CreateUserForm />
-            <ManageUserForm accounts={accounts} base={base} user={user}/>
+            <ManageUserForm accounts={accounts} base={base} user={user} actionData={actionData}/>
           </div>
         );
       case "rides":

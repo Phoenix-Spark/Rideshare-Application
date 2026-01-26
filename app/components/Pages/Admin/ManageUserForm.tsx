@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-router";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
 import ToggleSwitch from "~/components/Buttons/ToggleSwitch";
 import { WarningIcon } from "~/components/Icons/WarningIcon";
 
-export default function ManageUserForm({ accounts , base, user}: any) {
+export default function ManageUserForm({ accounts , base, user, actionData}: any) {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -46,6 +46,12 @@ export default function ManageUserForm({ accounts , base, user}: any) {
       setIsReset(false);
     }
   };
+
+  useEffect(() => {
+    if(actionData && actionData.success){
+      setDeletingUser(null)
+    }
+  }, [actionData])
 
   return (
     <>

@@ -92,7 +92,10 @@ export async function action({ request }: ActionFunctionArgs) {
       return { success: true, message: "Stop deleted!", intent} 
     }
     if (intent === "createUser") {
-      await registerUser(inviteCode, firstName, lastName, email, phoneNumber, password, baseId)
+      const result = await registerUser(inviteCode, firstName, lastName, email, phoneNumber, password, baseId)
+      if (result && 'error' in result) {
+        return { success: false, message: result.error }
+      }
       return { success: true, message: "User created!", intent}
   }
   if (intent === "updateUser") {
