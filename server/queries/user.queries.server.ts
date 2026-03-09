@@ -117,6 +117,23 @@ export async function getBaseInfo() {
   return{ base };
 }
 
+export async function getDriverCount() {
+  const subscriptions = await prisma.pushSubscription.findMany({
+    distinct: ["userId"],
+    select: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+  const drivers = subscriptions.map((s) => s.user);
+  return { count: drivers.length, drivers };
+}
+
 export async function updateUserInfo(
   userId: string,
   options: {

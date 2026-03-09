@@ -78,7 +78,13 @@ export default function LeftPanelDriverRequestForm({ accepted, userId }: any) {
                       {displayName(ride?.user?.firstName, ride?.user?.lastName)}
                     </p>
                     {ride.user?.phoneNumber && (
-                      <p className="text-xs text-gray-600 truncate">{ride?.user?.phoneNumber}</p>
+                      <a
+                        href={`sms:${ride.user.phoneNumber}`}
+                        className="text-xs text-indigo-600 underline truncate"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {ride.user.phoneNumber}
+                      </a>
                     )}
                   </div>
 

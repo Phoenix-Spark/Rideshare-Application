@@ -97,9 +97,12 @@ export default function LeftPanelRequestsForm({ requestInfo, user }: any) {
                             request.driver.lastName,
                           )}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <a 
+                        href={`sms:${request.driver.phoneNumber}`} 
+                        className="text-xs text-indigo-600 underline truncate"
+                        onClick={(e) => e.stopPropagation()}>
                           {request.driver.phoneNumber || "No phone"}
-                        </p>
+                        </a>
                       </div>
                     </div>
 

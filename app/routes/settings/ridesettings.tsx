@@ -5,13 +5,14 @@ import {
 import { requireUserId } from "server/session.server";
 import CreateRidesTable from "~/components/Forms/CreateRidesTable";
 import { getAllRidesForExport, getRidesByBase } from "server/queries/request.queries.server";
+import { getDriverCount } from "server/queries/user.queries.server";
 import type { Route } from "./+types/ridesettings";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireUserId(request);
   const user = await getUserBase(userId);
   if (!user?.base) {
-    return { rides: [], totalCount: 0, totalPages: 0, currentPage: 1 };
+    return { rides: [], totalCount: 0, totalPages: 0, currentPage: 1, allDriversCount: 0, activeDrivers: [] };
   }
 
   const url = new URL(request.url);
@@ -25,7 +26,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     search,
   });
 
-  return result;
+  const { count: allDriversCount, drivers: activeDrivers } = await getDriverCount();
+
+  return { ...result, allDriversCount, activeDrivers };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -47,10 +50,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Rides({ loaderData }: Route.ComponentProps) {
-  const { rides, totalCount, totalPages, currentPage } = loaderData;
+  const { rides, totalCount, totalPages, currentPage, allDriversCount, activeDrivers } = loaderData;
   return (
     <CreateRidesTable
       rides={rides}
+      allDriversCount={allDriversCount}
+      activeDrivers={activeDrivers}
       totalCount={totalCount}
       totalPages={totalPages}
       currentPage={currentPage}

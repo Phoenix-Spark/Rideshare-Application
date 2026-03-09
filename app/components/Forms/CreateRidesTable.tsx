@@ -389,7 +389,7 @@ function useRideMetrics(rides: Ride[]) {
 
 function ridesToCSV(rides: Ride[]) {
   const headers = ["ID", "Passenger", "Driver", "Pickup", "Dropoff", "Status", "Base", "State", "Created", "Completed"];
-  const rows = rides.map(r => [
+  const rows = rides.map((r: any) => [
     r.id,
     displayName(r.user?.firstName, r.user?.lastName),
     r.driver ? displayName(r.driver.firstName, r.driver.lastName) : "No Driver",
@@ -475,7 +475,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 /* ---------------- MAIN PAGE ---------------- */
 
-export default function AdminRidesPage({ rides, totalCount, totalPages, currentPage }: any) {
+export default function AdminRidesPage({ rides, allDriversCount, activeDrivers, totalCount, totalPages, currentPage }: any) {
   const metrics = useRideMetrics(rides);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
@@ -683,11 +683,21 @@ export default function AdminRidesPage({ rides, totalCount, totalPages, currentP
 
         {/* USER & DRIVER METRICS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard 
-            label="Active Drivers" 
-            value={metrics.activeDrivers.toLocaleString()}
-            sublabel="Providing rides"
-          />
+          <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
+            <p className="text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">Active Drivers</p>
+            <p className="text-2xl md:text-3xl font-semibold text-gray-900 mt-2">{allDriversCount.toLocaleString()}</p>
+            <p className="text-xs md:text-sm text-gray-500 mt-1">Providing rides</p>
+            {activeDrivers?.length > 0 && (
+              <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
+                {activeDrivers.map((driver: any) => (
+                  <li key={driver.id} className="text-xs text-gray-700 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+                    {displayName(driver.firstName, driver.lastName)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <StatCard 
             label="Unique Users" 
             value={metrics.uniqueUsers.toLocaleString()}

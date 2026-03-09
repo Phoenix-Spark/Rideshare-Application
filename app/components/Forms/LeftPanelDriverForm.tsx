@@ -72,9 +72,15 @@ export default function LeftPanelDriverForm({ user, activeRequests }: any) {
                     <p className="font-semibold text-gray-700">
                       {displayName(request.user.firstName, request.user.lastName)}
                     </p>
-                    <p className="text text-gray-500">
-                      {request.user.phoneNumber}
-                    </p>
+                    {request.user.phoneNumber && (
+                      <a
+                        href={`sms:${request.user.phoneNumber}`}
+                        className="text text-indigo-600 underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {request.user.phoneNumber}
+                      </a>
+                    )}
                   </div>
                   <div className="flex flex-col items-end space-y-2">
                     {getStatusBadge()}
